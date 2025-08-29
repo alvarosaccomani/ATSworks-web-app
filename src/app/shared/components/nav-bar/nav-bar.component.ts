@@ -45,7 +45,8 @@ export class NavBarComponent implements OnInit {
         cancelButtonText: 'No, cancel'
       }).then((result: any) => {
         if (result.value) {
-          this._router.navigate(['/auth/login'])
+          localStorage.clear();
+          this._router.navigate(['/auth/login']);
         }
       });
     });
