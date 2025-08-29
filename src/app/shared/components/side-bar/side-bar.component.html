@@ -14,7 +14,7 @@
             <ul>
                 <li *ngFor="let item of menuItems">
 
-                    <a href="#"
+                    <a [routerLink]="item.url"
                         class="nav-btn-submenu"
                         (click)="$event.preventDefault(); toggleSubMenu(item)"
                         [class.active]="item.hasSubmenu && item.isOpen">
@@ -30,7 +30,7 @@
                     <ul *ngIf="item.hasSubmenu"
                         [class.show-nav-lateral-submenu]="item.isOpen">
                         <li *ngFor="let subItem of item.submenu">
-                            <a href="#">
+                            <a [routerLink]="subItem.url">
                                 <i class="{{ subItem.icon }}"></i>
                                 &nbsp; {{ subItem.name }}
                             </a>
