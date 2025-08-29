@@ -16,20 +16,6 @@ $(document).ready(function(){
 		}
 	});
 
-	/*  Show/Hidden Nav Lateral */
-	$('.show-nav-lateral').on('click', function(e){
-		e.preventDefault();
-		var NavLateral=$('.nav-lateral');
-		var PageConten=$('.page-content');
-		if(NavLateral.hasClass('active')){
-			NavLateral.removeClass('active');
-			PageConten.removeClass('active');
-		}else{
-			NavLateral.addClass('active');
-			PageConten.addClass('active');
-		}
-	});
-
 	/*  Exit system buttom */
 	$('.btn-exit-system').on('click', function(e){
 		e.preventDefault();
