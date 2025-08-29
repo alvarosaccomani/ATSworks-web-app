@@ -1,0 +1,17 @@
+.password-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  .password-container .form-control {
+    padding-right: 40px; /* Espacio para el ícono */
+  }
+  .password-icon {
+    position: absolute;
+    right: 10px; /* Alineado a la derecha */
+    top: 50%; /* Centrado verticalmente */
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+  }
+}
