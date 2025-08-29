@@ -1,1 +1,44 @@
-<p>side-bar works!</p>
+<!-- Nav lateral -->
+<section class="full-box nav-lateral">
+    <div class="full-box nav-lateral-bg show-nav-lateral"></div>
+    <div class="full-box nav-lateral-content">
+        <figure class="full-box nav-lateral-avatar">
+            <i class="far fa-times-circle show-nav-lateral"></i>
+            <img src="assets/imgs/avatar/Avatar.png" class="img-fluid" alt="Avatar">
+            <figcaption class="roboto-medium text-center">
+                Carlos Alfaro <br><small class="roboto-condensed-light">Web Developer</small>
+            </figcaption>
+        </figure>
+        <div class="full-box nav-lateral-bar"></div>
+        <nav class="full-box nav-lateral-menu">
+            <ul>
+                <li *ngFor="let item of menuItems">
+
+                    <a href="#"
+                        class="nav-btn-submenu"
+                        (click)="$event.preventDefault(); toggleSubMenu(item)"
+                        [class.active]="item.hasSubmenu && item.isOpen">
+
+                        <i class="{{ item.icon }}"></i>
+                        &nbsp; {{ item.name }}
+                        <i class="fas fa-chevron-down"
+                            *ngIf="item.hasSubmenu"
+                            [class.fa-rotate-180]="item.isOpen">
+                        </i>
+                    </a>
+
+                    <ul *ngIf="item.hasSubmenu"
+                        [class.show-nav-lateral-submenu]="item.isOpen">
+                        <li *ngFor="let subItem of item.submenu">
+                            <a href="#">
+                                <i class="{{ subItem.icon }}"></i>
+                                &nbsp; {{ subItem.name }}
+                            </a>
+                        </li>
+                    </ul>
+
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>

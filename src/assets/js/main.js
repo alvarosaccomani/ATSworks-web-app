@@ -1,21 +1,5 @@
 $(document).ready(function(){
 
-	/*  Show/Hidden Submenus */
-	$('.nav-btn-submenu').on('click', function(e){
-		e.preventDefault();
-		var SubMenu=$(this).next('ul');
-		var iconBtn=$(this).children('.fa-chevron-down');
-		if(SubMenu.hasClass('show-nav-lateral-submenu')){
-			$(this).removeClass('active');
-			iconBtn.removeClass('fa-rotate-180');
-			SubMenu.removeClass('show-nav-lateral-submenu');
-		}else{
-			$(this).addClass('active');
-			iconBtn.addClass('fa-rotate-180');
-			SubMenu.addClass('show-nav-lateral-submenu');
-		}
-	});
-
 	/*  Exit system buttom */
 	$('.btn-exit-system').on('click', function(e){
 		e.preventDefault();
