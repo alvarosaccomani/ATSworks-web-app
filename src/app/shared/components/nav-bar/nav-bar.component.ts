@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { UserInterface } from '../../../core/interfaces/user.interface';
+import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
+import { UserRolCompanyInterface, UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 
 declare var $:any;
 declare var Swal: any;
@@ -12,8 +16,13 @@ declare var Swal: any;
 })
 export class NavBarComponent implements OnInit {
 
+  @Input() identity!: UserInterface;
+  public userRolesCompany$!: Observable<UserRolCompanyResults>;
+  public userRolesCompany!: any;
+
   constructor(
-    private _router: Router
+    private _router: Router,
+    private _userRolesCompany: UserRolesCompanyService
   ) { }
 
   ngOnInit(): void {
@@ -50,6 +59,38 @@ export class NavBarComponent implements OnInit {
         }
       });
     });
+
+    if(this.identity) {
+      this.userRolesCompany$ = this._userRolesCompany.getUserRolesCompany(this.identity.usr_uuid!);
+      this.userRolesCompany$.subscribe((userRolesCompany: any) => {
+        this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
+      });
+    }
+  }
+
+  public groupByCompany(data: any[]): any[] {
+    const grouped = new Map();
+
+    data.forEach((item) => {
+      const cmpUuid = item.cmp.cmp_uuid;
+
+      if (!grouped.has(cmpUuid)) {
+        grouped.set(cmpUuid, {
+          cmp: {
+            cmp_uuid: item.cmp.cmp_uuid,
+            cmp_name: item.cmp.cmp_name,
+            roles: [],
+          },
+        });
+      }
+
+      grouped.get(cmpUuid).cmp.roles.push({
+        rol_uuid: item.rol.rol_uuid,
+        rol_name: item.rol.rol_name,
+      });
+    });
+
+    return Array.from(grouped.values());
   }
 
 }

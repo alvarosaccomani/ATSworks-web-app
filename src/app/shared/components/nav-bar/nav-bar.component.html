@@ -2,6 +2,18 @@
     <a href="#" class="float-left show-nav-lateral">
         <i class="fas fa-exchange-alt"></i>
     </a>
+    @if(userRolesCompany) {
+        <select class="form-control" name="usuario_privilegio" class="select-rol">
+            <option value="" selected="" disabled="">Seleccione una opción</option>
+            @for(userRolCompany of userRolesCompany; track userRolCompany.usrrolcmp_uuid) {
+                @if(userRolCompany.cmp){
+                    <option [value]="userRolCompany.cmp.cmp_uuid">
+                        {{userRolCompany.cmp.cmp_name}}
+                    </option>
+                }
+            }
+        </select>
+    }
     <a href="user-update.html">
         <i class="fas fa-user-cog"></i>
     </a>
