@@ -32,91 +32,36 @@
                 <thead>
                     <tr class="text-center roboto-medium">
                         <th>#</th>
-                        <th>DNI</th>
                         <th>NOMBRE</th>
-                        <th>APELLIDO</th>
+                        <th>EMAIL</th>
                         <th>TELEFONO</th>
                         <th>ACTUALIZAR</th>
                         <th>ELIMINAR</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center" >
-                        <td>1</td>
-                        <td>012342567</td>
-                        <td>NOMBRE DEL CLIENTE</td>
-                        <td>APELLIDO DEL CLIENTE</td>
-                        <td>72349874</td>
-                        <td>
-                            <a href="client-update.html" class="btn btn-success">
-                                <i class="fas fa-sync-alt"></i>	
-                            </a>
-                        </td>
-                        <td>
-                            <form action="">
-                                <button type="button" class="btn btn-warning">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr class="text-center" >
-                        <td>2</td>
-                        <td>012342567</td>
-                        <td>NOMBRE DEL CLIENTE</td>
-                        <td>APELLIDO DEL CLIENTE</td>
-                        <td>72349874</td>
-                        <td>
-                            <a href="client-update.html" class="btn btn-success">
-                                <i class="fas fa-sync-alt"></i>	
-                            </a>
-                        </td>
-                        <td>
-                            <form action="">
-                                <button type="button" class="btn btn-warning">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr class="text-center" >
-                        <td>3</td>
-                        <td>012342567</td>
-                        <td>NOMBRE DEL CLIENTE</td>
-                        <td>APELLIDO DEL CLIENTE</td>
-                        <td>72349874</td>
-                        <td>
-                            <a href="client-update.html" class="btn btn-success">
-                                <i class="fas fa-sync-alt"></i>	
-                            </a>
-                        </td>
-                        <td>
-                            <form action="">
-                                <button type="button" class="btn btn-warning">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr class="text-center" >
-                        <td>4</td>
-                        <td>012342567</td>
-                        <td>NOMBRE DEL CLIENTE</td>
-                        <td>APELLIDO DEL CLIENTE</td>
-                        <td>72349874</td>
-                        <td>
-                            <a href="client-update.html" class="btn btn-success">
-                                <i class="fas fa-sync-alt"></i>	
-                            </a>
-                        </td>
-                        <td>
-                            <form action="">
-                                <button type="button" class="btn btn-warning">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                    @if(customers$ | async; as customers) {
+                        @for(customer of customers.data; track customer.cus_uuid) {
+                            <tr class="text-center" >
+                                <td>{{$index + 1}}</td>
+                                <td>{{customer.cus_fullname}}</td>
+                                <td>{{customer.cus_email}}</td>
+                                <td>{{customer.cus_phone}}</td>
+                                <td>
+                                    <a routerLink="/admin/user/customer/{{customer.cus_uuid}}" class="btn btn-success">
+                                        <i class="fas fa-sync-alt"></i>	
+                                    </a>
+                                </td>
+                                <td>
+                                    <form action="">
+                                        <button type="button" class="btn btn-warning">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
         </div>
