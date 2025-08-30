@@ -8,6 +8,8 @@ import { GlobalService } from './global.service';
 })
 export class UsersService {
 
+  public identity: any;
+
   constructor(
     private _http: HttpClient,
     private _GlobalService: GlobalService
@@ -22,5 +24,16 @@ export class UsersService {
     let headers = new HttpHeaders().set('content-type','application/json');
 
     return this._http.post(this._GlobalService.url + 'login', params, {headers:headers});
+  }
+
+  public getIdentity()  {
+    let identity = JSON.parse(localStorage.getItem('identity')!);
+
+    if(identity !== 'undefined') {
+        this.identity = identity;
+    } else {
+        this.identity = null;
+    }
+    return this.identity;
   }
 }
