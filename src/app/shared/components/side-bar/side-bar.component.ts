@@ -30,7 +30,7 @@ export class SideBarComponent {
         { 
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
-          url: null
+          url: '/admin/user/customer/new'
         },
         { 
           name: 'Lista de clientes',
