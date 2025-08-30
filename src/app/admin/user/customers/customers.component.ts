@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { NavBarComponent } from '../../../shared/components/nav-bar/nav-bar.component';
 import { CustomersService } from '../../../core/services/customers.service';
 import { CustomerResults } from '../../../core/interfaces/customer';
 
@@ -10,8 +9,7 @@ import { CustomerResults } from '../../../core/interfaces/customer';
   selector: 'app-customers',
   imports: [
     AsyncPipe,
-    RouterLink,
-    NavBarComponent
+    RouterLink
   ],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.scss'

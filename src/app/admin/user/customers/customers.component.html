@@ -1,83 +1,78 @@
-<section class="full-box page-content">
-    <app-nav-bar></app-nav-bar>
+<!-- Page header -->
+<div class="full-box page-header">
+    <h3 class="text-left">
+        <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES
+    </h3>
+    <p class="text-justify">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
+    </p>
+</div>
 
-    <!-- Page header -->
-    <div class="full-box page-header">
-        <h3 class="text-left">
-            <i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES
-        </h3>
-        <p class="text-justify">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.
-        </p>
-    </div>
+<div class="container-fluid">
+    <ul class="full-box list-unstyled page-nav-tabs">
+        <li>
+            <a routerLink="/admin/user/customer/new"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
+        </li>
+        <li>
+            <a class="active" href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
+        </li>
+        <li>
+            <a href="client-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR CLIENTE</a>
+        </li>
+    </ul>	
+</div>
 
-    <div class="container-fluid">
-        <ul class="full-box list-unstyled page-nav-tabs">
-            <li>
-                <a routerLink="/admin/user/customer/new"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
-            </li>
-            <li>
-                <a class="active" href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
-            </li>
-            <li>
-                <a href="client-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR CLIENTE</a>
-            </li>
-        </ul>	
-    </div>
-    
-    <!-- Content here-->
-    <div class="container-fluid">
-        <div class="table-responsive">
-            <table class="table table-dark table-sm">
-                <thead>
-                    <tr class="text-center roboto-medium">
-                        <th>#</th>
-                        <th>NOMBRE</th>
-                        <th>EMAIL</th>
-                        <th>TELEFONO</th>
-                        <th>ACTUALIZAR</th>
-                        <th>ELIMINAR</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if(customers$ | async; as customers) {
-                        @for(customer of customers.data; track customer.cus_uuid) {
-                            <tr class="text-center" >
-                                <td>{{$index + 1}}</td>
-                                <td>{{customer.cus_fullname}}</td>
-                                <td>{{customer.cus_email}}</td>
-                                <td>{{customer.cus_phone}}</td>
-                                <td>
-                                    <a routerLink="/admin/user/customer/{{customer.cus_uuid}}" class="btn btn-success">
-                                        <i class="fas fa-sync-alt"></i>	
-                                    </a>
-                                </td>
-                                <td>
-                                    <form action="">
-                                        <button type="button" class="btn btn-warning">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
+<!-- Content here-->
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                    <th>#</th>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                    <th>TELEFONO</th>
+                    <th>ACTUALIZAR</th>
+                    <th>ELIMINAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(customers$ | async; as customers) {
+                    @for(customer of customers.data; track customer.cus_uuid) {
+                        <tr class="text-center" >
+                            <td>{{$index + 1}}</td>
+                            <td>{{customer.cus_fullname}}</td>
+                            <td>{{customer.cus_email}}</td>
+                            <td>{{customer.cus_phone}}</td>
+                            <td>
+                                <a routerLink="/admin/user/customer/{{customer.cus_uuid}}" class="btn btn-success">
+                                    <i class="fas fa-sync-alt"></i>	
+                                </a>
+                            </td>
+                            <td>
+                                <form action="">
+                                    <button type="button" class="btn btn-warning">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     }
-                </tbody>
-            </table>
-        </div>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
+                }
+            </tbody>
+        </table>
     </div>
-
-</section>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
