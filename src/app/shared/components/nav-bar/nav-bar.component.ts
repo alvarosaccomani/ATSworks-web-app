@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UserInterface } from '../../../core/interfaces/user.interface';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { UserRolCompanyInterface, UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
+import { SharedDataService } from '../../../core/services/shared-data.service';
 
 declare var $:any;
 declare var Swal: any;
@@ -22,6 +23,7 @@ export class NavBarComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _sharedDataService: SharedDataService,
     private _userRolesCompany: UserRolesCompanyService
   ) { }
 
@@ -91,6 +93,17 @@ export class NavBarComponent implements OnInit {
     });
 
     return Array.from(grouped.values());
+  }
+
+  public onCompanyChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedCompany = this.userRolesCompany.find(
+      (company: any) => company.cmp.cmp_uuid === selectedValue
+    );
+    if (selectedCompany) {
+      localStorage.setItem('company', JSON.stringify(selectedCompany.cmp));
+      this._sharedDataService.setSelectedCompany(selectedCompany);
+    }
   }
 
 }

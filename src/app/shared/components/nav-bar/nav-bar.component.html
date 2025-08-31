@@ -3,7 +3,11 @@
         <i class="fas fa-exchange-alt"></i>
     </a>
     @if(userRolesCompany) {
-        <select class="form-control" name="usuario_privilegio" class="select-rol">
+        <select 
+            class="form-control" 
+            name="usuario_privilegio" 
+            class="select-rol"
+            (change)="onCompanyChange($event)">
             <option value="" selected="" disabled="">Seleccione una opción</option>
             @for(userRolCompany of userRolesCompany; track userRolCompany.usrrolcmp_uuid) {
                 @if(userRolCompany.cmp){
