@@ -7,6 +7,7 @@
             class="form-control" 
             name="usuario_privilegio" 
             class="select-rol"
+            [(ngModel)]="selectedCompany"
             (change)="onCompanyChange($event)">
             <option value="" selected="" disabled="">Seleccione una opción</option>
             @for(userRolCompany of userRolesCompany; track userRolCompany.usrrolcmp_uuid) {

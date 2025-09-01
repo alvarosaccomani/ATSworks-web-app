@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { UserInterface } from '../../../core/interfaces/user.interface';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
@@ -11,13 +12,17 @@ declare var Swal: any;
 
 @Component({
   selector: 'app-nav-bar',
-  imports: [],
+  imports: [
+    FormsModule
+  ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
 export class NavBarComponent implements OnInit {
 
   @Input() identity!: UserInterface;
+  public company!: any;
+  public selectedCompany!: any;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public userRolesCompany!: any;
 
@@ -67,6 +72,12 @@ export class NavBarComponent implements OnInit {
       this.userRolesCompany$.subscribe((userRolesCompany: any) => {
         this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
       });
+    }
+
+    this.company = JSON.parse(localStorage.getItem('company')!);
+    if(this.company) {
+      this.selectedCompany = this.company.cmp_uuid;
+      this._sharedDataService.setSelectedCompany({cmp: this.company});
     }
   }
 
