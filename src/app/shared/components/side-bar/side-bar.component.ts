@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { SharedDataService } from '../../../core/services/shared-data.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -12,13 +13,18 @@ import { RouterLink } from '@angular/router';
   styleUrl: './side-bar.component.scss'
 })
 export class SideBarComponent {
-  
+
+  constructor(
+    private _sharedDataService: SharedDataService
+  ) { }
+
   public menuItems = [
     {
       name: 'Dashboard',
       icon: 'fab fa-dashcube fa-fw',
       hasSubmenu: false,
-      url: 'dashboard'
+      url: 'dashboard',
+      allowedRoles: ['admin', 'editor']
     },
     {
       name: 'Clientes',
@@ -30,17 +36,20 @@ export class SideBarComponent {
         { 
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
-          url: '/admin/user/customer/new'
+          url: '/admin/user/customer/new',
+          allowedRoles: ['admin']
         },
         { 
           name: 'Lista de clientes',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: 'customers'
+          url: 'customers',
+          allowedRoles: ['admin', 'viewer']
         },
         {
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['admin', 'editor']
         }
       ]
     },
@@ -50,21 +59,25 @@ export class SideBarComponent {
       url: null,
       hasSubmenu: true,
       isOpen: false,
+      allowedRoles: ['sysadmin'],
       submenu: [
         { 
           name: 'Agregar item',
           icon: 'fas fa-plus fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['sysadmin']
         },
         { 
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['sysadmin']
         },
         {
           name: 'Buscar item',
           icon: 'fas fa-search fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['sysadmin']
         }
       ]
     },
@@ -102,17 +115,20 @@ export class SideBarComponent {
         { 
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['admin', 'editor']
         },
         { 
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['sysadmin']
         },
         {
           name: 'Buscar usuarios',
           icon: 'fas fa-search fa-fw',
-          url: null
+          url: null,
+          allowedRoles: ['sysadmin']
         }
       ]
     },
@@ -120,11 +136,57 @@ export class SideBarComponent {
       name: 'Empresa',
       icon: 'fas fa-store-alt fa-fw',
       url: null,
-      hasSubmenu: false
+      hasSubmenu: false,
+      allowedRoles: ['admin']
     }
   ];
 
+  public selectedCompany: any;
+  public filteredNavigation: any[] = [];
+
+  ngOnInit(): void {
+    this._sharedDataService.selectedCompany$.subscribe((company) => {
+      if(company) {
+        this.selectedCompany = company.cmp;
+        if (this.selectedCompany && this.selectedCompany.roles) {
+          // Extraer los nombres de los roles seleccionados
+          const allowedRoles = this.selectedCompany.roles.map((role: any) => role.rol_name);
+  
+          // Filtrar la navegación basada en los roles permitidos
+          this.filteredNavigation = this.filterNavigationByRoles(this.menuItems, allowedRoles);
+        }
+      }
+    });
+  }
+
   public toggleSubMenu(item: any) {
     item.isOpen = !item.isOpen;
+  }
+
+  public filterNavigationByRoles(navigation: any[], allowedRoles: string[]): any[] {
+    return navigation
+      .map((item) => {
+        const newItem = { ...item };
+
+        if (newItem.allowedRoles) {
+          const isAllowed = newItem.allowedRoles.some((role: string) =>
+            allowedRoles.includes(role)
+          );
+
+          if (!isAllowed) {
+            return null;
+          }
+        }
+
+        if (newItem.submenu) {
+          newItem.submenu = this.filterNavigationByRoles(newItem.submenu, allowedRoles);
+          if (newItem.submenu.length === 0) {
+            delete newItem.submenu;
+          }
+        }
+
+        return newItem;
+      })
+      .filter((item) => item !== null);
   }
 }

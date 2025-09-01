@@ -12,32 +12,37 @@
         <div class="full-box nav-lateral-bar"></div>
         <nav class="full-box nav-lateral-menu">
             <ul>
-                <li *ngFor="let item of menuItems">
+                @for(item of filteredNavigation; track item.name) {
+                    <li>
 
-                    <a [routerLink]="item.url"
-                        class="nav-btn-submenu"
-                        (click)="$event.preventDefault(); toggleSubMenu(item)"
-                        [class.active]="item.hasSubmenu && item.isOpen">
+                        <a [routerLink]="item.url"
+                            class="nav-btn-submenu"
+                            (click)="$event.preventDefault(); toggleSubMenu(item)"
+                            [class.active]="item.hasSubmenu && item.isOpen">
 
-                        <i class="{{ item.icon }}"></i>
-                        &nbsp; {{ item.name }}
-                        <i class="fas fa-chevron-down"
-                            *ngIf="item.hasSubmenu"
-                            [class.fa-rotate-180]="item.isOpen">
-                        </i>
-                    </a>
+                            <i class="{{ item.icon }}"></i>
+                            &nbsp; {{ item.name }}
+                            <i class="fas fa-chevron-down"
+                                *ngIf="item.hasSubmenu"
+                                [class.fa-rotate-180]="item.isOpen">
+                            </i>
+                        </a>
 
-                    <ul *ngIf="item.hasSubmenu"
-                        [class.show-nav-lateral-submenu]="item.isOpen">
-                        <li *ngFor="let subItem of item.submenu">
-                            <a [routerLink]="subItem.url">
-                                <i class="{{ subItem.icon }}"></i>
-                                &nbsp; {{ subItem.name }}
-                            </a>
-                        </li>
-                    </ul>
+                        @if(item.hasSubmenu) {
+                            <ul [class.show-nav-lateral-submenu]="item.isOpen">
+                                @for(subItem of item.submenu; track subItem.name) {
+                                    <li>
+                                        <a [routerLink]="subItem.url">
+                                            <i class="{{ subItem.icon }}"></i>
+                                            &nbsp; {{ subItem.name }}
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
 
-                </li>
+                    </li>
+                }
             </ul>
         </nav>
     </div>
