@@ -36,4 +36,10 @@ export class UsersService {
     }
     return this.identity;
   }
+
+  public getUserById(usr_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(this._GlobalService.url + 'user/' + usr_uuid, {headers:headers});
+  }
 }
