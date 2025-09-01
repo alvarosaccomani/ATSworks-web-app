@@ -42,4 +42,11 @@ export class UsersService {
 
     return this._http.get(this._GlobalService.url + 'user/' + usr_uuid, {headers:headers});
   }
+
+  public saveUser(user: any): Observable<any> {
+    let params = JSON.stringify(user);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'register', params, {headers:headers});
+  }
 }
