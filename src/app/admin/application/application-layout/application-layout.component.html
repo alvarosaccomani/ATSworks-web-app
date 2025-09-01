@@ -1,1 +1,8 @@
-<p>application-layout works!</p>
+<!-- Main container -->
+<main class="full-box main-container">
+    <app-side-bar></app-side-bar>
+    <section class="full-box page-content">
+        <app-nav-bar [identity]="identity"></app-nav-bar>
+        <router-outlet></router-outlet>
+    </section>
+</main>
