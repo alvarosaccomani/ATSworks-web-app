@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UserInterface } from '../../../core/interfaces/user.interface';
 import { UsersService } from '../../../core/services/users.service';
+import { ValidationService } from '../../../core/services/validation.service';
 
 @Component({
   selector: 'app-user',
@@ -15,12 +16,15 @@ import { UsersService } from '../../../core/services/users.service';
 export class UserComponent {
 
   public user: UserInterface;
+  public status: string = "";
+  public errorMessage: string = "";
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
 
   constructor(
     private _route: ActivatedRoute,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _validationService: ValidationService
   ) {
     this.isLoading = false;
     this.user = {
@@ -72,6 +76,56 @@ export class UserComponent {
         }
       }
     )
+  }
+
+  private validate(): boolean {
+    if(!this.user.usr_nick) {
+      this.status = 'error';
+      this.errorMessage = "El nombre de usuario no puede estar vacio";
+      return false;
+    }
+
+    if(!this.user.usr_email) {
+      this.status = 'error';
+      this.errorMessage = "El e-mail puede estar vacio";
+      return false;
+    }
+
+    if(!this.user.usr_password) {
+      this.status = 'error';
+      this.errorMessage = "La contraseña no puede estar vacia";
+      return false;
+    }
+
+    if(!this._validationService.emailValidator(this.user.usr_email)) {
+      this.status = 'error';
+      this.errorMessage = "El e-mail no tiene un formato correcto";
+      return false;
+    }
+
+    return true;
+  }
+
+  public onSaveUser(formRegister: NgForm): void {
+    if(this.validate()) {
+      this.isLoading = true;
+      this._usersService.saveUser(formRegister.form.value).subscribe(
+        response => {
+          this.isLoading = false;
+          const user = response.user;
+          this.status = 'success';
+        },
+        error =>{
+            this.isLoading = false;
+            let errorMessage = <any>error;
+            console.log(errorMessage);
+            if(errorMessage!=null) {
+                this.status = 'error';
+                this.errorMessage = errorMessage.error.error;
+            }
+        }
+      )
+    }
   }
 
 }
