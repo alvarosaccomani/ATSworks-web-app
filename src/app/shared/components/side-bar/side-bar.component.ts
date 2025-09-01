@@ -115,7 +115,7 @@ export class SideBarComponent {
         { 
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
-          url: null,
+          url: '/admin/application/user/new',
           allowedRoles: ['admin', 'editor']
         },
         { 
