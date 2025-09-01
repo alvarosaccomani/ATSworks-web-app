@@ -23,4 +23,10 @@ export class CustomersService {
 
     return this._http.get<CustomerResults>(this._GlobalService.url + 'customers/' + filter, {headers:headers})
   }
+
+  public getCustomerById(cmp_uuid: string, cus_uuid?: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(this._GlobalService.url + 'customer/' + cmp_uuid + '/' + cus_uuid, {headers:headers});
+  }
 }
