@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { UserInterface } from '../../../core/interfaces/user.interface';
+import { UserInterface } from '../../../core/interfaces/user';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { UserRolCompanyInterface, UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 import { SharedDataService } from '../../../core/services/shared-data.service';
