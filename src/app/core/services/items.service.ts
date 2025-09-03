@@ -30,4 +30,10 @@ export class ItemsService {
     return this._http.get(this._GlobalService.url + 'item/' + itm_uuid, {headers:headers});
   }
 
+  public saveItem(item: any): Observable<any> {
+    let params = JSON.stringify(item);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'item', params, {headers:headers});
+  }
 }
