@@ -82,6 +82,34 @@ export class SideBarComponent {
       ]
     },
     {
+      name: 'Modelo Items',
+      icon: 'fas fa-pallet fa-fw',
+      url: null,
+      hasSubmenu: true,
+      isOpen: false,
+      allowedRoles: ['admin'],
+      submenu: [
+        { 
+          name: 'Agregar modelo item',
+          icon: 'fas fa-plus fa-fw',
+          url: null,
+          allowedRoles: ['admin']
+        },
+        { 
+          name: 'Lista de modelo items',
+          icon: 'fas fa-clipboard-list fa-fw',
+          url: 'models-items',
+          allowedRoles: ['admin']
+        },
+        {
+          name: 'Buscar modelo item',
+          icon: 'fas fa-search fa-fw',
+          url: null,
+          allowedRoles: ['admin']
+        }
+      ]
+    },
+    {
       name: 'Préstamos',
       icon: 'fas fa-file-invoice-dollar fa-fw',
       url: null,
