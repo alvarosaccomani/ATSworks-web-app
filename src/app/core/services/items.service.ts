@@ -23,4 +23,11 @@ export class ItemsService {
 
     return this._http.get<ItemResults>(this._GlobalService.url + 'items/' + filter, {headers:headers})
   }
+
+  public getItemById(itm_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(this._GlobalService.url + 'item/' + itm_uuid, {headers:headers});
+  }
+
 }
