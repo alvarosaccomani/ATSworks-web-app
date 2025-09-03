@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GlobalService } from './global.service';
+import { UserResults } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,16 @@ export class UsersService {
         this.identity = null;
     }
     return this.identity;
+  }
+  
+  public getUsers(filter: string, page?: number, perPage?: number): Observable<UserResults> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    if(page && perPage) {
+      filter = `${filter}/${page}/${perPage}`;
+    }
+
+    return this._http.get<UserResults>(this._GlobalService.url + 'user/' + filter, {headers:headers})
   }
 
   public getUserById(usr_uuid: string): Observable<any> {
