@@ -70,7 +70,7 @@ export class SideBarComponent {
         { 
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: null,
+          url: 'items',
           allowedRoles: ['sysadmin']
         },
         {
