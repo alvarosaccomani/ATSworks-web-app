@@ -4,6 +4,7 @@ import { ApplicationLayoutComponent } from './application-layout/application-lay
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { ItemsComponent } from './items/items.component';
+import { ItemComponent } from './item/item.component';
 
 export const APPLICATION_ROUTES: Routes = [
     {
@@ -12,7 +13,8 @@ export const APPLICATION_ROUTES: Routes = [
         children: [
             { path: 'users', component: UsersComponent},
             { path: 'user/:usr_uuid', component: UserComponent},
-            { path: 'items', component: ItemsComponent}
+            { path: 'items', component: ItemsComponent},
+            { path: 'item/:itm_uuid', component: ItemComponent}
         ]
     }
 ];
