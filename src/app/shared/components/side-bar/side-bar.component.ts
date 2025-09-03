@@ -121,7 +121,7 @@ export class SideBarComponent {
         { 
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: null,
+          url: '/admin/application/users',
           allowedRoles: ['sysadmin']
         },
         {
