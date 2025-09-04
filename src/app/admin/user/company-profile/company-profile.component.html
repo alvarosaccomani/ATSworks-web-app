@@ -1,1 +1,104 @@
-<p>company-profile works!</p>
+<!-- Page header -->
+<div class="full-box page-header">
+    <h3 class="text-left">
+        <i class="fas fa-building fa-fw"></i> &nbsp; INFORMACÓN DE LA EMPRESA
+    </h3>
+    <p class="text-justify">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero nam eaque nostrum, voluptates, rerum quo. Consequuntur ut, maxime? Quibusdam ipsum maxime non veritatis dignissimos qui reiciendis, amet eum nihil! Et!
+    </p>
+</div>
+
+<!--CONTENT-->
+<div class="container-fluid">
+    <form action="" class="form-neon" autocomplete="off">
+        <fieldset>
+            @if(company.cmp_uuid === "new") {
+                <legend><i class="far fa-building"></i> &nbsp; Información de la empresa</legend>
+            } @else {
+                <legend><i class="far fa-building"></i> &nbsp;Actualizar Información de la empresa</legend>
+            }
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_name" 
+                                class="bmd-label-floating"
+                                >
+                                Nombre de la empresa
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-z0-99áéíóúÁÉÍÓÚñÑ ]{1,70}" 
+                                class="form-control" 
+                                id="cmp_name" 
+                                maxlength="70"
+                                name="cmp_name"
+                                [(ngModel)]="company.cmp_name">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_email" 
+                                class="bmd-label-floating">
+                                Correo
+                            </label>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                id="cmp_email" 
+                                maxlength="70"
+                                name="cmp_email" 
+                                [(ngModel)]="company.cmp_email">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_phone" 
+                                class="bmd-label-floating">
+                                Telefono
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[0-9()+]{1,20}" 
+                                class="form-control" 
+                                id="cmp_phone" 
+                                maxlength="20"
+                                name="cmp_phone" 
+                                [(ngModel)]="company.cmp_phone">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_email" 
+                                class="bmd-label-floating">
+                                Dirección
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-z0-99áéíóúÁÉÍÓÚñÑ ]{1,190}" 
+                                class="form-control" 
+                                name="cmp_email" 
+                                id="cmp_email" 
+                                maxlength="190"
+                                [(ngModel)]="company.cmp_email">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br><br><br>
+        <p class="text-center" style="margin-top: 40px;">
+            @if(company.cmp_uuid === "new") {
+                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR</button>
+                &nbsp; &nbsp;
+                <button type="submit" class="btn btn-raised btn-info btn-sm"><i class="far fa-save"></i> &nbsp; GUARDAR</button>
+            } @else {
+                <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR</button>
+            }
+        </p>
+    </form>
+</div>
