@@ -23,4 +23,10 @@ export class ModelItemsService {
 
     return this._http.get<ModelItemResults>(this._GlobalService.url + 'model-items/' + filter, {headers:headers})
   }
+
+  public getModelItemById(cmp_uuid: string, itm_uuid: string, cmpitm_uuid: string, mitm_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(this._GlobalService.url + 'model-item/' + cmp_uuid + '/' + itm_uuid + '/' + cmpitm_uuid + '/' + mitm_uuid, {headers:headers});
+  }
 }
