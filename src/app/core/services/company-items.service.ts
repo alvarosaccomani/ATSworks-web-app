@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GlobalService } from './global.service';
-import { companyItemResults } from '../interfaces/company-item/company-item-results.interface';
+import { CompanyItemResults } from '../interfaces/company-item';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +14,9 @@ export class CompanyItemsService {
     private _GlobalService: GlobalService
   ) { }
 
-  public getCompanyItems(cmp_uuid: string): Observable<companyItemResults> {
+  public getCompanyItems(cmp_uuid: string): Observable<CompanyItemResults> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.get<companyItemResults>(this._GlobalService.url + 'company-items/' + cmp_uuid, {headers:headers})
+    return this._http.get<CompanyItemResults>(this._GlobalService.url + 'company-items/' + cmp_uuid, {headers:headers})
   }
 }

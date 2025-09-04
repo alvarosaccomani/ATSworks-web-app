@@ -1,2 +1,2 @@
-export type { ModelItemInterface } from "./model-item.interface";
-export type { ModelItemResults } from "./model-item-results.interface";
+export type { CompanyItemInterface } from "./company-item.interface";
+export type { CompanyItemResults } from "./company-item-results.interface";

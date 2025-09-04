@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { UserInterface } from '../../../core/interfaces/user';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
-import { companyItemResults } from '../../../core/interfaces/company-item/company-item-results.interface';
+import { CompanyItemResults } from '../../../core/interfaces/company-item';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { CompanyItemsService } from '../../../core/services/company-items.service';
 
@@ -27,7 +27,7 @@ export class NavBarComponent implements OnInit {
   public selectedCompany!: any;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public userRolesCompany!: any;
-  public companyItems$!: Observable<companyItemResults>;
+  public companyItems$!: Observable<CompanyItemResults>;
 
   constructor(
     private _router: Router,

@@ -1,6 +1,6 @@
 import { CompanyItemInterface } from "./company-item.interface";
 
-export interface companyItemResults {
+export interface CompanyItemResults {
   item: number;
   itemOf: number;
   numElements: number;
