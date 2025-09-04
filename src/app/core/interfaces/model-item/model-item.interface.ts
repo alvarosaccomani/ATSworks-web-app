@@ -1,5 +1,5 @@
 export interface ModelItemInterface {
-    cmp_Uuid: string | null,
+    cmp_uuid: string | null,
     itm_uuid: string | null,
     cmpitm_uuid: string | null,
     mitm_uuid: string | null,
