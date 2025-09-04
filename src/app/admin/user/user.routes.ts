@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
 import { ModelsItemsComponent } from './models-items/models-items.component';
+import { ModelItemComponent } from './model-item/model-item.component';
 
 export const USER_ROUTES: Routes = [
     {
@@ -14,7 +15,8 @@ export const USER_ROUTES: Routes = [
             { path: 'dashboard', component: DashboardComponent},
             { path: 'customers', component: CustomersComponent},
             { path: 'customer/:cus_uuid', component: CustomerComponent},
-            { path: 'models-items', component: ModelsItemsComponent}
+            { path: 'models-items', component: ModelsItemsComponent},
+            { path: 'model-item/:itm_uuid/:cmpitm_uuid/:mitm_uuid', component: ModelItemComponent}
         ]
     }
 ];
