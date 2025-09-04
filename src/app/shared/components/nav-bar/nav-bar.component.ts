@@ -4,8 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { UserInterface } from '../../../core/interfaces/user';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
-import { UserRolCompanyInterface, UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
+import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
+import { companyItemResults } from '../../../core/interfaces/company-item/company-item-results.interface';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { CompanyItemsService } from '../../../core/services/company-items.service';
 
 declare var $:any;
 declare var Swal: any;
@@ -25,11 +27,13 @@ export class NavBarComponent implements OnInit {
   public selectedCompany!: any;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public userRolesCompany!: any;
+  public companyItems$!: Observable<companyItemResults>;
 
   constructor(
     private _router: Router,
     private _sharedDataService: SharedDataService,
-    private _userRolesCompany: UserRolesCompanyService
+    private _userRolesCompanyService: UserRolesCompanyService,
+    private _companyItemsService: CompanyItemsService
   ) { }
 
   ngOnInit(): void {
@@ -68,9 +72,14 @@ export class NavBarComponent implements OnInit {
     });
 
     if(this.identity) {
-      this.userRolesCompany$ = this._userRolesCompany.getUserRolesCompany(this.identity.usr_uuid!);
+      this.userRolesCompany$ = this._userRolesCompanyService.getUserRolesCompany(this.identity.usr_uuid!);
       this.userRolesCompany$.subscribe((userRolesCompany: any) => {
         this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
+        //Obtengo Company Items
+        this.companyItems$ = this._companyItemsService.getCompanyItems(userRolesCompany.data[0].cmp.cmp_uuid!);
+        this.companyItems$.subscribe((companyItems: any) => {
+          localStorage.setItem('companyItems', JSON.stringify(companyItems.data));;
+        });
       });
     }
 
@@ -113,6 +122,11 @@ export class NavBarComponent implements OnInit {
     );
     if (selectedCompany) {
       localStorage.setItem('company', JSON.stringify(selectedCompany.cmp));
+      //Obtengo Company Items
+      this.companyItems$ = this._companyItemsService.getCompanyItems(selectedCompany.cmp.cmp_uuid!);
+      this.companyItems$.subscribe((companyItems: any) => {
+        localStorage.setItem('companyItems', JSON.stringify(companyItems.data));;
+      });
       this._sharedDataService.setSelectedCompany(selectedCompany);
     }
   }
