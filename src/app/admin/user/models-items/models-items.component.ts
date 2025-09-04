@@ -25,10 +25,13 @@ export class ModelsItemsComponent {
   ) { }
   
   ngOnInit(): void {
-    this.modelItems$ = this._modelItemsService.getModelItems('');
+    let cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+
+    this.modelItems$ = this._modelItemsService.getModelItems(cmp_uuid);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
+        this.modelItems$ = this._modelItemsService.getModelItems(company.cmp.cmp_uuid);
       }
     });
   }
