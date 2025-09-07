@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UserInterface } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
@@ -8,6 +8,7 @@ import { ValidationService } from '../../../core/services/validation.service';
 @Component({
   selector: 'app-user',
   imports: [
+    RouterLink,
     FormsModule
   ],
   templateUrl: './user.component.html',
