@@ -60,4 +60,11 @@ export class UsersService {
 
     return this._http.post(this._GlobalService.url + 'register', params, {headers:headers});
   }
+
+  public updateUser(user: any): Observable<any> {
+    let params = JSON.stringify(user);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'user/' + user.usr_uuid, params, {headers:headers});
+  }
 }
