@@ -113,7 +113,7 @@
                             <label 
                                 for="itm_uuid" 
                                 class="bmd-label-floating">
-                                Estado
+                                Item
                             </label>
                             <select 
                                 class="form-control" 
@@ -184,6 +184,25 @@
                     </div>
                 </div>
             </div>
+        </fieldset>
+        <fieldset>
+            <legend><i class="far fa-address-card"></i> &nbsp; Detalle modelo item</legend>
+            @if(modelItem.detailModelItems) {
+                <div class="container-fluid">
+                    <app-dynamic-table 
+                        [data]="modelItem.detailModelItems" 
+                        [columns]="tableColumns"
+                        [canAddRow]="true"
+                        [canEditRow]="true"
+                        [canDeleteRow]="true"
+                        [scrollable]="true"
+                        [stickyHeader]="true"
+                        >
+                        <!-- (dataChange)="onDataChange($event)"
+                        (hasErrors)="onHasErrors($event)" -->
+                    </app-dynamic-table>
+                </div>
+            }
         </fieldset>
         <br><br><br>
         <p class="text-center" style="margin-top: 40px;">
