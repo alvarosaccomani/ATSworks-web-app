@@ -431,7 +431,6 @@ export class DynamicTableComponent {
    * Procesa un template y reemplaza los marcadores {{ ... }} con los valores correspondientes.
    */
   public processTemplate(template: string, rowData: any): SafeHtml {
-    debugger;
     if (!template) return '';
 
     // Reemplaza los marcadores {{ ... }} con los valores del objeto rowData
