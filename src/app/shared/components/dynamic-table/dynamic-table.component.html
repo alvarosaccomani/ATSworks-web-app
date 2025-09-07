@@ -1,1 +1,169 @@
-<p>dynamic-table works!</p>
+@if(canAddRow) {
+    <button (click)="addRow()" class="btn btn-primary">
+        <i class="fas fa-plus fa-fw"></i>
+        Agregar fila
+    </button>
+}
+<div class="table-responsive">
+    <table class="table table-dark table-sm">
+        <thead>
+            <tr class="text-center roboto-medium">
+                @for(column of columns; track column) {
+                    @if(column.visible) {
+                        <th [style.width]="column.width">{{ column.caption }}</th>
+                    }
+                }
+                @if(!isEditingRow){
+                    @if(canEditRow || isAddingRow) {
+                        <th>ACTUALIZAR</th>
+                    }
+                    @if(canDeleteRow || isAddingRow) {
+                        <th>ELIMINAR</th>
+                    }
+                } @else {
+                    <th>GUARDAR</th>
+                    <th>CANCELAR</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for(row of data; track $index) {
+            <tr class="text-center">
+            @if(editingRowIndex === $index) {
+                <!-- Modo edición -->
+                @for(column of columns; track column; let first = $first) {
+                    @if(column.visible) {
+                        <td [style.width]="column.width">
+                            @if(column.isSelect) {
+                                <!-- Campo de tipo select -->
+                                <select
+                                    #firstInput
+                                    [ngModel]="column.linkedProperty ? newRow[column.linkedProperty] : newRow[column.key]"
+                                    (ngModelChange)="column.linkedProperty ? (newRow[column.linkedProperty] = $event) : (newRow[column.key] = $event)"
+                                    class="form-control"
+                                    (blur)="validateField(column)"
+                                    (change)="onSelectChange($event, column, editingRowIndex)"
+                                >
+                                    @for(option of resolvedOptions[column.key]; track option) {
+                                        <option [value]="option.value">{{ option.label }}</option>
+                                    }
+                                </select>
+                            } @else {
+                                <!-- Campo de tipo input -->
+                                <input
+                                    #firstInput
+                                    [(ngModel)]="newRow[column.key]"
+                                    [type]="getColumnInputType(column)"
+                                    [checked]="column.type === 'boolean' && newRow[column.key] === true"
+                                    class="form-control"
+                                    (blur)="validateField(column)"
+                                />
+                            }                            
+                            @if(errors[column.key]) {
+                                <div class="error-message">{{ errors[column.key] }}</div>
+                            }
+                        </td>
+                    }
+                }
+                <td>
+                    <button (click)="saveRow($index)" class="btn btn-success">
+                        <i class="fas fa-check"></i>
+                    </button>
+                </td>
+                <td>
+                    <button (click)="cancelEditingRow($index)" class="btn btn-warning">
+                        <i class="fas fa-ban"></i>
+                    </button>
+                </td>
+            } @else {
+                <!-- Modo visualización -->
+                @for(column of columns; track column) {
+                    @if(column.visible && column.type !== 'boolean') {
+                        <td 
+                            [style.width]="column.width" 
+                            [innerHTML]="column.template ? processTemplate(column.template, row) : row[column.key]"
+                            >
+                        </td>
+                    } @else if(column.visible) {
+                        <td 
+                            [style.width]="column.width"
+                            >
+                            @if(row[column.key]) {
+                                <i class="fas fa-check"></i>
+                            } @else {
+                                <i class="far fa-square"></i>
+                            }
+                        </td>
+                    }
+                }
+                @if(canEditRow || canDeleteRow || isAddingRow) {
+                    <td>
+                        @if(canEditRow) {
+                            <button (click)="startEdit($index)" class="btn btn-success">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        }
+                    </td>
+                    <td>
+                        @if(canDeleteRow) {
+                            <button (click)="deleteRow($index)" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        }
+                    </td>
+                }
+            }
+            </tr>
+        }
+        <!-- Fila de nueva entrada -->
+        @if(isAddingRow) {
+            <tr class="text-center">
+            @for(column of columns; track column; let first = $first) {
+                @if(column.visible) {
+                    <td [style.width]="column.width">
+                        @if(column.isSelect) {
+                            <!-- Campo de tipo select -->
+                            <select
+                                #firstInput
+                                [ngModel]="column.linkedProperty ? newRow[column.linkedProperty] : newRow[column.key]"
+                                (ngModelChange)="column.linkedProperty ? (newRow[column.linkedProperty] = $event) : (newRow[column.key] = $event)"
+                                class="form-control"
+                                (blur)="validateField(column)"
+                                (change)="onSelectChange($event, column, $index)"
+                                >
+                                @for(option of resolvedOptions[column.key]; track option) {
+                                    <option [value]="option.value">{{ option.label }}</option>
+                                }
+                            </select>
+                        } @else {
+                            <!-- Campo de tipo input -->
+                            <input
+                                #firstInput
+                                [(ngModel)]="newRow[column.key]"
+                                [type]="getColumnInputType(column)"
+                                [checked]="column.type === 'boolean' && newRow[column.key] === true"
+                                class="form-control"
+                                (blur)="validateField(column)"
+                            />
+                        }
+                        @if(errors[column.key]) {
+                            <div class="error-message">{{ errors[column.key] }}</div>
+                        }
+                    </td>
+                }
+            }
+            <td>
+                <button (click)="saveRow(data.length)" class="btn btn-success">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </td>
+            <td>
+                <button (click)="cancelAdd()" class="btn btn-warning">
+                    <i class="fas fa-ban"></i>
+                </button>
+            </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
