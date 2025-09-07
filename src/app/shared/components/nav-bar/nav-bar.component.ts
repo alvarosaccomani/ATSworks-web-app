@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { UserInterface } from '../../../core/interfaces/user';
@@ -15,7 +15,8 @@ declare var Swal: any;
 @Component({
   selector: 'app-nav-bar',
   imports: [
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
