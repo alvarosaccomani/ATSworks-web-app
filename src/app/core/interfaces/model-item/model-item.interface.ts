@@ -1,3 +1,5 @@
+import { DetailModelItemInterface } from "../detail-model-item";
+
 export interface ModelItemInterface {
     cmp_uuid: string | null,
     itm_uuid: string | null,
@@ -7,5 +9,6 @@ export interface ModelItemInterface {
     mitm_description: string | null,
     mitm_active: boolean | null,
     mitm_createdat: Date | null,
-    mitm_updatedat: Date | null
+    mitm_updatedat: Date | null,
+    detailModelItems?: DetailModelItemInterface[]
 }
