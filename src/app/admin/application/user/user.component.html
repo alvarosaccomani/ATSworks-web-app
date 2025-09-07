@@ -36,6 +36,25 @@
         <fieldset>
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
             <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="usr_uuid" 
+                                class="bmd-label-floating">
+                                usr_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="usr_uuid" 
+                                maxlength="35"
+                                name="usr_uuid"
+                                [(ngModel)]="user.usr_uuid">
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
@@ -168,7 +187,13 @@
                     <i class="far fa-save"></i> &nbsp; GUARDAR
                 </button>
             } @else {
-                <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR</button>
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    (click)="onSaveUser(formUser)"
+                    >
+                    <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                </button>
             }
         </p>
     </form>

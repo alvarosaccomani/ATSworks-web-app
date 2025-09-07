@@ -106,9 +106,33 @@ export class UserComponent {
     return true;
   }
 
-  public onSaveUser(formRegister: NgForm): void {
-    if(this.validate()) {
-      this.isLoading = true;
+  private async updateUser(formRegister: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._usersService.updateUser(formRegister.form.value).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const user = response.user;
+          this.status = 'success';
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
+        }
+      },
+      error => {
+        this.isLoading = false;
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  private async insertUser(formRegister: NgForm): Promise<void> {
+    this.isLoading = true;
       this._usersService.saveUser(formRegister.form.value).subscribe(
         response => {
           this.isLoading = false;
@@ -125,6 +149,15 @@ export class UserComponent {
             }
         }
       )
+  }
+
+  public onSaveUser(formRegister: NgForm): void {
+    if(this.validate()) {
+      if(this.user.usr_uuid) {
+        this.updateUser(formRegister);
+      } else {
+        this.insertUser(formRegister);
+      }
     }
   }
 
