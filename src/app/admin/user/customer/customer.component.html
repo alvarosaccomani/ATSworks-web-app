@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a href="client-new.html"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
+            <a  [routerLink]="['/admin/user/customer', 'new']"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
         </li>
         <li>
             <a href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
@@ -86,7 +86,7 @@
                                 id="cus_phone" 
                                 maxlength="40"
                                 name="cus_phone" 
-                                [(ngModel)]="customer.cus_email">
+                                [(ngModel)]="customer.cus_phone">
                         </div>
                     </div>
                     <div class="col-12 col-md-4">

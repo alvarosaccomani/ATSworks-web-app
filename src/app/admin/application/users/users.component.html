@@ -11,10 +11,10 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a routerLink="/admin/application/user/new"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO USUARIO</a>
+            <a [routerLink]="['/admin/application/user', 'new']"><i class="fas fa-plus fa-fw"></i> &nbsp; NUEVO USUARIO</a>
         </li>
         <li>
-            <a class="active" routerLink="/admin/application/users"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS</a>
+            <a class="active" [routerLink]="['/admin/application/users']"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE USUARIOS</a>
         </li>
         <li>
             <a href="user-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR USUARIO</a>
@@ -47,7 +47,7 @@
                             <th>{{user.usr_nick}}</th>
                             <th>{{user.usr_email}}</th>
                             <td>
-                                <a routerLink="/admin/application/user/{{user.usr_uuid}}" class="btn btn-success">
+                                <a [routerLink]="['/admin/application/user', user.usr_uuid]" class="btn btn-success">
                                     <i class="fas fa-sync-alt"></i>	
                                 </a>
                             </td>

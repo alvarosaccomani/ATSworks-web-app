@@ -11,7 +11,7 @@
 <div class="container-fluid">
     <ul class="full-box list-unstyled page-nav-tabs">
         <li>
-            <a routerLink="/admin/user/model-item/new"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR MODELO ITEM</a>
+            <a [routerLink]="['/admin/user/model-item', 'new', '', '']"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR MODELO ITEM</a>
         </li>
         <li>
             <a class="active" href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE MODELOS ITEMS</a>
@@ -45,7 +45,7 @@
                             <td>{{modelItem.mitm_description}}</td>
                             <td>{{modelItem.mitm_active}}</td>
                             <td>
-                                <a routerLink="/admin/user/model-item/{{modelItem.itm_uuid}}/{{modelItem.cmpitm_uuid}}/{{modelItem.mitm_uuid}}" class="btn btn-success">
+                                <a [routerLink]="['/admin/user/model-item', modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid]" class="btn btn-success">
                                     <i class="fas fa-sync-alt"></i>	
                                 </a>
                             </td>

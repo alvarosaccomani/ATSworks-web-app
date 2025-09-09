@@ -19,7 +19,7 @@
             }
         </select>
     }
-    <a routerLink="/admin/application/user/{{identity.usr_uuid}}">
+    <a [routerLink]="['/admin/application/user', identity.usr_uuid]">
         <i class="fas fa-user-cog"></i>
     </a>
     <a href="#" class="btn-exit-system">
