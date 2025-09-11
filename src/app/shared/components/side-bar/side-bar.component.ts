@@ -100,7 +100,7 @@ export class SideBarComponent {
           { 
             name: 'Agregar modelo item',
             icon: 'fas fa-plus fa-fw',
-            url: null,
+            url: ['/admin/user/model-item/new', '', ''],
             allowedRoles: ['admin']
           },
           { 
