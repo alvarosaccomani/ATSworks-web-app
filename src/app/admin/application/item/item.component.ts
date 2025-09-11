@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
 
 @Component({
   selector: 'app-item',
   imports: [
-    FormsModule
+    FormsModule,
+    PageNavTabsComponent
   ],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss'
@@ -18,6 +20,19 @@ export class ItemComponent {
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
+
+  public dataTabs: any = [
+    {
+      url: ['/admin/application/item', 'new'],
+      icon: "fas fa-plus fa-fw",
+      title: "NUEVO ITEM"
+    },
+    {
+       url: ['/admin/application/items'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE ITEMS"
+    }
+  ] 
 
   constructor(
     private _route: ActivatedRoute,
