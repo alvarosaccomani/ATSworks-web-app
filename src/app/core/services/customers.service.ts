@@ -14,14 +14,14 @@ export class CustomersService {
     private _GlobalService: GlobalService
   ) { }
 
-  public getCustomers(filter: string, page?: number, perPage?: number): Observable<CustomerResults> {
+  public getCustomers(cmp_uuid: string, filter?: string, page?: number, perPage?: number): Observable<CustomerResults> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
     if(page && perPage) {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<CustomerResults>(this._GlobalService.url + 'customers/' + filter, {headers:headers})
+    return this._http.get<CustomerResults>(this._GlobalService.url + 'customers/' + cmp_uuid + '/' + filter, {headers:headers})
   }
 
   public getCustomerById(cmp_uuid: string, cus_uuid?: string): Observable<any> {
