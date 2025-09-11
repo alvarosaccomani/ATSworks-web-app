@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { CustomersService } from '../../../core/services/customers.service';
@@ -8,7 +8,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 @Component({
   selector: 'app-customer',
   imports: [
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.scss'
