@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomersService } from '../../../core/services/customers.service';
 import { CustomerResults } from '../../../core/interfaces/customer';
 import { SharedDataService } from '../../../core/services/shared-data.service';
@@ -10,7 +11,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
   selector: 'app-customers',
   imports: [
     AsyncPipe,
-    RouterLink
+    RouterLink,
+    PageNavTabsComponent
   ],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.scss'
@@ -18,6 +20,18 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class CustomersComponent implements OnInit {
 
   public customers$!: Observable<CustomerResults>;
+  public dataTabs: any = [
+    {
+      url: ['/admin/user/customer', 'new'],
+      icon: "fas fa-plus fa-fw",
+      title: "AGREGAR CLIENTE"
+    },
+    {
+       url: ['/admin/user/customers'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE CLIENTES"
+    }
+  ]
 
   constructor(
     private _customersService: CustomersService,
