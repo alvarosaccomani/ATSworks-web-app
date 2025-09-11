@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { UserResults } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
 
@@ -9,7 +10,8 @@ import { UsersService } from '../../../core/services/users.service';
   selector: 'app-users',
   imports: [
     AsyncPipe,
-    RouterLink
+    RouterLink,
+    PageNavTabsComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -17,6 +19,19 @@ import { UsersService } from '../../../core/services/users.service';
 export class UsersComponent implements OnInit {
 
   public users$!: Observable<UserResults>;
+
+  public dataTabs: any = [
+    {
+      url: ['/admin/application/user', 'new'],
+      icon: "fas fa-plus fa-fw",
+      title: "NUEVO USUARIO"
+    },
+    {
+       url: ['/admin/application/users'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE USUARIOS"
+    }
+  ]
   
     constructor(
       private _usersService: UsersService
