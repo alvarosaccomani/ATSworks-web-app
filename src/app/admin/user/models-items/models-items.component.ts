@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { ModelItemResults } from '../../../core/interfaces/model-item';
 import { SharedDataService } from '../../../core/services/shared-data.service';
@@ -10,7 +11,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
   selector: 'app-models-items',
   imports: [
     AsyncPipe,
-    RouterLink
+    RouterLink,
+    PageNavTabsComponent
   ],
   templateUrl: './models-items.component.html',
   styleUrl: './models-items.component.scss'
@@ -18,6 +20,19 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class ModelsItemsComponent {
 
   public modelItems$!: Observable<ModelItemResults>;
+
+  public dataTabs: any = [
+    {
+      url: ['/admin/user/model-item/new', '', ''],
+      icon: "fas fa-plus fa-fw",
+      title: "NUEVO MODELO ITEM"
+    },
+    {
+       url: ['/admin/user/models-items'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE MODELOS ITEMS"
+    }
+  ]
 
   constructor(
     private _modelItemsService: ModelItemsService,
