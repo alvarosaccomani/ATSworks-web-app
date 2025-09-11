@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { UserInterface } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
@@ -8,8 +9,8 @@ import { ValidationService } from '../../../core/services/validation.service';
 @Component({
   selector: 'app-user',
   imports: [
-    RouterLink,
-    FormsModule
+    FormsModule,
+    PageNavTabsComponent
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
@@ -21,6 +22,19 @@ export class UserComponent {
   public errorMessage: string = "";
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
+
+  public dataTabs: any = [
+    {
+      url: ['/admin/application/user', 'new'],
+      icon: "fas fa-plus fa-fw",
+      title: "NUEVO USUARIO"
+    },
+    {
+       url: ['/admin/application/users'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE USUARIOS"
+    }
+  ]
 
   constructor(
     private _route: ActivatedRoute,
