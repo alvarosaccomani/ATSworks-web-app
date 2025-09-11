@@ -12,19 +12,7 @@
     </p>
 </div>
 
-<div class="container-fluid">
-    <ul class="full-box list-unstyled page-nav-tabs">
-        <li>
-            <a [routerLink]="['/admin/user/customer', 'new']"><i class="fas fa-plus fa-fw"></i> &nbsp; AGREGAR CLIENTE</a>
-        </li>
-        <li>
-            <a href="client-list.html"><i class="fas fa-clipboard-list fa-fw"></i> &nbsp; LISTA DE CLIENTES</a>
-        </li>
-        <li>
-            <a href="client-search.html"><i class="fas fa-search fa-fw"></i> &nbsp; BUSCAR CLIENTE</a>
-        </li>
-    </ul>	
-</div>
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
 
 <!-- Content here-->
 <div class="container-fluid">
