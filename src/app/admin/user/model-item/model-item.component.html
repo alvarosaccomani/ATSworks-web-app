@@ -118,7 +118,7 @@
                             <select 
                                 class="form-control" 
                                 name="itm_uuid"
-                                [(ngModel)]="selectedcompanyItem"
+                                [(ngModel)]="modelItem.itm_uuid"
                                 (change)="onCompanyItemChange($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
                                 @for(companyItem of companyItems; track companyItem.cmpitm_uuid) {

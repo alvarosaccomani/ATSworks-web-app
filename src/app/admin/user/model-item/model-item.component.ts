@@ -20,7 +20,6 @@ export class ModelItemComponent {
 
   public modelItem: ModelItemInterface;
   public companyItems: any;
-  public selectedcompanyItem: any;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
