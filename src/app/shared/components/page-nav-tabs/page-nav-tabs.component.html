@@ -1,1 +1,11 @@
-<p>page-nav-tabs works!</p>
+<div class="container-fluid">
+    <ul class="full-box list-unstyled page-nav-tabs">
+        @for(item of data; track $index) {
+            <li>
+                <a [routerLink]="item.url" routerLinkActive="active">
+                    <i [class]="item.icon"></i> &nbsp; {{item.title}}
+                </a>
+            </li>
+        }
+    </ul>	
+</div>
