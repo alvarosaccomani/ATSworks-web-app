@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { pluck } from 'rxjs/operators';
+import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
 import { ModelItemsService } from '../../../core/services/model-items.service';
@@ -11,7 +12,8 @@ import { DataTypesService } from '../../../core/services/data-types.service';
   selector: 'app-model-item',
   imports: [
     FormsModule,
-    DynamicTableComponent
+    DynamicTableComponent,
+    PageNavTabsComponent
   ],
   templateUrl: './model-item.component.html',
   styleUrl: './model-item.component.scss'
@@ -23,6 +25,19 @@ export class ModelItemComponent {
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
+
+  public dataTabs: any = [
+    {
+      url: ['/admin/user/model-item/new', '', ''],
+      icon: "fas fa-plus fa-fw",
+      title: "NUEVO MODELO ITEM"
+    },
+    {
+       url: ['/admin/user/models-items'],
+       icon: "fas fa-clipboard-list fa-fw",
+       title: "LISTA DE MODELOS ITEMS"
+    }
+  ]
 
   // Opciones externas pasadas a la tabla
   public tableColumns: any = [
