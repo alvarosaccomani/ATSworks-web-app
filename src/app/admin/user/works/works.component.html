@@ -1,1 +1,191 @@
-<p>works works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!--CONTENT-->
+
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                    <th>#</th>
+                    <th>CLIENTE</th>
+                    <th>FECHA DE TRABAJO</th>
+                    <th>RUBRO</th>
+                    <th>ESTADO</th>
+                    <th>DESCRIPCION</th>
+                    <th>FACTURA</th>
+                    <th>ACTUALIZAR</th>
+                    <th>ELIMINAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(works$ | async; as works) {
+                    @for(work of works.data; track work.wrk_uuid) {
+                        <tr class="text-center" >
+                            <td>{{$index + 1}}</td>
+                            <td>{{work.adr_uuid}}</td>
+                            <td>{{work.wrk_workdate}}</td>
+                            <td>{{work.cmpitm_uuid}}</td>
+                            <td>{{work.wrks_uuid}}</td>
+                            <td>{{work.wrk_description}}</td>
+                            <td>
+                                <a href="#" class="btn btn-info">
+                                    <i class="fas fa-file-pdf"></i>	
+                                </a>
+                            </td>
+                            <td>
+                                <a [routerLink]="['/admin/user/work', work.wrk_uuid]" class="btn btn-success">
+                                    <i class="fas fa-sync-alt"></i>	
+                                </a>
+                            </td>
+                            <td>
+                                <a href="payment.html" class="btn btn-info">
+                                    <i class="fas fa-dollar-sign"></i>	
+                                </a>
+                            </td>
+                            <td>
+                                <form action="">
+                                    <button type="button" class="btn btn-warning">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+                <!-- <tr class="text-center" >
+                    <td>1</td>
+                    <td>NOMBRE CLIENTE</td>
+                    <td>2017/10/8</td>
+                    <td>2017/10/10</td>
+                    <td>Pendiente</td>
+                    <td>
+                        <a href="#" class="btn btn-info">
+                            <i class="fas fa-file-pdf"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="reservation-update.html" class="btn btn-success">
+                            <i class="fas fa-sync-alt"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="payment.html" class="btn btn-info">
+                            <i class="fas fa-dollar-sign"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button type="button" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="text-center" >
+                    <td>2</td>
+                    <td>NOMBRE CLIENTE</td>
+                    <td>2017/10/8</td>
+                    <td>2017/10/10</td>
+                    <td>Finalizado</td>
+                    <td>
+                        <a href="#" class="btn btn-info">
+                            <i class="fas fa-file-pdf"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="reservation-update.html" class="btn btn-success">
+                            <i class="fas fa-sync-alt"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="payment.html" class="btn btn-info">
+                            <i class="fas fa-dollar-sign"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button type="button" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="text-center" >
+                    <td>3</td>
+                    <td>NOMBRE CLIENTE</td>
+                    <td>2017/10/8</td>
+                    <td>2017/10/10</td>
+                    <td>Finalizado</td>
+                    <td>
+                        <a href="#" class="btn btn-info">
+                            <i class="fas fa-file-pdf"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="reservation-update.html" class="btn btn-success">
+                            <i class="fas fa-sync-alt"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="payment.html" class="btn btn-info">
+                            <i class="fas fa-dollar-sign"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button type="button" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="text-center" >
+                    <td>4</td>
+                    <td>NOMBRE CLIENTE</td>
+                    <td>2017/10/8</td>
+                    <td>2017/10/10</td>
+                    <td>Pendiente</td>
+                    <td>
+                        <a href="#" class="btn btn-info">
+                            <i class="fas fa-file-pdf"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="reservation-update.html" class="btn btn-success">
+                            <i class="fas fa-sync-alt"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <a href="payment.html" class="btn btn-info">
+                            <i class="fas fa-dollar-sign"></i>	
+                        </a>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button type="button" class="btn btn-warning">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
