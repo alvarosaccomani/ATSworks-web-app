@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
@@ -9,6 +10,7 @@ import { ItemsService } from '../../../core/services/items.service';
   selector: 'app-item',
   imports: [
     FormsModule,
+    HeaderComponent,
     PageNavTabsComponent
   ],
   templateUrl: './item.component.html',
@@ -20,7 +22,7 @@ export class ItemComponent {
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
-
+  public headerConfig: any = {};
   public dataTabs: any = [
     {
       url: ['/admin/application/item', 'new'],
@@ -51,8 +53,19 @@ export class ItemComponent {
   ngOnInit(): void {
     this._route.params.subscribe( (params) => {
       if(params['itm_uuid'] && params['itm_uuid'] != 'new') {
+        this.headerConfig = {
+          title: "NUEVO ITEM",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-plus fa-fw"
+        }
         this.item.itm_uuid = params['itm_uuid'];
         this.getItemById(params['itm_uuid']);
+      } else {
+        this.headerConfig = {
+          title: "ACTUALIZAR ITEM",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-sync-alt fa-fw"
+        }
       }
     });
   }
