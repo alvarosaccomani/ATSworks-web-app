@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { pluck } from 'rxjs/operators';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
@@ -12,6 +13,7 @@ import { DataTypesService } from '../../../core/services/data-types.service';
   selector: 'app-model-item',
   imports: [
     FormsModule,
+    HeaderComponent,
     DynamicTableComponent,
     PageNavTabsComponent
   ],
@@ -25,7 +27,7 @@ export class ModelItemComponent {
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
-
+  public headerConfig: any = {};
   public dataTabs: any = [
     {
       url: ['/admin/user/model-item/new', '', ''],
@@ -98,10 +100,21 @@ export class ModelItemComponent {
 
     this._route.params.subscribe( (params) => {
       if(params['itm_uuid'] && params['cmpitm_uuid'] && params['mitm_uuid'] && params['mitm_uuid'] != 'new') {
+        this.headerConfig = {
+          title: "NUEVO MODELO ITEM",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-plus fa-fw"
+        }
         this.modelItem.itm_uuid = params['itm_uuid'];
         this.modelItem.cmpitm_uuid = params['cmpitm_uuid'];
         this.modelItem.mitm_uuid = params['mitm_uuid'];
         this.getModelItemById(this.modelItem.cmp_uuid!, this.modelItem.itm_uuid!, this.modelItem.cmpitm_uuid!, params['mitm_uuid']);
+      } else {
+        this.headerConfig = {
+          title: "ACTUALIZAR MODELO ITEM",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-sync-alt fa-fw"
+        }
       }
     });
   }
