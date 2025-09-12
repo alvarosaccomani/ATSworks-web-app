@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { CustomersService } from '../../../core/services/customers.service';
@@ -10,6 +11,7 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
   selector: 'app-customer',
   imports: [
     FormsModule,
+    HeaderComponent,
     PageNavTabsComponent
   ],
   templateUrl: './customer.component.html',
@@ -18,6 +20,7 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class CustomerComponent {
 
   public customer: CustomerInterface;
+  public headerConfig: any = {};
   public dataTabs: any = [
     {
       url: ['/admin/user/customer', 'new'],
@@ -55,8 +58,19 @@ export class CustomerComponent {
 
     this._route.params.subscribe( (params) => {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
+        this.headerConfig = {
+          title: "AGREGAR CLIENTE",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-plus fa-fw"
+        }
         this.customer.cus_uuid = params['cus_uuid'];
         this.getCustomerById(this.customer.cmp_uuid!, params['cus_uuid']);
+      } else {
+        this.headerConfig = {
+          title: "ACTUALIZAR CLIENTE",
+          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          icon: "fas fa-sync-alt fa-fw"
+        }
       }
     });
 
