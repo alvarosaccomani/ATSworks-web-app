@@ -315,6 +315,20 @@ export class DynamicTableComponent {
   }
 
   /**
+   * Cambia el valor si es boolean.
+   */
+  public toggleBooleanValue(row: any, column: TableColumn): void {
+    // Verifica que la columna sea realmente de tipo booleano para seguridad
+    if (column.type === 'boolean') {
+      // Invierte el valor actual (true -> false, false -> true)
+      row[column.key] = !row[column.key];
+
+      // Opcional pero recomendado: notifica al componente padre que los datos han cambiado.
+      this.dataChange.emit(this.data);
+    }
+  }
+
+  /**
    * Inicializa una nueva fila con valores predeterminados.
    */
   private initializeNewRow(): any {
@@ -341,6 +355,8 @@ export class DynamicTableComponent {
           newRow[column.key] = this.formatDate(new Date());
         } else if (column.type === 'datetime') {
           newRow[column.key] = this.formatDateTime(new Date());
+        } else if (column.type === 'boolean') {
+          newRow[column.key] = true;
         } else {
           newRow[column.key] = ''; // Valor predeterminado para otros tipos de campos
         }

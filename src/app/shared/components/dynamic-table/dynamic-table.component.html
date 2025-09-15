@@ -13,7 +13,7 @@
                         <th [style.width]="column.width">{{ column.caption }}</th>
                     }
                 }
-                @if(!isEditingRow){
+                @if(isEditingRow){
                     @if(canEditRow || isAddingRow) {
                         <th>ACTUALIZAR</th>
                     }
@@ -56,6 +56,7 @@
                                     [type]="getColumnInputType(column)"
                                     [checked]="column.type === 'boolean' && newRow[column.key] === true"
                                     class="form-control"
+                                    (click)="toggleBooleanValue(newRow, column)"
                                     (blur)="validateField(column)"
                                 />
                             }                            
@@ -143,6 +144,7 @@
                                 [type]="getColumnInputType(column)"
                                 [checked]="column.type === 'boolean' && newRow[column.key] === true"
                                 class="form-control"
+                                (click)="toggleBooleanValue(newRow, column)"
                                 (blur)="validateField(column)"
                             />
                         }
@@ -154,7 +156,7 @@
             }
             <td>
                 <button (click)="saveRow(data.length)" class="btn btn-success">
-                    <i class="fas fa-sync-alt"></i>
+                    <i class="fas fa-check"></i>
                 </button>
             </td>
             <td>
