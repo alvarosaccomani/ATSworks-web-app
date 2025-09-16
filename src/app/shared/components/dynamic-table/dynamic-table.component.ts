@@ -24,6 +24,11 @@ interface TableColumn {
         value: string; // Nombre del campo que representa el valor
         label: string; // Nombre del campo que representa la etiqueta
       }; // Configuración dinámica
+  visibilityTrigger: {
+    targetColumnKey: string, 
+    checkProperty: string,
+    showOnValue: string
+  };
   template?: string; // Plantilla HTML personalizada (opcional)
   linkedProperty?: string; // Propiedad adicional que debe actualizarse (opcional)
 }
@@ -470,7 +475,7 @@ export class DynamicTableComponent {
    * Maneja el cambio en un campo de tipo select.
    */
   public onSelectChange(event: Event, column: TableColumn, index: number): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedValue = (event.target as HTMLSelectElement).value; // Este sigue siendo el UUID
     const data = this.resolvedOptions[column.key].filter(e => e.value === selectedValue)[0]["data"];
 
     // Actualiza el valor del campo principal
@@ -488,6 +493,31 @@ export class DynamicTableComponent {
       } else {
         this.data[index][column.linkedProperty] = selectedValue;
         this.newRow[column.linkedProperty] = selectedValue;
+      }
+    }
+    
+    // Logica de visibilidad
+    if (column.visibilityTrigger) {
+      const trigger = column.visibilityTrigger;
+
+      const targetColumn = this.columns.find(c => c.key === trigger.targetColumnKey);
+
+      if (targetColumn) {
+        let valueToCompare: any;
+        
+        if (trigger.checkProperty) {
+          const selectedOption = this.resolvedOptions[column.key]?.find(opt => opt.value == selectedValue);
+          valueToCompare = selectedOption?.data?.[trigger.checkProperty];
+        } else {
+          valueToCompare = selectedValue;
+        }
+
+        const shouldBeVisible = valueToCompare == trigger.showOnValue;
+        targetColumn.visible = shouldBeVisible;
+
+        if (!shouldBeVisible && (this.isAddingRow || this.editingRowIndex !== null)) {
+            this.newRow[targetColumn.key] = null;
+        }
       }
     }
   }
