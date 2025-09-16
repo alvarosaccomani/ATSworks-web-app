@@ -8,6 +8,7 @@ export interface DetailModelItemInterface {
 	dmitm_name: string | null,
 	dmitm_description: string | null,
 	dtp_uuid: string | null,
+	dmitm_arrayvalues: string | null,
 	dmitm_defaultvalue: string | null,
 	dmitm_active: boolean | null,
 	dmitm_createdat: Date | null,
