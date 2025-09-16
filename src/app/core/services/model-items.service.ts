@@ -36,4 +36,11 @@ export class ModelItemsService {
 
     return this._http.post(this._GlobalService.url + 'model-item', params, {headers:headers});
   }
+
+  public updateModelItem(modelItem: any): Observable<any> {
+    let params = JSON.stringify(modelItem);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'model-item/' + modelItem.cmp_uuid + '/' + modelItem.itm_uuid + '/' + modelItem.cmpitm_uuid + '/' + modelItem.mitm_uuid, params, {headers:headers});
+  }
 }
