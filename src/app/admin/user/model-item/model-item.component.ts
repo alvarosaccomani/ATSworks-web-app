@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { pluck } from 'rxjs/operators';
+import { from, of } from 'rxjs';
+import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
+import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-item';
 import { ModelItemsService } from '../../../core/services/model-items.service';
+import { DetailModelItemsService } from '../../../core/services/detail-model-items.service';
 import { DataTypesService } from '../../../core/services/data-types.service';
 
 @Component({
@@ -67,9 +70,17 @@ export class ModelItemComponent {
           value: 'dtp_uuid',
           label: 'dtp_name'
       },
+      // Le decimos que esta columna controla la visibilidad de otra
+      visibilityTrigger: {
+        targetColumnKey: 'dmitm_arrayvalues', // La columna que será afectada
+        checkProperty: 'dtp_name', // Le decimos que compare usando el nombre
+        showOnValue: 'Lista' // Ahora el valor es el nombre visible, no el UUID
+      }
     },
+    { key: 'dmitm_arrayvalues', caption: 'Valores', visible: true, width: '30%' },
     { key: 'dmitm_description', caption: 'Descripcion', visible: true, width: '30%' },
     { key: 'dmitm_defaultvalue', caption: 'Valor por defecto', visible: true, width: '30%' },
+    { key: 'dmitm_order', caption: 'Orden', visible: true, width: '30%' },
     { key: 'dmitm_active', caption: 'Activo', visible: true, width: '30%', type: 'boolean'},
     { key: 'dmitm_createdat', caption: 'Fecha Alta', visible: true, width: '30%', type: 'date', defaultValue: (formatDate: (date: Date) => string) => formatDate(new Date()) /* Usa la función externa*/ },
     { key: 'dmitm_updatedat', caption: 'Fecha Modificacion', visible: true, width: '30%', type: 'date', defaultValue: (formatDate: (date: Date) => string) => formatDate(new Date()) /* Usa la función externa*/ }
@@ -78,6 +89,7 @@ export class ModelItemComponent {
   constructor(
     private _route: ActivatedRoute,
     private _modelsItemsService: ModelItemsService,
+    private _detailModelItemsService: DetailModelItemsService,
     private _dataTypesService: DataTypesService
   ) {
     this.isLoading = false;
@@ -90,7 +102,8 @@ export class ModelItemComponent {
       mitm_description: null,
       mitm_active: null,
       mitm_createdat: null,
-      mitm_updatedat: null
+      mitm_updatedat: null,
+      detailModelItems: []
     }
   }
 
@@ -161,13 +174,39 @@ export class ModelItemComponent {
     return true;
   }
 
-  public onSaveModelItem(formModelItem: NgForm): void {
-    if(this.validate()) {
-      this.isLoading = true;
+  private async updateModelItem(formModelItem: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._modelsItemsService.updateModelItem(formModelItem.form.value).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const modelItem = response.data;
+          this.onSaveDetailModelItems(modelItem.cmp_uuid, modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid);
+          this.status = 'success';
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
+        }
+      },
+      error => {
+        this.isLoading = false;
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  private async insertModelIem(formModelItem: NgForm): Promise<void> {
+    this.isLoading = true;
       this._modelsItemsService.saveModelItem(formModelItem.form.value).subscribe(
         response => {
           this.isLoading = false;
-          const modelItem = response.modelItem;
+          const modelItem = response.data;
+          this.onSaveDetailModelItems(modelItem.cmp_uuid, modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid);
           this.status = 'success';
         },
         error =>{
@@ -180,7 +219,77 @@ export class ModelItemComponent {
             }
         }
       )
+  }
+
+  public onSaveModelItem(formModelItem: NgForm): void {
+    if(this.validate()) {
+      if(this.modelItem.mitm_uuid) {
+        this.updateModelItem(formModelItem);
+      } else {
+        this.insertModelIem(formModelItem);
+      }
     }
   }
+
+  public onSaveDetailModelItems(cmp_uuid: string, itm_uuid: string, cmpitm_uuid: string, mitm_uuid: string): void {
+  // Verificar si hay elementos en detailModelItems
+  if (this.modelItem.detailModelItems?.length) {
+    this.modelItem.detailModelItems.forEach((e) => {
+      e.cmp_uuid = cmp_uuid;
+      e.itm_uuid = itm_uuid,
+      e.cmpitm_uuid = cmpitm_uuid,
+      e.mitm_uuid = mitm_uuid
+    });
+    // Convertir el array en un observable
+    from(this.modelItem.detailModelItems)
+      .pipe(
+        // Procesar cada elemento del array
+        mergeMap((detailModelItem: DetailModelItemInterface) => {
+          // Si es un nuevo registro, asignar la fecha de creación
+          if (detailModelItem.dmitm_createdat === null) {
+            detailModelItem.dmitm_createdat = new Date();
+          }
+
+          // Determinar si es una inserción o una actualización
+          if (!detailModelItem.dmitm_uuid) {
+            // Inserción
+            return this._detailModelItemsService.insertDetailModelItem(detailModelItem).pipe(
+              catchError((error) => {
+                console.error('Error al insertar:', error);
+                return of(null); // Devolver un Observable vacío en caso de error
+              })
+            );
+          } else {
+            // Actualización 
+            return this._detailModelItemsService.updateDetailModelItem(detailModelItem).pipe(
+              catchError((error) => {
+                console.error('Error al actualizar:', error);
+                return of(null); // Devolver un Observable vacío en caso de error
+              })
+            );
+            return of(null); // Devolver un Observable vacío si no hay actualización
+          }
+        }),
+        // Agrupar todas las respuestas en un solo array
+        toArray()
+      )
+      .subscribe({
+        next: (responses) => {
+          console.log('Respuestas de las llamadas:', responses);
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error al procesar las llamadas:', error);
+        },
+        complete: () => {
+          this.isLoading = false;
+          console.log('Proceso completado.');
+        }
+      });
+  } else {
+    console.warn('No hay elementos en detailModelItems para procesar.');
+    this.isLoading = false;
+  }
+}
 
 }

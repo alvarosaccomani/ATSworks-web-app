@@ -35,23 +35,6 @@
                     <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label 
-                                for="itm_uuid" 
-                                class="bmd-label-floating">
-                                itm_uuid
-                            </label>
-                            <input 
-                                type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
-                                class="form-control" 
-                                id="itm_uuid" 
-                                maxlength="35"
-                                name="itm_uuid"
-                                [(ngModel)]="modelItem.itm_uuid">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="form-group">
-                            <label 
                                 for="cmpitm_uuid" 
                                 class="bmd-label-floating">
                                 cmpitm_uuid
@@ -194,7 +177,13 @@
                     <i class="far fa-save"></i> &nbsp; GUARDAR
                 </button>
             } @else {
-                <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR</button>
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    (click)="onSaveModelItem(formModelItem)"
+                    >
+                    <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                </button>
             }
         </p>
     </form>
