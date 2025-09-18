@@ -29,7 +29,7 @@ export class WorksComponent {
   }
   public dataTabs: any = [
     {
-      url: null,
+      url: ['/admin/user/work','new'],
       icon: "fas fa-plus fa-fw",
       title: "NUEVO TRABAJO"
     },
