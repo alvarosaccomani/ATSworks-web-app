@@ -16,5 +16,5 @@ export interface WorkInterface {
     mitm_uuid: string | null,
 	wrk_createdat: Date | null,
     wrk_updatedat: Date | null,
-    detailWorks?: WorkDetailInterface[]
+    workDetails?: WorkDetailInterface[]
 }
