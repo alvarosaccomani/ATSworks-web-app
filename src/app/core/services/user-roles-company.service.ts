@@ -14,6 +14,12 @@ export class UserRolesCompanyService {
     private _GlobalService: GlobalService
   ) { }
 
+  public getUserRolesCompany(cmp_uuid: string): Observable<UserRolCompanyResults> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get<UserRolCompanyResults>(this._GlobalService.url + 'user-roles-company/' + cmp_uuid, {headers:headers})
+  }
+
   public getUserRolesCompanyByUser(usr_uuid: string): Observable<UserRolCompanyResults> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
