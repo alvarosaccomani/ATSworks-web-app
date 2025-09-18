@@ -43,4 +43,10 @@ export class ModelItemsService {
 
     return this._http.put(this._GlobalService.url + 'model-item/' + modelItem.cmp_uuid + '/' + modelItem.itm_uuid + '/' + modelItem.cmpitm_uuid + '/' + modelItem.mitm_uuid, params, {headers:headers});
   }
+
+  public deleteModelItem(cmp_uuid: string, itm_uuid: string, cmpitm_uuid: string, mitm_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'model-item/' + cmp_uuid + '/' + itm_uuid + '/' + cmpitm_uuid + '/' + mitm_uuid, {headers:headers});
+  }
 }
