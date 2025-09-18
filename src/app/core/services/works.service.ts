@@ -23,4 +23,18 @@ export class WorksService {
 
     return this._http.get<WorkResults>(this._GlobalService.url + 'works/' + cmp_uuid + '/' + filter, {headers:headers})
   }
+
+  public saveWork(work: any): Observable<any> {
+    let params = JSON.stringify(work);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'work', params, {headers:headers});
+  }
+
+  public updateWork(work: any): Observable<any> {
+    let params = JSON.stringify(work);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'work/' + work.cmp_uuid + '/' + work.wrk_uuid, params, {headers:headers});
+  }
 }
