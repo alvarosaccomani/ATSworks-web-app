@@ -16,7 +16,7 @@
                     <th>RUBRO</th>
                     <th>ESTADO</th>
                     <th>DESCRIPCION</th>
-                    <th>FACTURA</th>
+                    <th>PLANILLA</th>
                     <th>ACTUALIZAR</th>
                     <th>ELIMINAR</th>
                 </tr>
@@ -32,18 +32,13 @@
                             <td>{{work.wrks_uuid}}</td>
                             <td>{{work.wrk_description}}</td>
                             <td>
-                                <a href="#" class="btn btn-info">
+                                <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
                                     <i class="fas fa-file-pdf"></i>	
                                 </a>
                             </td>
                             <td>
                                 <a [routerLink]="['/admin/user/work', work.wrk_uuid]" class="btn btn-success">
                                     <i class="fas fa-sync-alt"></i>	
-                                </a>
-                            </td>
-                            <td>
-                                <a href="payment.html" class="btn btn-info">
-                                    <i class="fas fa-dollar-sign"></i>	
                                 </a>
                             </td>
                             <td>
