@@ -1,1 +1,414 @@
-<p>work works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content -->
+<div class="container-fluid">
+    <form 
+        name="formWork"
+        #formWork="ngForm" 
+        class="form-neon" 
+        autocomplete="off">
+        <fieldset>
+            <legend><i class="far fa-address-card"></i> &nbsp; Información de trabajo</legend>
+            <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_uuid" 
+                                class="bmd-label-floating">
+                                cmp_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[0-9()+]{1,20}" 
+                                class="form-control" 
+                                name="cmp_uuid" 
+                                id="cmp_uuid" 
+                                maxlength="20"
+                                name="cmp_uuid" 
+                                [(ngModel)]="work.cmp_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_uuid" 
+                                class="bmd-label-floating">
+                                wrk_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="wrk_uuid" 
+                                maxlength="35"
+                                name="wrk_uuid"
+                                [(ngModel)]="work.wrk_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_user_uuid" 
+                                class="bmd-label-floating">
+                                wrk_user_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="wrk_user_uuid" 
+                                maxlength="35"
+                                name="wrk_user_uuid"
+                                [(ngModel)]="work.wrk_user_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="itm_uuid" 
+                                class="bmd-label-floating">
+                                itm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="itm_uuid" 
+                                maxlength="35"
+                                name="itm_uuid"
+                                [(ngModel)]="work.itm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmpitm_uuid" 
+                                class="bmd-label-floating">
+                                cmpitm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="cmpitm_uuid" 
+                                maxlength="35"
+                                name="cmpitm_uuid"
+                                [(ngModel)]="work.cmpitm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="mitm_uuid" 
+                                class="bmd-label-floating">
+                                mitm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="mitm_uuid" 
+                                maxlength="35"
+                                name="mitm_uuid"
+                                [(ngModel)]="work.mitm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrks_uuid" 
+                                class="bmd-label-floating">
+                                wrks_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="wrks_uuid" 
+                                maxlength="35"
+                                name="wrks_uuid"
+                                [(ngModel)]="work.wrks_uuid">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-8">
+                        <div class="form-group">
+                            <label 
+                                for="mitm_uuid" 
+                                class="bmd-label-floating">
+                                Modelo Rubro
+                            </label>
+                            <!-- [disabled]="modelItems.length === 1" -->
+                            <select 
+                                class="form-control" 
+                                name="mitm_uuid"
+                                [(ngModel)]="work.mitm_uuid"
+                                (change)="onModelItemChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(modelItem of modelItems; track modelItem.mitm_uuid) {
+                                    @if(modelItem){
+                                        <option [value]="modelItem.mitm_uuid">
+                                            {{modelItem.mitm_name}}
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>                        
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_workdate"
+                                >
+                                Fecha
+                            </label>
+                            <input 
+                                type="date" 
+                                class="form-control" 
+                                name="wrk_workdate" 
+                                id="wrk_workdate"
+                                [(ngModel)]="work.wrk_workdate"
+                                >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <span class="roboto-medium">CLIENTE:</span> 
+                            @if(customer) {
+                                {{customer.cus_fullname}}
+                            } @else {
+                                <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un cliente</span>
+                            }
+                            <form action="" style="display: inline-block !important;">                                
+                                @if(customer) {
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-danger"
+                                        (click)="removeCustomer()"
+                                        >
+                                        <i class="fas fa-user-times"></i>
+                                    </button>
+                                } @else {
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCliente">
+                                        <i class="fas fa-user-plus"></i> &nbsp; Agregar cliente
+                                    </button>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="adr_uuid" 
+                                class="bmd-label-floating">
+                                Direccion
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="adr_uuid"
+                                [disabled]="!customer && addresses.length"
+                                [(ngModel)]="work.adr_uuid"
+                                (change)="onAddressChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(address of addresses; track address.adr_uuid) {
+                                    @if(address){
+                                        <option [value]="address.adr_uuid">
+                                            {{address.adr_address}}
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid" 
+                                class="bmd-label-floating">
+                                Usuario
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid"
+                                [(ngModel)]="work.wrk_operator_uuid"
+                                (change)="onWorkOperatorChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.usrrolcmp_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(!userOperatorWork.usr?.usr_surname || !userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-8">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_description" 
+                                class="bmd-label-floating">
+                                Descripcion
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="wrk_description" 
+                                maxlength="35"
+                                name="wrk_description" 
+                                [(ngModel)]="work.wrk_description">
+                        </div>
+                    </div>
+                    <!-- <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_active" 
+                                class="bmd-label-floating">
+                                Activo
+                            </label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="wrk_active" 
+                                name="wrk_active" 
+                                [(ngModel)]="work.wrk_active">
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><i class="far fa-address-card"></i> &nbsp; Detalle trabajo</legend>
+            @if(work.workDetails) {
+                <div class="container-fluid">
+                    <app-dynamic-table 
+                        [data]="work.workDetails" 
+                        [columns]="tableColumns"
+                        [canAddRow]="true"
+                        [canEditRow]="true"
+                        [canDeleteRow]="true"
+                        [scrollable]="true"
+                        [stickyHeader]="true"
+                        >
+                        <!-- (dataChange)="onDataChange($event)"
+                        (hasErrors)="onHasErrors($event)" -->
+                    </app-dynamic-table>
+                </div>
+            }
+        </fieldset>
+        <br><br><br>
+        <p class="text-center" style="margin-top: 40px;">
+            @if(work.wrk_uuid === "new") {
+                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR</button>
+                &nbsp; &nbsp;
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-info btn-sm"
+                    (click)="onSaveWork(formWork)"
+                    >
+                    <i class="far fa-save"></i> &nbsp; GUARDAR
+                </button>
+            } @else {
+                <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR</button>
+            }
+        </p>
+    </form>
+</div>
+
+<!-- MODAL CLIENTE -->
+<div class="modal fade" id="ModalCliente" tabindex="-1" role="dialog" aria-labelledby="ModalCliente" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalCliente">Agregar cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-group">
+                        <label for="agregar_cliente" class="bmd-label-floating">DNI, Nombre, Apellido, Telefono</label>
+                        <input type="text" pattern="[a-zA-z0-9áéíóúÁÉÍÓÚñÑ#() ]{1,30}" class="form-control" name="agregar_cliente" id="agregar_cliente" maxlength="30">
+                    </div>
+                </div>
+                <br>
+                <div class="container-fluid">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered table-sm">
+                            <tbody>
+                                @for(customer of customers; track customer.cus_uuid) {
+                                    @if(customer){
+                                        <tr class="text-center">
+                                            <td>000000000000 - {{customer.cus_fullname}}</td>
+                                            <td>
+                                                <form action="">
+                                                    <button 
+                                                        type="button" 
+                                                        class="btn btn-primary"
+                                                        data-dismiss="modal"
+                                                        (click)="addCustomer(customer)">
+                                                        <i class="fas fa-user-plus"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                <!-- <tr class="text-center">
+                                    <td>000000000000 - Nombre del cliente</td>
+                                    <td>
+                                        <form action="">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>000000000000 - Nombre del cliente</td>
+                                    <td>
+                                        <form action="">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>000000000000 - Nombre del cliente</td>
+                                    <td>
+                                        <form action="">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <tr class="text-center">
+                                    <td>000000000000 - Nombre del cliente</td>
+                                    <td>
+                                        <form action="">
+                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
+                                        </form>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
