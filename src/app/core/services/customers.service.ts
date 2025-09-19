@@ -29,4 +29,18 @@ export class CustomersService {
 
     return this._http.get(this._GlobalService.url + 'customer/' + cmp_uuid + '/' + cus_uuid, {headers:headers});
   }
+
+  public saveCustomer(customer: any): Observable<any> {
+    let params = JSON.stringify(customer);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'customer', params, {headers:headers});
+  }
+
+  public updateCustomer(customer: any): Observable<any> {
+    let params = JSON.stringify(customer);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'customer/' + customer.cmp_uuid + '/' + customer.cus_uuid, params, {headers:headers});
+  }
 }
