@@ -23,4 +23,24 @@ export class AddressesService {
 
     return this._http.get<AddressResults>(this._GlobalService.url + 'addresses/' + cmp_uuid + '/' + cus_uuid + '/' + filter, {headers:headers})
   }
+
+  public getAddressById(cmp_uuid: string, cus_uuid?: string, adr_uuid?: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(this._GlobalService.url + 'address/' + cmp_uuid + '/' + cus_uuid + '/' + adr_uuid, {headers:headers});
+  }
+
+  public saveAddress(address: any): Observable<any> {
+    let params = JSON.stringify(address);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'address', params, {headers:headers});
+  }
+
+  public updateAddress(address: any): Observable<any> {
+    let params = JSON.stringify(address);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'address/' + address.cmp_uuid + '/' + address.cus_uuid + '/' + address.adr_uuid, params, {headers:headers});
+  }
 }
