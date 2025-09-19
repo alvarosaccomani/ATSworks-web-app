@@ -1,3 +1,5 @@
+import { AddressInterface } from "../address";
+
 export interface CustomerInterface {
     cmp_uuid: string | null,
     cus_uuid: string | null,
@@ -6,5 +8,6 @@ export interface CustomerInterface {
     cus_phone: string | null,    
     usr_uuid: string | null,
     cus_createdat: Date | null,
-    cus_updatedat: Date | null
+    cus_updatedat: Date | null,
+    addresses?: AddressInterface[]
 }
