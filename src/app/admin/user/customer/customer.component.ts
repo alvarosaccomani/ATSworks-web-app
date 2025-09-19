@@ -20,6 +20,9 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class CustomerComponent {
 
   public customer: CustomerInterface;
+  public status: string = "";
+  public errorMessage: string = "";
+  public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
     {
@@ -33,7 +36,6 @@ export class CustomerComponent {
        title: "LISTA DE CLIENTES"
     }
   ]
-  public isLoading: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
@@ -102,6 +104,75 @@ export class CustomerComponent {
         }
       }
     )
+  }  
+
+  private validate(): boolean {
+    if(!this.customer.cus_fullname) {
+      this.status = 'error';
+      this.errorMessage = "El nombre de cliente no puede estar vacio";
+      return false;
+    }
+
+    return true;
   }
 
+  private async updateCustomer(formCustomer: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._customersService.updateCustomer(formCustomer.form.value).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const customer = response.customer;
+          this.status = 'success';
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
+        }
+      },
+      error => {
+        this.isLoading = false;
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  private async insertCustomer(formCustomer: NgForm): Promise<void> {
+    this.isLoading = true;
+      this._customersService.saveCustomer(formCustomer.form.value).subscribe(
+        response => {
+          if(response.success) {
+            this.isLoading = false;
+            const customer = response.customer;
+            this.status = 'success';
+          } else {
+            this.isLoading = false;
+            //this.status = 'error'
+          }
+        },
+        error =>{
+            this.isLoading = false;
+            let errorMessage = <any>error;
+            console.log(errorMessage);
+            if(errorMessage!=null) {
+                this.status = 'error';
+                this.errorMessage = errorMessage.error.error;
+            }
+        }
+      )
+  }
+
+  public onSaveCustomer(formCustomer: NgForm): void {
+    if(this.validate()) {
+      if(this.customer.cus_uuid) {
+        this.updateCustomer(formCustomer);
+      } else {
+        this.insertCustomer(formCustomer);
+      }
+    }
+  }
 }
