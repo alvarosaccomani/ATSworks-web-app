@@ -54,17 +54,17 @@ export class ItemComponent {
     this._route.params.subscribe( (params) => {
       if(params['itm_uuid'] && params['itm_uuid'] != 'new') {
         this.headerConfig = {
-          title: "NUEVO ITEM",
+          title: "ACTUALIZAR ITEM",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-plus fa-fw"
+          icon: "fas fa-sync-alt fa-fw"
         }
         this.item.itm_uuid = params['itm_uuid'];
         this.getItemById(params['itm_uuid']);
       } else {
         this.headerConfig = {
-          title: "ACTUALIZAR ITEM",
+          title: "NUEVO ITEM",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-sync-alt fa-fw"
+          icon: "fas fa-plus fa-fw"
         }
       }
     });
