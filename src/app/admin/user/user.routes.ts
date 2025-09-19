@@ -9,6 +9,7 @@ import { ModelsItemsComponent } from './models-items/models-items.component';
 import { ModelItemComponent } from './model-item/model-item.component';
 import { WorksComponent } from './works/works.component';
 import { WorkComponent } from './work/work.component';
+import { WorkSheetComponent } from './work-sheet/work-sheet.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 
 export const USER_ROUTES: Routes = [
@@ -24,6 +25,7 @@ export const USER_ROUTES: Routes = [
             { path: 'model-item/:itm_uuid/:cmpitm_uuid/:mitm_uuid', component: ModelItemComponent },
             { path: 'works', component: WorksComponent },
             { path: 'work/:wrk_uuid', component: WorkComponent },
+            { path: 'work-sheet/:wrk_uuid', component: WorkSheetComponent },
             { path: 'company-profile/:cmp_uuid', component: CompanyProfileComponent }
         ]
     }
