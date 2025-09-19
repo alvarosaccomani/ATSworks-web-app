@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { CompanyInterface } from '../../../core/interfaces/company';
 import { CompaniesService } from '../../../core/services/companies.service';
 
@@ -15,12 +15,15 @@ import { CompaniesService } from '../../../core/services/companies.service';
 export class CompanyProfileComponent {
 
   public company: CompanyInterface;
+  public status: string = "";
+  public errorMessage: string = "";
+  public isLoading: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
     private _companiesService: CompaniesService
-  )
-  {
+  ) {
+    this.isLoading = false;
     this.company = {
       cmp_uuid: null,
       cmp_name: null,
@@ -62,4 +65,73 @@ export class CompanyProfileComponent {
     )
   }  
 
+  private validate(): boolean {
+    if(!this.company.cmp_name) {
+      this.status = 'error';
+      this.errorMessage = "El nombre de empresa no puede estar vacio";
+      return false;
+    }
+
+    return true;
+  }
+
+  private async updateCompany(formCompany: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._companiesService.updateCompany(formCompany.form.value).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const company = response.company;
+          this.status = 'success';
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
+        }
+      },
+      error => {
+        this.isLoading = false;
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  private async insertCompany(formCompany: NgForm): Promise<void> {
+    this.isLoading = true;
+      this._companiesService.saveCompany(formCompany.form.value).subscribe(
+        response => {
+          if(response.success) {
+            this.isLoading = false;
+            const company = response.company;
+            this.status = 'success';
+          } else {
+            this.isLoading = false;
+            //this.status = 'error'
+          }
+        },
+        error =>{
+            this.isLoading = false;
+            let errorMessage = <any>error;
+            console.log(errorMessage);
+            if(errorMessage!=null) {
+                this.status = 'error';
+                this.errorMessage = errorMessage.error.error;
+            }
+        }
+      )
+  }
+
+  public onSaveCompany(formCompany: NgForm): void {
+    if(this.validate()) {
+      if(this.company.cmp_uuid) {
+        this.updateCompany(formCompany);
+      } else {
+        this.insertCompany(formCompany);
+      }
+    }
+  }
 }
