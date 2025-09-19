@@ -59,17 +59,17 @@ export class CustomerComponent {
     this._route.params.subscribe( (params) => {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
         this.headerConfig = {
-          title: "AGREGAR CLIENTE",
+          title: "ACTUALIZAR CLIENTE",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-plus fa-fw"
+          icon: "fas fa-sync-alt fa-fw"
         }
         this.customer.cus_uuid = params['cus_uuid'];
         this.getCustomerById(this.customer.cmp_uuid!, params['cus_uuid']);
       } else {
         this.headerConfig = {
-          title: "ACTUALIZAR CLIENTE",
+          title: "AGREGAR CLIENTE",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-sync-alt fa-fw"
+          icon: "fas fa-plus fa-fw"
         }
       }
     });
