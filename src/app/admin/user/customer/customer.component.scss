@@ -1,0 +1,60 @@
+.card-address {
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    width: 100%; 
+    border: 1px solid var(--border-color);
+    background-color: #FFF;
+    box-shadow: 1.5px 1.5px 1.5px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 3px; 
+    padding: 10px; 
+    margin: 5px 0 0 0;
+}
+
+.card-address-left {
+    width: 90%;
+}
+
+.card-address-left-label {
+    font-size: 13px;
+}
+
+.card-address-left-bottom {
+    display: flex;
+    flex-direction: row;
+}
+
+.card-address-left-bottom-city {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 10px 0 0;
+}
+
+.card-address-left-bottom-city-data {
+    display: flex;
+    flex-direction: row;
+    h5 {
+        margin: 0 10px 0 0;
+    }
+}
+
+.card-address-left-bottom-province {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 10px 0 0;
+    h5 {
+        margin: 0 10px 0 0;
+    }
+}
+
+.card-address-right {
+    display: flex; 
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+}
+
+.card-address-right-form {
+    margin: 0;
+}

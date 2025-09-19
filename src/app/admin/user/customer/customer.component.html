@@ -82,7 +82,7 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label 
-                                for="cliente_telefono" 
+                                for="usr_uuid" 
                                 class="bmd-label-floating">
                                 Usuario
                             </label>
@@ -90,15 +90,55 @@
                                 type="text" 
                                 pattern="[0-9()+]{1,20}" 
                                 class="form-control" 
-                                name="cliente_telefono" 
-                                id="cliente_telefono" 
+                                name="usr_uuid" 
+                                id="usr_uuid" 
                                 maxlength="20"
                                 name="cus_phone" 
-                                [(ngModel)]="customer.cus_email">
+                                [(ngModel)]="customer.usr_uuid">
                         </div>
                     </div>
                 </div>
             </div>
+        </fieldset>
+        <fieldset>
+            <legend><i class="fa fa-map"></i> &nbsp; Direcciones</legend>
+            <button (click)="addAddress()" class="btn btn-primary">
+                <i class="fas fa-plus fa-fw"></i>
+                Agregar Direccion
+            </button>
+            @if(customer.addresses) {
+                @for(address of customer.addresses; track address.adr_uuid) {
+                    <div class="card-address">
+                        <div class="card-address-left">
+                            <label class="card-address-left-label">Direccion</label>
+                            <h4>{{address.adr_address}}</h4>
+                            <div class="card-address-left-bottom">
+                                <div class="card-address-left-bottom-city">
+                                    <label class="card-address-left-label">Ciudad</label>
+                                    <div class="card-address-left-bottom-city-data">
+                                        <h5>{{address.adr_postalcode}}</h5>
+                                        <h5>{{address.adr_city}}</h5>
+                                    </div>
+                                </div>
+                                <div class="card-address-left-bottom-province">
+                                    <label class="card-address-left-label">Provincia</label>
+                                    <h5>{{address.adr_province}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-address-right">
+                            <a [routerLink]="['/admin/user/address', address.cus_uuid, address.adr_uuid]" class="btn btn-success">
+                                <i class="fas fa-sync-alt"></i>	
+                            </a>
+                            <form action="" class="card-address-right-form">
+                                <button type="button" class="btn btn-warning">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            }
         </fieldset>
         <br><br><br>
         <p class="text-center" style="margin-top: 40px;">

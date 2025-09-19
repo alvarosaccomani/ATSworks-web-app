@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { CustomersService } from '../../../core/services/customers.service';
+import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
 @Component({
   selector: 'app-customer',
   imports: [
+    RouterLink,
     FormsModule,
     HeaderComponent,
     PageNavTabsComponent
@@ -39,7 +41,9 @@ export class CustomerComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _customersService: CustomersService,
+    private _addressesService: AddressesService,
     private _sharedDataService: SharedDataService
   ) {
     this.isLoading = false;
@@ -85,12 +89,33 @@ export class CustomerComponent {
     });
   }
 
+  private getAdresses(cmp_uuid: string, cus_uuid: string) {
+    this._addressesService.getAddresses(cmp_uuid, cus_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.customer.addresses = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
   private getCustomerById(cmp_uuid: string, cus_uuid: string): void {
     this._customersService.getCustomerById(cmp_uuid, cus_uuid).subscribe(
       (response: any) => {
         if(response.success) {
           console.info(response.data);
           this.customer = response.data;
+          this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!);
         } else {
           //this.status = 'error'
         }
@@ -105,6 +130,10 @@ export class CustomerComponent {
       }
     )
   }  
+
+  public addAddress(): void {
+    this._router.navigate(['/admin/user/address', 'new', '']);
+  }
 
   private validate(): boolean {
     if(!this.customer.cus_fullname) {
