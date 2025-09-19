@@ -114,9 +114,9 @@ export class ModelItemComponent {
     this._route.params.subscribe( (params) => {
       if(params['itm_uuid'] && params['cmpitm_uuid'] && params['mitm_uuid'] && params['mitm_uuid'] != 'new') {
         this.headerConfig = {
-          title: "NUEVO MODELO ITEM",
+          title: "ACTUALIZAR MODELO ITEM",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-plus fa-fw"
+          icon: "fas fa-sync-alt fa-fw"
         }
         this.modelItem.itm_uuid = params['itm_uuid'];
         this.modelItem.cmpitm_uuid = params['cmpitm_uuid'];
@@ -124,9 +124,9 @@ export class ModelItemComponent {
         this.getModelItemById(this.modelItem.cmp_uuid!, this.modelItem.itm_uuid!, this.modelItem.cmpitm_uuid!, params['mitm_uuid']);
       } else {
         this.headerConfig = {
-          title: "ACTUALIZAR MODELO ITEM",
+          title: "NUEVO MODELO ITEM",
           description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
-          icon: "fas fa-sync-alt fa-fw"
+          icon: "fas fa-plus fa-fw"
         }
       }
     });
@@ -223,7 +223,7 @@ export class ModelItemComponent {
 
   public onSaveModelItem(formModelItem: NgForm): void {
     if(this.validate()) {
-      if(this.modelItem.mitm_uuid) {
+      if(this.modelItem.mitm_uuid && this.modelItem.mitm_uuid != 'new') {
         this.updateModelItem(formModelItem);
       } else {
         this.insertModelIem(formModelItem);
