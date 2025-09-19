@@ -101,25 +101,63 @@ export class ItemComponent {
     return true;
   }
 
-  public onSaveItem(formRegister: NgForm): void {
-    if(this.validate()) {
-      this.isLoading = true;
-      this._itemsService.saveItem(formRegister.form.value).subscribe(
-        response => {
+  private async updateItem(formItem: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._itemsService.updateItem(formItem.form.value).subscribe(
+      response => {
+        if(response.success) {
           this.isLoading = false;
           const item = response.item;
           this.status = 'success';
-        },
-        error =>{
-            this.isLoading = false;
-            let errorMessage = <any>error;
-            console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
-            }
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
         }
-      )
+      },
+      error => {
+          this.isLoading = false;
+          let errorMessage = <any>error;
+          console.log(errorMessage);
+          if(errorMessage!=null) {
+              this.status = 'error';
+              this.errorMessage = errorMessage.error.error;
+          }
+      }
+    )
+  }
+
+  private async insertItem(formItem: NgForm): Promise<void> {
+    this.isLoading = true;
+    this._itemsService.saveItem(formItem.form.value).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const item = response.item;
+          this.status = 'success';
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
+        }
+      },
+      error =>{
+          this.isLoading = false;
+          let errorMessage = <any>error;
+          console.log(errorMessage);
+          if(errorMessage!=null) {
+              this.status = 'error';
+              this.errorMessage = errorMessage.error.error;
+          }
+      }
+    )
+  }
+
+  public onSaveItem(formItem: NgForm): void {
+    if(this.validate()) {
+      if(this.item.itm_uuid) {
+        this.updateItem(formItem);
+      } else {
+        this.insertItem(formItem);
+      }
     }
   }
 

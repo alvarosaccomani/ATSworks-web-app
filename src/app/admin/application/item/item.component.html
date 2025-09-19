@@ -60,11 +60,29 @@
                     type="submit" 
                     class="btn btn-raised btn-info btn-sm"
                     (click)="onSaveItem(formItem)"
+                    [disabled]="isLoading"
                     >
-                    <i class="far fa-save"></i> &nbsp; GUARDAR
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="far fa-save"></i> &nbsp; GUARDAR
+                    }
                 </button>
             } @else {
-                <button type="submit" class="btn btn-raised btn-success btn-sm"><i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR</button>
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    (click)="onSaveItem(formItem)"
+                    [disabled]="isLoading"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                    }
+                </button>
             }
         </p>
     </form>
