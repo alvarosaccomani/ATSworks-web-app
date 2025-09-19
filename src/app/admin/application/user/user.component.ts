@@ -163,9 +163,14 @@ export class UserComponent {
     this.isLoading = true;
       this._usersService.saveUser(formRegister.form.value).subscribe(
         response => {
-          this.isLoading = false;
-          const user = response.user;
-          this.status = 'success';
+          if(response.success) {
+            this.isLoading = false;
+            const user = response.user;
+            this.status = 'success';
+          } else {
+            this.isLoading = false;
+            //this.status = 'error'
+          }
         },
         error =>{
             this.isLoading = false;
