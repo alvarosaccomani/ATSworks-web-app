@@ -1,1 +1,177 @@
-<p>address works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<!-- Content here-->
+<div class="container-fluid">
+    <form 
+        name="formAddress"
+        #formAddress="ngForm"
+        class="form-neon"
+        autocomplete="off">
+        <fieldset>
+            <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
+            <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_uuid" 
+                                class="bmd-label-floating">
+                                cmp_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[0-9()+]{1,20}" 
+                                class="form-control" 
+                                name="cmp_uuid" 
+                                id="cmp_uuid" 
+                                maxlength="20"
+                                name="cmp_uuid" 
+                                [(ngModel)]="address.cmp_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cus_uuid" 
+                                class="bmd-label-floating">
+                                cus_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="cus_uuid" 
+                                maxlength="35"
+                                name="cus_uuid"
+                                [(ngModel)]="address.cus_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="adr_uuid" 
+                                class="bmd-label-floating">
+                                adr_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                class="form-control" 
+                                id="adr_uuid" 
+                                maxlength="35"
+                                name="adr_uuid"
+                                [(ngModel)]="address.adr_uuid">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="adr_address"
+                                class="bmd-label-floating"
+                                >
+                                Direccion
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[a-zA-Z0-9-]{1,27}"
+                                class="form-control"
+                                id="adr_address"
+                                maxlength="27"
+                                name="adr_address"
+                                [(ngModel)]="address.adr_address">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="adr_postalcode" 
+                                class="bmd-label-floating">
+                                Cod. Postal
+                            </label>
+                            <input 
+                                type="text"
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
+                                class="form-control"
+                                id="adr_postalcode"
+                                maxlength="40"
+                                name="adr_postalcode"
+                                [(ngModel)]="address.adr_postalcode">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label
+                                for="adr_city"
+                                class="bmd-label-floating">
+                                Ciudad
+                            </label>
+                            <input
+                                type="text" 
+                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" 
+                                class="form-control" 
+                                id="adr_city" 
+                                maxlength="40"
+                                name="adr_city" 
+                                [(ngModel)]="address.adr_city">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label 
+                                for="adr_province" 
+                                class="bmd-label-floating">
+                                Provincia
+                            </label>
+                            <input 
+                                type="text" 
+                                pattern="[0-9()+]{1,20}" 
+                                class="form-control" 
+                                name="adr_province" 
+                                id="adr_province" 
+                                maxlength="20"
+                                name="adr_province" 
+                                [(ngModel)]="address.adr_province">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br><br><br>
+        <p class="text-center" style="margin-top: 40px;">
+            @if(address.cus_uuid === "new") {
+                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR</button>
+                &nbsp; &nbsp;
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-info btn-sm"
+                    (click)="onSaveAddress(formAddress)"
+                    [disabled]="isLoading"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="far fa-save"></i> &nbsp; GUARDAR
+                    }
+                </button>
+            } @else {
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    (click)="onSaveAddress(formAddress)"
+                    [disabled]="isLoading"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                    }
+                </button>
+            }
+        </p>
+    </form>
+</div>
