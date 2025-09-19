@@ -19,4 +19,18 @@ export class CompaniesService {
 
     return this._http.get<CompanyResults>(this._GlobalService.url + 'company/' + cmp_uuid, {headers:headers})
   }
+
+  public saveCompany(company: any): Observable<any> {
+    let params = JSON.stringify(company);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(this._GlobalService.url + 'company', params, {headers:headers});
+  }
+
+  public updateCompany(company: any): Observable<any> {
+    let params = JSON.stringify(company);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(this._GlobalService.url + 'company/' + company.cmp_uuid, params, {headers:headers});
+  }
 }
