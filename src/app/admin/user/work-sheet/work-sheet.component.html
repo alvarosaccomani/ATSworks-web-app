@@ -1,1 +1,116 @@
-<p>work-sheet works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<!-- Content -->
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                    <th>#</th>
+                    <th>ITEM</th>
+                    <th>VALOR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(workDetail of work.workDetails; track workDetail.wrkd_uuid) {
+                    <tr class="text-center" >
+                        <td>{{$index + 1}}</td>
+                        <td>{{workDetail.wrkd_name}}</td>
+                        @switch (workDetail.dtp?.dtp_cod) {
+                            @case ('string') {
+                                <td>
+                                    <input 
+                                        type="text" 
+                                        pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                        class="form-control" 
+                                        id="wrkd_value" 
+                                        maxlength="35"
+                                        name="wrkd_value"
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        (blur)="onValueChangeInputText($event, workDetail!)">
+                                </td>
+                            }
+                            @case ('boolean') {
+                                <td>
+                                    <input 
+                                        type="checkbox" 
+                                        class="form-control" 
+                                        id="wrkd_value" 
+                                        name="wrkd_value" 
+                                        [checked]="workDetail.wrkd_value === 'true'"
+                                        (click)="onValueChangeInputCheck($event, workDetail!)">
+                                        <!-- [(ngModel)]="workDetail.wrkd_value" -->
+                                </td>
+                            }
+                            @case ('Integer') {
+                                <input 
+                                        type="number" 
+                                        pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                        class="form-control" 
+                                        id="wrkd_value" 
+                                        maxlength="35"
+                                        name="wrkd_value"
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        (blur)="onValueChangeInputNumber($event, workDetail!)">
+                            }
+                            @case ('float') {
+                                <input 
+                                        type="number" 
+                                        pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
+                                        class="form-control" 
+                                        id="wrkd_value" 
+                                        maxlength="35"
+                                        name="wrkd_value"
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        (blur)="onValueChangeInputNumber($event, workDetail!)">
+                            }
+                            @case ('date') {
+                                <td>
+                                    <input 
+                                        type="date" 
+                                        class="form-control" 
+                                        name="wrkd_value" 
+                                        id="wrkd_value"
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        >
+                                </td>
+                            }
+                            @case ('datetime') {
+                                <td>
+                                    <input 
+                                        type="datetime-local" 
+                                        class="form-control" 
+                                        name="wrkd_value" 
+                                        id="wrkd_value"
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        >
+                                </td>
+                            }
+                            @case ('array') {
+                                <td>
+                                    <select 
+                                        class="form-control" 
+                                        name="wrkd_value" 
+                                        [(ngModel)]="workDetail.wrkd_value"
+                                        (change)="onValueChangeList($event, workDetail!)">
+                                        @for(arrayValue of findDetailModelItemArrayValues(workDetail.wrkd_key!); track arrayValue.id) {
+                                            <option [value]="arrayValue.value">
+                                                {{arrayValue.value}}
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+                            }
+                            @default {
+                                <div>
+                                    No hay tipo de dato.
+                                </div>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
