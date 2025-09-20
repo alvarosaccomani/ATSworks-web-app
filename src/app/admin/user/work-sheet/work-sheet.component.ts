@@ -6,8 +6,10 @@ import { MultiStepComponent } from '../../../shared/components/multi-step/multi-
 import { CameraComponent } from '../../../shared/components/camera/camera.component';
 import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail';
+import { WorkAttachmentInterface } from '../../../core/interfaces/work-attachment';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service';
+import { WorksAttachmentsService } from '../../../core/services/works-attachments.service';
 
 @Component({
   selector: 'app-work-sheet',
@@ -36,6 +38,7 @@ export class WorkSheetComponent {
     private _route: ActivatedRoute,
     private _worksService: WorksService,
     private _worksDetailsService: WorksDetailsService,
+    private _worksAttachmentsService: WorksAttachmentsService
   )
   {
     this.work = {
@@ -138,6 +141,16 @@ export class WorkSheetComponent {
           this.work.wrk_workdateinit = response.data.wrk_workdateinit;
           console.info(image); // Guardar la imagen recibida
           this.step = this.itemsStep[this.step.index + 1];
+          let workAttachment = {
+            cmp_uuid: this.work.cmp_uuid,
+            wrk_uuid: this.work.wrk_uuid,
+            wrka_uuid: null,
+            wrka_attachmenttype: 'imagen',
+            wrka_filepath: image,
+            wrka_createdat:null,
+            wrka_updatedat: null
+          }
+          this.onSaveWorAttachment(workAttachment);
         } else {
           //this.status = 'error'
         }
@@ -152,6 +165,35 @@ export class WorkSheetComponent {
       }
     )
   }
+
+  public insertWorAttachment(workAttachment: WorkAttachmentInterface): void {
+    this._worksAttachmentsService.insertWorAttachment(workAttachment).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.work.workAttachments = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  public onSaveWorAttachment(workAttachment: WorkAttachmentInterface): void {
+    if(this.work.wrk_workdatefinish) {
+
+    } else {
+      this.insertWorAttachment(workAttachment);
+    }
+  }  
 
   public findDetailModelItemArrayValues(key: string) {
     let values = this.work.mitm?.detailModelItems?.find((itm => itm.dmitm_key === key))?.dmitm_arrayvalues;
