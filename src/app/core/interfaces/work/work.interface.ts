@@ -3,6 +3,7 @@ import { WorkStateInterface } from "../work-state";
 import { UserInterface } from "../user";
 import { ModelItemInterface } from "../model-item";
 import { WorkDetailInterface } from "../work-detail";
+import { WorkAttachmentInterface } from "../work-attachment";
 
 export interface WorkInterface {
     cmp_uuid: string | null,
@@ -25,5 +26,6 @@ export interface WorkInterface {
     mitm: ModelItemInterface | null,
 	wrk_createdat: Date | null,
     wrk_updatedat: Date | null,
-    workDetails?: WorkDetailInterface[]
+    workDetails?: WorkDetailInterface[],
+    workAttachments?: WorkAttachmentInterface[]
 }
