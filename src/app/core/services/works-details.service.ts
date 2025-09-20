@@ -24,6 +24,6 @@ export class WorksDetailsService {
     let params = JSON.stringify(workDetail);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.put(this._GlobalService.url + 'work-detail/' + workDetail.wrk_uuid + '/' + workDetail.dwrk_uuid, params, {headers:headers});
+    return this._http.put(this._GlobalService.url + 'work-detail/' + workDetail.cmp_uuid + '/' + workDetail.wrk_uuid + '/' + workDetail.dwrk_uuid, params, {headers:headers});
   }
 }
