@@ -1,1 +1,46 @@
-<p>camera works!</p>
+<!-- Contenedor para mostrar la cámara y la captura -->
+<div class="camera-wrapper">
+    <!-- Mostrar el mensaje de carga si la cámara está cargando -->
+    @if(isLoading) {
+        <div class="loading-message">
+            Cargando cámara...
+        </div>
+    }
+
+    <!-- El video siempre está presente en el DOM, pero se muestra/oculta con CSS -->
+    <video #video autoplay playsinline [style.display]="isCameraActive && !isLoading ? 'block' : 'none'"></video>
+
+    <!-- Mostrar el botón de captura si la cámara está activa -->
+    @if(isCameraActive && !isLoading) {
+        <button
+            class="btn btn-raised btn-success btn-sm" 
+            (click)="capturePhoto()"
+            >
+            <i class="fas fa-camera"></i>
+            Capturar Foto
+        </button>
+    }
+
+    <!-- Lienzo oculto para capturar la foto -->
+    <canvas #canvas style="display: none;"></canvas>
+
+    <!-- Mostrar la imagen capturada y los botones si hay una foto y la cámara no está activa -->
+    @if(capturedImage && !isCameraActive) {
+        <img [src]="capturedImage" alt="Foto capturada">
+        <div class="camera-wrapper-toolbar">
+            <button 
+                class="btn btn-raised btn-secondary btn-sm" 
+                (click)="retakePhoto()"
+                >
+                <i class="fas fa-camera"></i>
+                Volver a Capturar
+            </button>
+            <button 
+                class="btn btn-raised btn-success btn-sm"
+                (click)="savePhoto()"
+                >
+                Guardar Foto
+            </button>
+        </div>
+    }
+</div>
