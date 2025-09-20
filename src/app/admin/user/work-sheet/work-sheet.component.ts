@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { MultiStepComponent } from '../../../shared/components/multi-step/multi-step.component';
+import { CameraComponent } from '../../../shared/components/camera/camera.component';
 import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail';
 import { WorksService } from '../../../core/services/works.service';
@@ -13,7 +14,8 @@ import { WorksDetailsService } from '../../../core/services/works-details.servic
   imports: [
     FormsModule,
     HeaderComponent,
-    MultiStepComponent
+    MultiStepComponent,
+    CameraComponent
   ],
   templateUrl: './work-sheet.component.html',
   styleUrl: './work-sheet.component.scss'
@@ -125,6 +127,30 @@ export class WorkSheetComponent {
 
   public goToStep($event: any): void {
     this.step = $event;
+  }
+
+  public onPhotoSaved(image: string) {
+    this.work.wrk_workdateinit = new Date();
+    this._worksService.updateWork(this.work).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.work.wrk_workdateinit = response.data.wrk_workdateinit;
+          console.info(image); // Guardar la imagen recibida
+          this.step = this.itemsStep[this.step.index + 1];
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
   }
 
   public findDetailModelItemArrayValues(key: string) {

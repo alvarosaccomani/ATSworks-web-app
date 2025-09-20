@@ -11,6 +11,10 @@
     </app-multi-step>
     @switch(step.name) {
         @case('initial_photo') {
+            <app-camera 
+                (photoSaved)="onPhotoSaved($event)"
+                >
+            </app-camera>
         }
         @case('work_detail') {
             <div class="table-responsive">
