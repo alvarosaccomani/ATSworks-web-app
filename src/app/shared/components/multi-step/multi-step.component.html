@@ -1,1 +1,19 @@
-<p>multi-step works!</p>
+<div class="row">
+  <div class="multistep-wrapper col-12 col-lg-8 ml-auto mr-auto mb-4">
+    <div class="multistep-progress">
+      @for(item of items; track i; let i = $index) {
+        <button
+          class="multistep-progress-btn"
+          [ngClass] = "{
+            'js-active': item.active
+          }"
+          type="button"
+          [title]="item.title"
+          (click)="setActiveStep(i)"
+          >
+          {{item.caption}}
+        </button>
+      }
+    </div>
+  </div>
+</div>
