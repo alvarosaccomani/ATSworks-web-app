@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { MultiStepComponent } from '../../../shared/components/multi-step/multi-step.component';
 import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail';
 import { WorksService } from '../../../core/services/works.service';
@@ -11,7 +12,8 @@ import { WorksDetailsService } from '../../../core/services/works-details.servic
   selector: 'app-work-sheet',
   imports: [
     FormsModule,
-    HeaderComponent
+    HeaderComponent,
+    MultiStepComponent
   ],
   templateUrl: './work-sheet.component.html',
   styleUrl: './work-sheet.component.scss'
@@ -25,6 +27,8 @@ export class WorkSheetComponent {
     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
     icon: "fab fa-dashcube fa-fw"
   }
+  public itemsStep: any;
+  public step: any;
 
   constructor(
     private _route: ActivatedRoute,
@@ -57,6 +61,38 @@ export class WorkSheetComponent {
   }
 
   ngOnInit(): void {
+    this.itemsStep = [
+      {
+        id: 1,
+        icon: "",
+        name: "initial_photo",
+        caption: "Foto Inicial",
+        title: "Foto Inicial",
+        active: true,
+        url: ""
+      },
+      {
+        id: 2,
+        icon: "",
+        name: "work_detail",
+        caption: "Detalle Trabajo",
+        title: "Detalle Trabajo",
+        active: false,
+        url: ""
+      },
+      {
+        id: 3,
+        icon: "",
+        name: "final_photo",
+        caption: "Foto Final",
+        title: "Foto Final",
+        active: false,
+        url: ""
+      }
+    ]
+
+    this.step = this.itemsStep[0];
+
     this.work.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
     this._route.params.subscribe( (params) => {
       if(params['wrk_uuid'] != 'new') {
@@ -85,6 +121,10 @@ export class WorkSheetComponent {
         }
       }
     )
+  }
+
+  public goToStep($event: any): void {
+    this.step = $event;
   }
 
   public findDetailModelItemArrayValues(key: string) {
