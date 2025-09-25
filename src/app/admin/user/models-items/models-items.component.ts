@@ -7,6 +7,7 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { ModelItemInterface, ModelItemResults } from '../../../core/interfaces/model-item';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 declare var Swal: any;
 
@@ -16,7 +17,8 @@ declare var Swal: any;
     AsyncPipe,
     RouterLink,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    PaginationComponent
   ],
   templateUrl: './models-items.component.html',
   styleUrl: './models-items.component.scss'
