@@ -66,7 +66,7 @@ export class CustomerComponent {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR CLIENTE",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para actualizar un Cliente.",
           icon: "fas fa-sync-alt fa-fw"
         }
         this.customer.cus_uuid = params['cus_uuid'];
@@ -74,7 +74,7 @@ export class CustomerComponent {
       } else {
         this.headerConfig = {
           title: "AGREGAR CLIENTE",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para agregar un Cliente.",
           icon: "fas fa-plus fa-fw"
         }
       }

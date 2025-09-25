@@ -51,7 +51,7 @@ export class AddressComponent {
       if(params['adr_uuid'] && params['adr_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR DIRECCION",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para actualizar una Direccion.",
           icon: "fas fa-sync-alt fa-fw"
         }
         this.address.cus_uuid = params['cus_uuid'];
@@ -60,7 +60,7 @@ export class AddressComponent {
       } else {
         this.headerConfig = {
           title: "AGREGAR DIRECCION",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para agregar una Direccion.",
           icon: "fas fa-plus fa-fw"
         }
       }

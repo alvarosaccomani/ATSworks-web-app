@@ -25,7 +25,7 @@ export class ItemsComponent implements OnInit {
   public items$!: Observable<ItemResults>;
   public headerConfig: any = {
     title: "LISTA DE ITEMS",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+    description: "Listado de Rubros.",
     icon: "fas fa-clipboard-list fa-fw"
   }
   public dataTabs: any = [

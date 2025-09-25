@@ -124,7 +124,7 @@ export class WorkComponent {
       if(params['wrk_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR TRABAJO",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para actualizar un Trabajo.",
           icon: "fas fa-sync-alt fa-fw"
         }
         this.work.wrk_uuid = params['wrk_uuid'];
@@ -132,7 +132,7 @@ export class WorkComponent {
       } else {
         this.headerConfig = {
           title: "NUEVO TRABAJO",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para agregar un Trabajo.",
           icon: "fas fa-plus fa-fw"
         }
       }

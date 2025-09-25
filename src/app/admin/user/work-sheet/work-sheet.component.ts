@@ -28,7 +28,7 @@ export class WorkSheetComponent {
   public isLoading: boolean = false;
   public headerConfig: any = {
     title: "HOJA DE TRABAJO",
-    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+    description: "Ficha de Hoja de Trabajo.",
     icon: "fab fa-dashcube fa-fw"
   }
   public itemsStep: any;

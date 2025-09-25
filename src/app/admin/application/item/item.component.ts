@@ -55,7 +55,7 @@ export class ItemComponent {
       if(params['itm_uuid'] && params['itm_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR ITEM",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para actualizar un Rubro.",
           icon: "fas fa-sync-alt fa-fw"
         }
         this.item.itm_uuid = params['itm_uuid'];
@@ -63,7 +63,7 @@ export class ItemComponent {
       } else {
         this.headerConfig = {
           title: "NUEVO ITEM",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para agregar un Rubro.",
           icon: "fas fa-plus fa-fw"
         }
       }

@@ -115,7 +115,7 @@ export class ModelItemComponent {
       if(params['itm_uuid'] && params['cmpitm_uuid'] && params['mitm_uuid'] && params['mitm_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR MODELO ITEM",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para actualizar un Modelo de Rubro.",
           icon: "fas fa-sync-alt fa-fw"
         }
         this.modelItem.itm_uuid = params['itm_uuid'];
@@ -125,7 +125,7 @@ export class ModelItemComponent {
       } else {
         this.headerConfig = {
           title: "NUEVO MODELO ITEM",
-          description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Suscipit nostrum rerum animi natus beatae ex. Culpa blanditiis tempore amet alias placeat, obcaecati quaerat ullam, sunt est, odio aut veniam ratione.",
+          description: "Ficha para agregar un Modelo de Rubro.",
           icon: "fas fa-plus fa-fw"
         }
       }
