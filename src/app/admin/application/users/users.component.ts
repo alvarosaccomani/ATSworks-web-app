@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { UserResults } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-users',
@@ -13,7 +14,8 @@ import { UsersService } from '../../../core/services/users.service';
     AsyncPipe,
     RouterLink,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    PaginationComponent
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
