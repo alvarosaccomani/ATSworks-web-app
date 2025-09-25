@@ -7,6 +7,7 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { CustomersService } from '../../../core/services/customers.service';
 import { CustomerResults } from '../../../core/interfaces/customer';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-customers',
@@ -14,7 +15,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
     AsyncPipe,
     RouterLink,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    PaginationComponent
   ],
   templateUrl: './customers.component.html',
   styleUrl: './customers.component.scss'
