@@ -7,6 +7,7 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { WorksService } from '../../../core/services/works.service';
 import { WorkResults } from '../../../core/interfaces/work';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-works',
@@ -14,7 +15,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
     AsyncPipe,
     RouterLink,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    PaginationComponent
   ],
   templateUrl: './works.component.html',
   styleUrl: './works.component.scss'
