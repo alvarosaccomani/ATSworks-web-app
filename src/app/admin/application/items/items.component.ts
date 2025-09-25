@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ItemResults } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-items',
@@ -13,7 +14,8 @@ import { ItemsService } from '../../../core/services/items.service';
     AsyncPipe,
     RouterLink,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    PaginationComponent
   ],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'
