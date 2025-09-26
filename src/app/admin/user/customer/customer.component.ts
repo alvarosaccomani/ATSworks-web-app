@@ -21,7 +21,7 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 })
 export class CustomerComponent {
 
-  public customer: CustomerInterface;
+  public customer!: CustomerInterface;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
@@ -47,16 +47,7 @@ export class CustomerComponent {
     private _sharedDataService: SharedDataService
   ) {
     this.isLoading = false;
-    this.customer = {
-      cmp_uuid: null,
-      cus_uuid: 'new',
-      cus_fullname: null,
-      cus_email: null,
-      cus_phone: null,    
-      usr_uuid: null,
-      cus_createdat: null,
-      cus_updatedat: null
-    }
+    this.customerInit();
   }
 
   ngOnInit(): void {
@@ -87,6 +78,19 @@ export class CustomerComponent {
         this.getCustomerById(this.customer.cmp_uuid!, this.customer.cus_uuid!);
       }
     });
+  }
+
+  public customerInit(): void {
+    this.customer = {
+      cmp_uuid: null,
+      cus_uuid: 'new',
+      cus_fullname: null,
+      cus_email: null,
+      cus_phone: null,    
+      usr_uuid: null,
+      cus_createdat: null,
+      cus_updatedat: null
+    }
   }
 
   private getAdresses(cmp_uuid: string, cus_uuid: string) {
