@@ -132,6 +132,12 @@ export class WorkSheetComponent {
     this.step = $event;
   }
 
+  public continue(): void {
+    this.isLoading = true;
+    this.step = this.itemsStep[this.step.index + 1];
+    this.isLoading = false;
+  }
+
   public onPhotoSaved(image: string) {
     this.work.wrk_workdateinit = new Date();
     this._worksService.updateWork(this.work).subscribe(

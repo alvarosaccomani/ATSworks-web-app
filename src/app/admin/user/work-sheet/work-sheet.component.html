@@ -127,6 +127,23 @@
                     </tbody>
                 </table>
             </div>
+            <p class="text-center" style="margin-top: 40px;">
+                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
+                &nbsp; &nbsp;
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-info btn-sm"
+                    [disabled]="isLoading"
+                    (click)="continue()"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="far fa-save"></i> &nbsp; CONTINUAR
+                    }
+                </button>
+            </p>
         }
         @case('final_photo') {
         }
