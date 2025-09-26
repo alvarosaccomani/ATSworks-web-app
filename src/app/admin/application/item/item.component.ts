@@ -18,7 +18,7 @@ import { ItemsService } from '../../../core/services/items.service';
 })
 export class ItemComponent {
 
-  public item: ItemInterface;
+  public item!: ItemInterface;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
@@ -41,13 +41,7 @@ export class ItemComponent {
     private _itemsService: ItemsService
   ) {
     this.isLoading = false;
-    this.item = {
-      itm_uuid: 'new',
-      itm_name: null,
-      itm_description: null,
-      itm_createdat: null,
-      itm_updatedat: null
-    }    
+    this.itemInit();
   }
 
   ngOnInit(): void {
@@ -68,6 +62,16 @@ export class ItemComponent {
         }
       }
     });
+  }
+
+  public itemInit(): void {
+    this.item = {
+      itm_uuid: 'new',
+      itm_name: null,
+      itm_description: null,
+      itm_createdat: null,
+      itm_updatedat: null
+    }   
   }
 
   private getItemById(itm_uuid: string): void {
