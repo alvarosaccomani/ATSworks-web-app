@@ -33,7 +33,7 @@ import { WorksDetailsService } from '../../../core/services/works-details.servic
 })
 export class WorkComponent {
 
-  public work: WorkInterface;
+  public work!: WorkInterface;
   public modelItems: ModelItemInterface[] = [];
   public modelItem!: ModelItemInterface;
   public customers: CustomerInterface[] = [];
@@ -89,28 +89,7 @@ export class WorkComponent {
     private _worksDetailsService: WorksDetailsService
   )
   {
-    this.work = {
-      cmp_uuid: null,
-      wrk_uuid: 'new',
-      adr_uuid: null,
-      adr: null,
-      wrk_description: null,
-      wrk_workdate: new Date(),
-      wrk_workdateinit: null,
-      wrk_workdatefinish: null,
-      wrks_uuid: 'bcaa7b3b-cdbf-4b02-8a91-78a67b5aa823',
-      wrks: null,
-      wrk_user_uuid: null,
-      wrk_user: null,
-      wrk_operator_uuid: null,
-      wrk_operator: null,
-      itm_uuid: null,
-      cmpitm_uuid: null,
-      mitm_uuid: null,
-      mitm: null,
-      wrk_createdat: null,
-      wrk_updatedat: null
-    }
+    this.workInit();
   }
 
   ngOnInit(): void {
@@ -137,6 +116,31 @@ export class WorkComponent {
         }
       }
     });
+  }
+
+  public workInit(): void {
+    this.work = {
+      cmp_uuid: null,
+      wrk_uuid: 'new',
+      adr_uuid: null,
+      adr: null,
+      wrk_description: null,
+      wrk_workdate: new Date(),
+      wrk_workdateinit: null,
+      wrk_workdatefinish: null,
+      wrks_uuid: 'bcaa7b3b-cdbf-4b02-8a91-78a67b5aa823',
+      wrks: null,
+      wrk_user_uuid: null,
+      wrk_user: null,
+      wrk_operator_uuid: null,
+      wrk_operator: null,
+      itm_uuid: null,
+      cmpitm_uuid: null,
+      mitm_uuid: null,
+      mitm: null,
+      wrk_createdat: null,
+      wrk_updatedat: null
+    }
   }
 
   private getWorkById(cmp_uuid: string, wrk_uuid: string): void {
