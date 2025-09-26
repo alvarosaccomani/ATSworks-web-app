@@ -17,7 +17,7 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 })
 export class AddressComponent {
 
-  public address: AddressInterface;
+  public address!: AddressInterface;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
@@ -30,18 +30,7 @@ export class AddressComponent {
   )
   {
     this.isLoading = false;
-    this.address = {
-      cmp_uuid: null,
-      adr_uuid: 'new',
-      cus_uuid: null,
-      cus: null,
-      adr_address: null,
-      adr_city: null,
-      adr_province: null,
-      adr_postalcode: null,
-      adr_createdat: null,
-      adr_updatedat: null
-    }
+    this.addressInit();
   }
 
   ngOnInit(): void {
@@ -73,6 +62,21 @@ export class AddressComponent {
         this.getAddressById(this.address.cmp_uuid!, this.address.cus_uuid!, this.address.adr_uuid!);
       }
     });
+  }
+
+  public addressInit(): void {
+    this.address = {
+      cmp_uuid: null,
+      adr_uuid: 'new',
+      cus_uuid: null,
+      cus: null,
+      adr_address: null,
+      adr_city: null,
+      adr_province: null,
+      adr_postalcode: null,
+      adr_createdat: null,
+      adr_updatedat: null
+    }
   }
 
   private getAddressById(cmp_uuid: string, cus_uuid: string, adr_uuid: string): void {
