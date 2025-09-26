@@ -14,7 +14,7 @@ import { CompaniesService } from '../../../core/services/companies.service';
 })
 export class CompanyProfileComponent {
 
-  public company: CompanyInterface;
+  public company!: CompanyInterface;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
@@ -24,15 +24,7 @@ export class CompanyProfileComponent {
     private _companiesService: CompaniesService
   ) {
     this.isLoading = false;
-    this.company = {
-      cmp_uuid: null,
-      cmp_name: null,
-      cmp_address: null,
-      cmp_phone: null,
-      cmp_email: null,
-      cmp_createdat: null,
-      cmp_updatedat: null
-    }
+    this.companyInit();
   }
 
   ngOnInit(): void {
@@ -42,6 +34,18 @@ export class CompanyProfileComponent {
         this.getCompanyById(this.company.cmp_uuid!);
       }
     });
+  }
+
+  public companyInit(): void {
+    this.company = {
+      cmp_uuid: null,
+      cmp_name: null,
+      cmp_address: null,
+      cmp_phone: null,
+      cmp_email: null,
+      cmp_createdat: null,
+      cmp_updatedat: null
+    }
   }
 
   private getCompanyById(cmp_uuid: string): void {
