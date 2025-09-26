@@ -25,7 +25,7 @@ import { DataTypesService } from '../../../core/services/data-types.service';
 })
 export class ModelItemComponent {
 
-  public modelItem: ModelItemInterface;
+  public modelItem!: ModelItemInterface;
   public companyItems: any;
   public status: string = "";
   public errorMessage: string = "";
@@ -93,18 +93,7 @@ export class ModelItemComponent {
     private _dataTypesService: DataTypesService
   ) {
     this.isLoading = false;
-    this.modelItem = {
-      cmp_uuid: null,
-      itm_uuid: null,
-      cmpitm_uuid: null,
-      mitm_uuid: 'new',
-      mitm_name: null,
-      mitm_description: null,
-      mitm_active: null,
-      mitm_createdat: null,
-      mitm_updatedat: null,
-      detailModelItems: []
-    }
+    this.modelItemInit();
   }
 
   ngOnInit(): void {
@@ -130,6 +119,21 @@ export class ModelItemComponent {
         }
       }
     });
+  }
+
+  public modelItemInit(): void {
+    this.modelItem = {
+      cmp_uuid: null,
+      itm_uuid: null,
+      cmpitm_uuid: null,
+      mitm_uuid: 'new',
+      mitm_name: null,
+      mitm_description: null,
+      mitm_active: null,
+      mitm_createdat: null,
+      mitm_updatedat: null,
+      detailModelItems: []
+    }
   }
 
   private getModelItemById(cmp_uuid: string, itm_uuid: string, cmpitm_uuid: string, mitm_uuid: string): void {
