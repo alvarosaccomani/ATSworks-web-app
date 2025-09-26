@@ -3,11 +3,13 @@
     <div class="full-box nav-lateral-bg show-nav-lateral"></div>
     <div class="full-box nav-lateral-content">
         <figure class="full-box nav-lateral-avatar">
-            <i class="far fa-times-circle show-nav-lateral"></i>
-            <img src="assets/imgs/avatar/Avatar.png" class="img-fluid" alt="Avatar">
-            <figcaption class="roboto-medium text-center">
-                Carlos Alfaro <br><small class="roboto-condensed-light">Web Developer</small>
-            </figcaption>
+            @if(identity) {
+                <i class="far fa-times-circle show-nav-lateral"></i>
+                <img [src]="identity.usr_image" class="img-fluid" alt="Avatar">
+                <figcaption class="roboto-medium text-center">
+                    {{identity.usr_nick}} <br><small class="roboto-condensed-light">{{identity.usr_name}} {{identity.usr_surname}}</small>
+                </figcaption>
+            }
         </figure>
         <div class="full-box nav-lateral-bar"></div>
         <nav class="full-box nav-lateral-menu">

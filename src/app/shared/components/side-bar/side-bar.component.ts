@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { UserInterface } from '../../../core/interfaces/user';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
 @Component({
@@ -14,6 +15,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 })
 export class SideBarComponent {
 
+  @Input() identity!: UserInterface;
+
   constructor(
     private _sharedDataService: SharedDataService
   ) { }
@@ -24,7 +27,10 @@ export class SideBarComponent {
 
   ngOnInit(): void {
 
-    let cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    let cmp_uuid;
+    if(localStorage.getItem('company')) {
+      cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    }
 
     this.menuItems = [
       {
