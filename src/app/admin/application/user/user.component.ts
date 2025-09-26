@@ -19,7 +19,7 @@ import { ValidationService } from '../../../core/services/validation.service';
 })
 export class UserComponent {
 
-  public user: UserInterface;
+  public user!: UserInterface;
   public status: string = "";
   public errorMessage: string = "";
   public isLoading: boolean = false;
@@ -44,25 +44,7 @@ export class UserComponent {
     private _validationService: ValidationService
   ) {
     this.isLoading = false;
-    this.user = {
-      usr_uuid: 'new',
-      usr_name: null,
-      usr_surname: null,
-      usr_password: null,
-      usr_image: null,
-      usr_email: null,
-      usr_nick: null,
-      usr_bio: null,
-      usr_registered: null,
-      usr_socket: null,
-      usr_online: null,
-      usr_confirmed: null,
-      usr_confirmationtoken: null,
-      usr_resetpasswordtoken: null,
-      usr_resetpasswordexpires: null,
-      usr_createdat: null,
-      usr_updatedat: null
-    }    
+    this.userInit();
   }
 
   ngOnInit(): void {
@@ -83,6 +65,28 @@ export class UserComponent {
         }
       }
     });
+  }
+
+  public userInit(): void {
+    this.user = {
+      usr_uuid: 'new',
+      usr_name: null,
+      usr_surname: null,
+      usr_password: null,
+      usr_image: null,
+      usr_email: null,
+      usr_nick: null,
+      usr_bio: null,
+      usr_registered: null,
+      usr_socket: null,
+      usr_online: null,
+      usr_confirmed: null,
+      usr_confirmationtoken: null,
+      usr_resetpasswordtoken: null,
+      usr_resetpasswordexpires: null,
+      usr_createdat: null,
+      usr_updatedat: null
+    }
   }
 
   private getUserById(usr_uuid: string): void {
