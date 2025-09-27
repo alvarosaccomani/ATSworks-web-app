@@ -6,6 +6,8 @@ import { AddressInterface } from '../../../core/interfaces/address';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-address',
   imports: [
@@ -18,8 +20,6 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class AddressComponent {
 
   public address!: AddressInterface;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public headerConfig: any = {};
 
@@ -90,7 +90,7 @@ export class AddressComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -100,10 +100,37 @@ export class AddressComponent {
     )
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.address.adr_address) {
-      this.status = 'error';
-      this.errorMessage = "El nombre de la direccion no puede estar vacio";
+      this.showMessage("Error", "El nombre de la direccion no puede estar vacio");
+      return false;
+    }
+
+    if(this.address.adr_city && this.address.adr_city.length > 100) {
+      this.showMessage("Error", "La ciudad no puede superar los 100 caracteres");
+      return false;
+    }
+
+    if(this.address.adr_province && this.address.adr_province.length > 100) {
+      this.showMessage("Error", "La provincia no puede superar los 100 caracteres");
+      return false;
+    }
+    
+    if(this.address.adr_postalcode && this.address.adr_postalcode.length > 20) {
+      this.showMessage("Error", "El codigo postal no puede superar los 20 caracteres");
       return false;
     }
 
@@ -117,7 +144,6 @@ export class AddressComponent {
         if(response.success) {
           this.isLoading = false;
           const address = response.address;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -125,11 +151,10 @@ export class AddressComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
-          //this.status = 'error'
+          this.showMessage("Error", errorMessage.error.error);
         }
       }
     )
@@ -142,7 +167,6 @@ export class AddressComponent {
           if(response.success) {
             this.isLoading = false;
             const address = response.address;
-            this.status = 'success';
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -152,9 +176,8 @@ export class AddressComponent {
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )
