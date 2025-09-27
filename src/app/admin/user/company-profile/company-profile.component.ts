@@ -4,6 +4,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CompanyInterface } from '../../../core/interfaces/company';
 import { CompaniesService } from '../../../core/services/companies.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-company-profile',
   imports: [
@@ -15,8 +17,6 @@ import { CompaniesService } from '../../../core/services/companies.service';
 export class CompanyProfileComponent {
 
   public company!: CompanyInterface;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
 
   constructor(
@@ -59,7 +59,7 @@ export class CompanyProfileComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -69,10 +69,37 @@ export class CompanyProfileComponent {
     )
   }  
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.company.cmp_name) {
-      this.status = 'error';
-      this.errorMessage = "El nombre de empresa no puede estar vacio";
+      this.showMessage("Error", "El nombre de empresa no puede estar vacio");
+      return false;
+    }
+
+    if(this.company.cmp_name.length > 150) {
+      this.showMessage("Error", "El nombre no puede superar los 150 caracteres");
+      return false;
+    }
+
+    if(this.company.cmp_phone && this.company.cmp_phone.length > 20) {
+      this.showMessage("Error", "El telefono no puede superar los 20 caracteres");
+      return false;
+    }
+
+    if(this.company.cmp_email && this.company.cmp_email.length > 100) {
+      this.showMessage("Error", "El email no puede superar los 100 caracteres");
       return false;
     }
 
@@ -86,7 +113,6 @@ export class CompanyProfileComponent {
         if(response.success) {
           this.isLoading = false;
           const company = response.company;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -94,9 +120,8 @@ export class CompanyProfileComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
           //this.status = 'error'
         }
@@ -111,7 +136,6 @@ export class CompanyProfileComponent {
           if(response.success) {
             this.isLoading = false;
             const company = response.company;
-            this.status = 'success';
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -121,9 +145,8 @@ export class CompanyProfileComponent {
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )

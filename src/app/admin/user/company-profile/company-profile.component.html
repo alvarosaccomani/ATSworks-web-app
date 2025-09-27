@@ -33,10 +33,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-z0-99áéíóúÁÉÍÓÚñÑ ]{1,70}" 
                                 class="form-control" 
                                 id="cmp_name" 
-                                maxlength="70"
                                 name="cmp_name"
                                 [(ngModel)]="company.cmp_name">
                         </div>
@@ -52,7 +50,6 @@
                                 type="email" 
                                 class="form-control" 
                                 id="cmp_email" 
-                                maxlength="70"
                                 name="cmp_email" 
                                 [(ngModel)]="company.cmp_email">
                         </div>
@@ -66,10 +63,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[0-9()+]{1,20}" 
                                 class="form-control" 
                                 id="cmp_phone" 
-                                maxlength="20"
                                 name="cmp_phone" 
                                 [(ngModel)]="company.cmp_phone">
                         </div>
@@ -83,11 +78,9 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-z0-99áéíóúÁÉÍÓÚñÑ ]{1,190}" 
                                 class="form-control" 
                                 name="cmp_email" 
                                 id="cmp_email" 
-                                maxlength="190"
                                 [(ngModel)]="company.cmp_email">
                         </div>
                     </div>
