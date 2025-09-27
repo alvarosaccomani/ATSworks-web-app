@@ -81,7 +81,7 @@ export class LoginComponent {
           this.isLoading = false;
           let errorMessage = <any>error;
           console.log(errorMessage);
-          if(errorMessage!=null) {
+          if(errorMessage != null) {
               this.status = 'error';
               this.errorMessage = errorMessage.error.error;
           }
@@ -106,7 +106,7 @@ export class LoginComponent {
       error =>{
         let errorMessage = <any>error;
         console.log(errorMessage);
-        if(errorMessage!=null) {
+        if(errorMessage != null) {
             this.status = 'error';
         }
       }
