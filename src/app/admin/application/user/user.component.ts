@@ -7,6 +7,8 @@ import { UserInterface } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-user',
   imports: [
@@ -20,8 +22,6 @@ import { ValidationService } from '../../../core/services/validation.service';
 export class UserComponent {
 
   public user!: UserInterface;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
   public headerConfig: any = {};
@@ -100,7 +100,7 @@ export class UserComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -110,28 +110,52 @@ export class UserComponent {
     )
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.user.usr_nick) {
-      this.status = 'error';
-      this.errorMessage = "El nombre de usuario no puede estar vacio";
+      this.showMessage("Error", "El nombre de usuario no puede estar vacio");
       return false;
     }
 
     if(!this.user.usr_email) {
-      this.status = 'error';
-      this.errorMessage = "El e-mail puede estar vacio";
+      this.showMessage("Error", "El e-mail puede estar vacio");
       return false;
     }
 
     if(!this.user.usr_password) {
-      this.status = 'error';
-      this.errorMessage = "La contraseña no puede estar vacia";
+      this.showMessage("Error", "La contraseña no puede estar vacia");
+      return false;
+    }
+
+    if(this.user.usr_nick.length > 50) {
+      this.showMessage("Error", "El nick del usuario no puede superar los 50 caracteres");
+      return false;
+    }
+
+    if(this.user.usr_email.length > 100) {
+      this.showMessage("Error", "El email del usuario no puede superar los 100 caracteres");
+      return false;
+    }
+
+    if(this.user.usr_password.length > 100) {
+      this.showMessage("Error", "El password del usuario no puede superar los 100 caracteres");
       return false;
     }
 
     if(!this._validationService.emailValidator(this.user.usr_email)) {
-      this.status = 'error';
-      this.errorMessage = "El e-mail no tiene un formato correcto";
+      this.showMessage("Error", "El e-mail no tiene un formato correcto");
       return false;
     }
 
@@ -145,7 +169,6 @@ export class UserComponent {
         if(response.success) {
           this.isLoading = false;
           const user = response.user;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -153,11 +176,10 @@ export class UserComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
-          //this.status = 'error'
+          this.showMessage("Error", errorMessage.error.error);
         }
       }
     )
@@ -170,7 +192,6 @@ export class UserComponent {
           if(response.success) {
             this.isLoading = false;
             const user = response.user;
-            this.status = 'success';
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -180,9 +201,8 @@ export class UserComponent {
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )
@@ -197,5 +217,4 @@ export class UserComponent {
       }
     }
   }
-
 }
