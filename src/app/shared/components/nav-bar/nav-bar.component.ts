@@ -56,14 +56,14 @@ export class NavBarComponent implements OnInit {
     $('.btn-exit-system').on('click', (e: any) => {
       e.preventDefault();
       Swal.fire({
-        title: 'Are you sure to close the session?',
-        text: "You are about to close the session and exit the system",
+        title: '¿Estás seguro de cerrar la sesión?',
+        text: "Estás a punto de cerrar la sesión y salir del sistema.",
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, exit!',
-        cancelButtonText: 'No, cancel'
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
       }).then((result: any) => {
         if (result.value) {
           localStorage.clear();
