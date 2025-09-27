@@ -12,6 +12,8 @@ import { ModelItemsService } from '../../../core/services/model-items.service';
 import { DetailModelItemsService } from '../../../core/services/detail-model-items.service';
 import { DataTypesService } from '../../../core/services/data-types.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-model-item',
   imports: [
@@ -27,8 +29,6 @@ export class ModelItemComponent {
 
   public modelItem!: ModelItemInterface;
   public companyItems: any;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -147,7 +147,7 @@ export class ModelItemComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -168,10 +168,27 @@ export class ModelItemComponent {
     }
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.modelItem.mitm_name) {
-      this.status = 'error';
-      this.errorMessage = "El nombre de modelo de item no puede estar vacio";
+      this.showMessage("Error", "El nombre de modelo de item no puede estar vacio");
+      return false;
+    }
+
+    if(this.modelItem.mitm_name.length > 50) {
+      this.showMessage("Error", "El nombre no puede superar los 50 caracteres");
       return false;
     }
 
@@ -186,7 +203,6 @@ export class ModelItemComponent {
           this.isLoading = false;
           const modelItem = response.data;
           this.onSaveDetailModelItems(modelItem.cmp_uuid, modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid);
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -194,9 +210,8 @@ export class ModelItemComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
           //this.status = 'error'
         }
@@ -211,15 +226,13 @@ export class ModelItemComponent {
           this.isLoading = false;
           const modelItem = response.data;
           this.onSaveDetailModelItems(modelItem.cmp_uuid, modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid);
-          this.status = 'success';
         },
         error =>{
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )
