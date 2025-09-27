@@ -8,6 +8,8 @@ import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-customer',
   imports: [
@@ -22,8 +24,6 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class CustomerComponent {
 
   public customer!: CustomerInterface;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -104,7 +104,7 @@ export class CustomerComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
         if(errorMessage != null) {
           //this.status = 'error'
@@ -125,7 +125,7 @@ export class CustomerComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -139,12 +139,39 @@ export class CustomerComponent {
     this._router.navigate(['/admin/user/address', 'new', '']);
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.customer.cus_fullname) {
-      this.status = 'error';
-      this.errorMessage = "El nombre de cliente no puede estar vacio";
+      this.showMessage("Error", "El nombre de cliente no puede estar vacio");
       return false;
     }
+
+    if(this.customer.cus_fullname.length > 255) {
+      this.showMessage("Error", "El nombre no puede superar los 255 caracteres");
+      return false;
+    }
+
+    if(this.customer.cus_email && this.customer.cus_email.length > 255) {
+      this.showMessage("Error", "El email no puede superar los 255 caracteres");
+      return false;
+    }
+
+    if(this.customer.cus_phone && this.customer.cus_phone.length > 20) {
+      this.showMessage("Error", "El telefono no puede superar los 20 caracteres");
+      return false;
+    } 
 
     return true;
   }
@@ -156,7 +183,6 @@ export class CustomerComponent {
         if(response.success) {
           this.isLoading = false;
           const customer = response.customer;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -164,9 +190,8 @@ export class CustomerComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
           //this.status = 'error'
         }
@@ -181,7 +206,6 @@ export class CustomerComponent {
           if(response.success) {
             this.isLoading = false;
             const customer = response.customer;
-            this.status = 'success';
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -191,9 +215,8 @@ export class CustomerComponent {
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )

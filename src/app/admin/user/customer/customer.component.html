@@ -24,10 +24,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-Z0-9-]{1,27}"
                                 class="form-control"
                                 id="cus_fullname"
-                                maxlength="27"
                                 name="cus_fullname"
                                 [(ngModel)]="customer.cus_fullname">
                         </div>
@@ -41,10 +39,8 @@
                             </label>
                             <input 
                                 type="text"
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}"
                                 class="form-control"
                                 id="cus_email"
-                                maxlength="40"
                                 name="cus_email"
                                 [(ngModel)]="customer.cus_email">
                         </div>
@@ -58,10 +54,8 @@
                             </label>
                             <input
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,40}" 
                                 class="form-control" 
                                 id="cus_phone" 
-                                maxlength="40"
                                 name="cus_phone" 
                                 [(ngModel)]="customer.cus_phone">
                         </div>
@@ -75,11 +69,9 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[0-9()+]{1,20}" 
                                 class="form-control" 
                                 name="usr_uuid" 
                                 id="usr_uuid" 
-                                maxlength="20"
                                 name="cus_phone" 
                                 [(ngModel)]="customer.usr_uuid">
                         </div>
