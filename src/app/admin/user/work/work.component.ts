@@ -20,6 +20,8 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service'
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-work',
   imports: [
@@ -40,8 +42,6 @@ export class WorkComponent {
   public customer!: CustomerInterface;
   public addresses: AddressInterface[] = [];
   public usersOperatorWork: UserRolCompanyInterface[] = [];
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -156,7 +156,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -182,7 +182,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -218,7 +218,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -239,7 +239,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -260,7 +260,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -281,7 +281,7 @@ export class WorkComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
         if(errorMessage != null) {
           //this.status = 'error'
@@ -337,6 +337,43 @@ export class WorkComponent {
     }
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
+  private validate(): boolean {
+    if(!this.work.mitm_uuid) {
+      this.showMessage("Error", "Debe seleccionar un modelo de rubro.");
+      return false;
+    }
+
+    if(!this.customer) {
+      this.showMessage("Error", "Debe seleccionar un cliente.");
+      return false;
+    }
+
+    if(!this.work.adr_uuid) {
+      this.showMessage("Error", "Debe seleccionar una direccion.");
+      return false;
+    }
+
+    if(!this.work.wrk_operator_uuid) {
+      this.showMessage("Error", "Debe seleccionar un usuario.");
+      return false;
+    }
+
+    return true;
+  }
+
   private async updateWork(formWork: NgForm): Promise<void> {
     this.isLoading = true;
     this._worksService.updateWork(formWork.form.value).subscribe(
@@ -345,7 +382,6 @@ export class WorkComponent {
           this.isLoading = false;
           const modelItem = response.data;
           this.onSaveWorkDetails(modelItem.cmp_uuid, modelItem.wrk_uuid);
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -353,9 +389,8 @@ export class WorkComponent {
       },
       error => {
         this.isLoading = false;
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
-
         if(errorMessage != null) {
           //this.status = 'error'
         }
@@ -370,25 +405,25 @@ export class WorkComponent {
           this.isLoading = false;
           const modelItem = response.data;
           this.onSaveWorkDetails(modelItem.cmp_uuid, modelItem.wrk_uuid);
-          this.status = 'success';
         },
         error =>{
             this.isLoading = false;
             let errorMessage = <any>error;
             console.log(errorMessage);
-            if(errorMessage!=null) {
-                this.status = 'error';
-                this.errorMessage = errorMessage.error.error;
+            if(errorMessage != null) {
+                this.showMessage("Error", errorMessage.error.error);
             }
         }
       )
   }
 
   public onSaveWork(formWork: NgForm): void {
-    if(this.work.wrk_uuid && this.work.wrk_uuid != 'new') {
-      this.updateWork(formWork);
-    } else {
-      this.insertWork(formWork);
+    if(this.validate()) {
+        if(this.work.wrk_uuid && this.work.wrk_uuid != 'new') {
+          this.updateWork(formWork);
+        } else {
+          this.insertWork(formWork);
+        }
     }
   }
   

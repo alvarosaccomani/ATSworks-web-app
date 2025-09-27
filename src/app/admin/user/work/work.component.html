@@ -23,11 +23,9 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[0-9()+]{1,20}" 
                                 class="form-control" 
                                 name="cmp_uuid" 
                                 id="cmp_uuid" 
-                                maxlength="20"
                                 name="cmp_uuid" 
                                 [(ngModel)]="work.cmp_uuid">
                         </div>
@@ -41,10 +39,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="wrk_uuid" 
-                                maxlength="35"
                                 name="wrk_uuid"
                                 [(ngModel)]="work.wrk_uuid">
                         </div>
@@ -58,10 +54,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="wrk_user_uuid" 
-                                maxlength="35"
                                 name="wrk_user_uuid"
                                 [(ngModel)]="work.wrk_user_uuid">
                         </div>
@@ -75,10 +69,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="itm_uuid" 
-                                maxlength="35"
                                 name="itm_uuid"
                                 [(ngModel)]="work.itm_uuid">
                         </div>
@@ -92,10 +84,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="cmpitm_uuid" 
-                                maxlength="35"
                                 name="cmpitm_uuid"
                                 [(ngModel)]="work.cmpitm_uuid">
                         </div>
@@ -109,10 +99,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="mitm_uuid" 
-                                maxlength="35"
                                 name="mitm_uuid"
                                 [(ngModel)]="work.mitm_uuid">
                         </div>
@@ -126,10 +114,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
                                 id="wrks_uuid" 
-                                maxlength="35"
                                 name="wrks_uuid"
                                 [(ngModel)]="work.wrks_uuid">
                         </div>
@@ -265,10 +251,8 @@
                             </label>
                             <input 
                                 type="text" 
-                                pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                 class="form-control" 
-                                id="wrk_description" 
-                                maxlength="35"
+                                id="wrk_description"
                                 name="wrk_description" 
                                 [(ngModel)]="work.wrk_description">
                         </div>
@@ -367,7 +351,7 @@
                 <div class="container-fluid">
                     <div class="form-group">
                         <label for="agregar_cliente" class="bmd-label-floating">DNI, Nombre, Apellido, Telefono</label>
-                        <input type="text" pattern="[a-zA-z0-9áéíóúÁÉÍÓÚñÑ#() ]{1,30}" class="form-control" name="agregar_cliente" id="agregar_cliente" maxlength="30">
+                        <input type="text" class="form-control" name="agregar_cliente" id="agregar_cliente">
                     </div>
                 </div>
                 <br>
