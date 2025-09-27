@@ -63,8 +63,8 @@ export class ModelsItemsComponent {
 
   public deleteModelItem(modelItem: ModelItemInterface) {
     Swal.fire({
-        title: '¿Desea eliminar el Modelo de Item?',
-        text: "You are about to close the session and exit the system",
+        title: '¿Desea eliminar el Modelo de Rubro?',
+        text: "Esta a punto de eliminar el Modelo De Rubro",
         type: 'question',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
