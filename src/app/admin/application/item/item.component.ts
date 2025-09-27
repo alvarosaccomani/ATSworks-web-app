@@ -6,6 +6,8 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
 
+declare var Swal: any;
+
 @Component({
   selector: 'app-item',
   imports: [
@@ -19,8 +21,6 @@ import { ItemsService } from '../../../core/services/items.service';
 export class ItemComponent {
 
   public item!: ItemInterface;
-  public status: string = "";
-  public errorMessage: string = "";
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -85,7 +85,7 @@ export class ItemComponent {
         }
       },
       (error: any) => {
-        var errorMessage = <any>error;
+        let errorMessage = <any>error;
         console.log(errorMessage);
 
         if(errorMessage != null) {
@@ -95,10 +95,26 @@ export class ItemComponent {
     )
   }
 
+  private showMessage(title: string, text: string): void {
+    Swal.fire({
+        title: title,
+        text: text,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Aceptar',
+      }).then((result: any) => {
+        console.info(result);
+      });
+  }
+
   private validate(): boolean {
     if(!this.item.itm_name) {
-      this.status = 'error';
-      this.errorMessage = "El nombre del item no puede estar vacio";
+      this.showMessage("Error", "El nombre del item no puede estar vacio");
+      return false;
+    }
+    if(this.item.itm_name.length > 100) {
+      this.showMessage("Error", "El nombre del item no puede superar los 100 caracteres");
       return false;
     }
 
@@ -112,7 +128,6 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -122,9 +137,8 @@ export class ItemComponent {
           this.isLoading = false;
           let errorMessage = <any>error;
           console.log(errorMessage);
-          if(errorMessage!=null) {
-              this.status = 'error';
-              this.errorMessage = errorMessage.error.error;
+          if(errorMessage != null) {
+              this.showMessage("Error", errorMessage.error.error);
           }
       }
     )
@@ -137,7 +151,6 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
-          this.status = 'success';
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -147,9 +160,8 @@ export class ItemComponent {
           this.isLoading = false;
           let errorMessage = <any>error;
           console.log(errorMessage);
-          if(errorMessage!=null) {
-              this.status = 'error';
-              this.errorMessage = errorMessage.error.error;
+          if(errorMessage != null) {
+              this.showMessage("Error", errorMessage.error.error);
           }
       }
     )
