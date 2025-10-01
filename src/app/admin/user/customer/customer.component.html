@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label 
                                 for="cus_fullname"
@@ -63,7 +63,7 @@
                                 [(ngModel)]="customer.cus_fullname">
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
+                    <div class="col-12 col-md-5">
                         <div class="form-group">
                             <label 
                                 for="cus_email" 
@@ -76,6 +76,21 @@
                                 id="cus_email"
                                 name="cus_email"
                                 [(ngModel)]="customer.cus_email">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <div class="form-group">
+                            <label 
+                                for="cus_dateofbirth" 
+                                class="bmd-label-floating">
+                                Fecha de Cumpleaños
+                            </label>
+                            <input 
+                                type="date"
+                                class="form-control"
+                                id="cus_dateofbirth"
+                                name="cus_dateofbirth"
+                                [(ngModel)]="customer.cus_dateofbirth">
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
