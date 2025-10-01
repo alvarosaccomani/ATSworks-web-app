@@ -4,8 +4,10 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
+import { CollectionFormInterface } from '../../../core/interfaces/collection-form';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
+import { CollectionFormsService } from '../../../core/services/collection-forms.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
 declare var Swal: any;
@@ -24,6 +26,7 @@ declare var Swal: any;
 export class CustomerComponent {
 
   public customer!: CustomerInterface;
+  public collectionForms: CollectionFormInterface[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -44,6 +47,7 @@ export class CustomerComponent {
     private _router: Router,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
+    private _collectionFormsService: CollectionFormsService,
     private _sharedDataService: SharedDataService
   ) {
     this.isLoading = false;
@@ -52,6 +56,7 @@ export class CustomerComponent {
 
   ngOnInit(): void {
     this.customer.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.getCollectionForms(this.customer.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
@@ -87,6 +92,7 @@ export class CustomerComponent {
       cus_fullname: null,
       cus_email: null,
       cus_phone: null,    
+      cfrm_uuid: null,
       usr_uuid: null,
       cus_createdat: null,
       cus_updatedat: null
@@ -133,10 +139,41 @@ export class CustomerComponent {
         }
       }
     )
-  }  
+  }
+  
+  private getCollectionForms(cmp_uuid: string) {
+    this._collectionFormsService.getCollectionForms(cmp_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.collectionForms = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
 
   public addAddress(): void {
     this._router.navigate(['/admin/user/address', 'new', '']);
+  }
+
+  public onCollectionFormChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedCollectionForm = this.collectionForms.find(
+      (selectedCollectionForm: CollectionFormInterface) => selectedCollectionForm.cfrm_uuid === selectedValue
+    );
+    if (selectedCollectionForm) {
+      //this.setModelItem(selectedCollectionForm);
+    }
   }
 
   private showMessage(title: string, text: string): void {

@@ -13,6 +13,39 @@
         <fieldset>
             <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
             <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_uuid" 
+                                class="bmd-label-floating">
+                                cmp_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="cmp_uuid" 
+                                id="cmp_uuid" 
+                                name="cmp_uuid" 
+                                [(ngModel)]="customer.cmp_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cus_uuid" 
+                                class="bmd-label-floating">
+                                cus_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="cus_uuid" 
+                                name="cus_uuid"
+                                [(ngModel)]="customer.cus_uuid">
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
@@ -58,6 +91,29 @@
                                 id="cus_phone" 
                                 name="cus_phone" 
                                 [(ngModel)]="customer.cus_phone">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label
+                                for="cfrm_uuid"
+                                class="bmd-label-floating">
+                                Forma de Cobro
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="cfrm_uuid"
+                                [(ngModel)]="customer.cfrm_uuid"
+                                (change)="onCollectionFormChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(collectionForm of collectionForms; track collectionForm.cfrm_uuid) {
+                                    @if(collectionForm){
+                                        <option [value]="collectionForm.cfrm_uuid">
+                                            {{collectionForm.cfrm_name}}
+                                        </option>
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
