@@ -146,6 +146,10 @@
             </p>
         }
         @case('final_photo') {
+            <app-camera 
+                (photoSaved)="onPhotoSaved($event)"
+                >
+            </app-camera>
         }
     }
 </div>

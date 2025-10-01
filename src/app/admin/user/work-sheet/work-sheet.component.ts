@@ -139,6 +139,18 @@ export class WorkSheetComponent {
   }
 
   public onPhotoSaved(image: string) {
+    switch(this.step.name) {
+        case 'initial_photo': {
+          this.insertInitialPhoto(image);
+          break;
+        }
+        case 'final_photo':
+          this.insertFinalPhoto(image);
+          break;
+      }
+  }
+
+  public insertInitialPhoto(image: string) {
     this.work.wrk_workdateinit = new Date();
     this._worksService.updateWork(this.work).subscribe(
       (response: any) => {
@@ -156,7 +168,41 @@ export class WorkSheetComponent {
             wrka_createdat:null,
             wrka_updatedat: null
           }
-          this.onSaveWorAttachment(workAttachment);
+          this.insertWorAttachment(workAttachment);
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  public insertFinalPhoto(image: string) {
+    this.work.wrk_workdatefinish = new Date();
+    this._worksService.updateWork(this.work).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
+          console.info(image); // Guardar la imagen recibida
+          this.step = this.itemsStep[this.step.index + 1];
+          let workAttachment = {
+            cmp_uuid: this.work.cmp_uuid,
+            wrk_uuid: this.work.wrk_uuid,
+            wrka_uuid: null,
+            wrka_attachmenttype: 'imagen',
+            wrka_filepath: image,
+            wrka_createdat:null,
+            wrka_updatedat: null
+          }
+          this.insertWorAttachment(workAttachment);
         } else {
           //this.status = 'error'
         }
@@ -192,14 +238,6 @@ export class WorkSheetComponent {
       }
     )
   }
-
-  public onSaveWorAttachment(workAttachment: WorkAttachmentInterface): void {
-    if(this.work.wrk_workdatefinish) {
-
-    } else {
-      this.insertWorAttachment(workAttachment);
-    }
-  }  
 
   public findDetailModelItemArrayValues(key: string) {
     let values = this.work.mitm?.detailModelItems?.find((itm => itm.dmitm_key === key))?.dmitm_arrayvalues;
