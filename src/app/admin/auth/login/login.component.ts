@@ -100,7 +100,7 @@ export class LoginComponent {
             //persist user token
             localStorage.setItem('token', this.token);
             this.status = 'success';
-            this._router.navigate(['/admin/user/dashboard']);
+            this._router.navigate(['/admin/user/no-company']);
         }
       },
       error =>{
