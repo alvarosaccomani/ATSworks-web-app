@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
@@ -37,6 +37,7 @@ export class ItemComponent {
   ] 
 
   constructor(
+    private _router: Router,
     private _route: ActivatedRoute,
     private _itemsService: ItemsService
   ) {
@@ -95,7 +96,7 @@ export class ItemComponent {
     )
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -105,6 +106,10 @@ export class ItemComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -128,6 +133,9 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
+          this.showMessage("Informacion", "El Rubro fue actualizado correctamente.", () => {
+            this._router.navigate(['/admin/application/items']);
+          });
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -151,6 +159,9 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
+          this.showMessage("Informacion", "El Rubro fue agregado correctamente.", () => {
+            this._router.navigate(['/admin/application/items']);
+          });
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -169,7 +180,7 @@ export class ItemComponent {
 
   public onSaveItem(formItem: NgForm): void {
     if(this.validate()) {
-      if(this.item.itm_uuid) {
+      if(this.item.itm_uuid && this.item.itm_uuid != 'new') {
         this.updateItem(formItem);
       } else {
         this.insertItem(formItem);
