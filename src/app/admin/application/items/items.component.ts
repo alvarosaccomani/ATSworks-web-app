@@ -22,6 +22,12 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 })
 export class ItemsComponent implements OnInit {
 
+  //Pagination
+  public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
+  public perPage: number = 10; //Number of items displayed per page
+  public numElements!: number; //Total existing items
+
+  private cmp_uuid!: string;
   public items$!: Observable<ItemResults>;
   public headerConfig: any = {
     title: "LISTA DE ITEMS",
@@ -46,7 +52,11 @@ export class ItemsComponent implements OnInit {
     ) { }
     
     ngOnInit(): void {
-      this.items$ = this._itemsService.getItems('');
+      this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
     }
 
+  public goToPage(page: number): void {
+    this.page = page;
+    this.items$ = this._itemsService.getItems("null", page, this.perPage);
+  }
 }
