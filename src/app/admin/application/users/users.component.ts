@@ -22,6 +22,11 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 })
 export class UsersComponent implements OnInit {
 
+  //Pagination
+  public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
+  public perPage: number = 10; //Number of items displayed per page
+  public numElements!: number; //Total existing items
+
   public users$!: Observable<UserResults>;
   public headerConfig: any = {
     title: "LISTA DE USUARIOS",
@@ -46,7 +51,11 @@ export class UsersComponent implements OnInit {
     ) { }
     
     ngOnInit(): void {
-      this.users$ = this._usersService.getUsers('');
+      this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
     }
 
+  public goToPage(page: number): void {
+    this.page = page;
+    this.users$ = this._usersService.getUsers("null", page, this.perPage);
+  }
 }
