@@ -11,6 +11,11 @@
         class="form-neon" 
         autocomplete="off">
         <fieldset>
+            <legend><i class="far fa-image"></i> &nbsp; Imagen de usuario</legend>
+            <app-image
+                    (imageSelected)="onImageSelected($event)"
+                >
+            </app-image>
             <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
             <div class="container-fluid">
                 <div [hidden]="true" class="row">
