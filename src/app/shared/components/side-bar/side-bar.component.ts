@@ -133,7 +133,7 @@ export class SideBarComponent {
           { 
             name: 'Nuevo trabajo',
             icon: 'fas fa-plus fa-fw',
-            url: null
+            url: 'work/new'
           },
           { 
             name: 'Lista de trabajos',
