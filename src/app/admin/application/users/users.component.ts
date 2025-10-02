@@ -4,9 +4,11 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
-import { UserResults } from '../../../core/interfaces/user';
+import { UserInterface, UserResults } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+
+declare var Swal: any;
 
 @Component({
   selector: 'app-users',
@@ -52,6 +54,32 @@ export class UsersComponent implements OnInit {
     
     ngOnInit(): void {
       this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
+    }
+
+    public deleteUser(user: UserInterface) {
+      Swal.fire({
+        title: '¿Desea eliminar el Usuario?',
+        text: "Esta a punto de eliminar el Usuario",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar'
+      }).then((result: any) => {
+        if (result.value) {
+          this._usersService.deleteUser(user.usr_uuid!)
+            .subscribe(
+              response => {
+                console.info(response);
+                this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
+              },
+              error => {
+                console.log(<any>error);
+              }
+            );
+        }
+      });
     }
 
   public goToPage(page: number): void {
