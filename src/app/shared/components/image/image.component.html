@@ -1,1 +1,29 @@
-<p>image works!</p>
+<p class="text-muted text-center">Seleciona una imagen</p>
+<div class="form-group">
+    <div class="custom-input-file">
+        <input
+            type="file"
+            size="1"
+            class="input-file"
+            (change)="changeImage($event)"
+            />
+        @if(!imageSrc) {
+            <i
+                class="fa-regular fa-image"
+                aria-hidden="true"
+                >
+            </i>
+        } @else {
+            <img
+                style="height: 200px; width:200px"
+                [src]="imageSrc"
+                default="assets/no-image.png"
+            />
+        }
+    </div>
+    <br>
+    <p class="text-muted text-center file-name">
+        <!--Archivo...-->
+        {{imageSrc}}
+    </p>
+</div>
