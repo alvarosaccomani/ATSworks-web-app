@@ -43,4 +43,10 @@ export class CustomersService {
 
     return this._http.put(this._GlobalService.url + 'customer/' + customer.cmp_uuid + '/' + customer.cus_uuid, params, {headers:headers});
   }
+
+  public deleteCustomer(cmp_uuid: string, cus_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'customer/' + cmp_uuid + '/' + cus_uuid, {headers:headers});
+  }
 }
