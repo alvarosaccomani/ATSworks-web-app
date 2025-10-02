@@ -9,14 +9,13 @@
             />
         @if(!imageSrc) {
             <i
-                class="fa-regular fa-image"
+                class="far fa-image"
                 aria-hidden="true"
                 >
             </i>
         } @else {
             <img
-                style="height: 200px; width:200px"
-                [src]="imageSrc"
+                [src]="imageSrc.base64"
                 default="assets/no-image.png"
             />
         }
@@ -24,6 +23,6 @@
     <br>
     <p class="text-muted text-center file-name">
         <!--Archivo...-->
-        {{imageSrc}}
+        {{imageSrc.name}}
     </p>
 </div>
