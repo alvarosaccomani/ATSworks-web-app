@@ -4,9 +4,11 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
-import { ItemResults } from '../../../core/interfaces/item';
+import { ItemInterface, ItemResults } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+
+declare var Swal: any;
 
 @Component({
   selector: 'app-items',
@@ -53,7 +55,33 @@ export class ItemsComponent implements OnInit {
     
     ngOnInit(): void {
       this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
-    }
+  }
+
+  public deleteItem(item: ItemInterface) {
+    Swal.fire({
+        title: '¿Desea eliminar el Rubro?',
+        text: "Esta a punto de eliminar el Rubro",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar'
+      }).then((result: any) => {
+        if (result.value) {
+          this._itemsService.deleteItem(item.itm_uuid!)
+            .subscribe(
+              response => {
+                console.info(response);
+                this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
+              },
+              error => {
+                console.log(<any>error);
+              }
+            );
+        }
+      });
+  }
 
   public goToPage(page: number): void {
     this.page = page;
