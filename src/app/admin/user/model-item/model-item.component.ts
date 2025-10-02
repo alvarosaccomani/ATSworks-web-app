@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
@@ -88,6 +88,7 @@ export class ModelItemComponent {
     
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _modelsItemsService: ModelItemsService,
     private _detailModelItemsService: DetailModelItemsService,
     private _dataTypesService: DataTypesService
@@ -168,7 +169,7 @@ export class ModelItemComponent {
     }
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -178,6 +179,10 @@ export class ModelItemComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -301,6 +306,9 @@ export class ModelItemComponent {
         complete: () => {
           this.isLoading = false;
           console.log('Proceso completado.');
+          this.showMessage("Informacion", "El Modelo de rubro fue agregado/modificado correctamente.", () => {
+            this._router.navigate(['/admin/user/models-items']);
+          });
         }
       });
   } else {
