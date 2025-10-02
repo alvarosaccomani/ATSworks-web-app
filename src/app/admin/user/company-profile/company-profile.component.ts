@@ -69,7 +69,7 @@ export class CompanyProfileComponent {
     )
   }  
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -79,6 +79,10 @@ export class CompanyProfileComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -113,6 +117,7 @@ export class CompanyProfileComponent {
         if(response.success) {
           this.isLoading = false;
           const company = response.company;
+          this.showMessage("Informacion", "La Empresa fue actualizada correctamente.");
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -136,6 +141,7 @@ export class CompanyProfileComponent {
           if(response.success) {
             this.isLoading = false;
             const company = response.company;
+            this.showMessage("Informacion", "La Empresa fue agregada correctamente.");
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -154,7 +160,7 @@ export class CompanyProfileComponent {
 
   public onSaveCompany(formCompany: NgForm): void {
     if(this.validate()) {
-      if(this.company.cmp_uuid) {
+      if(this.company.cmp_uuid && this.company.cmp_uuid != 'new') {
         this.updateCompany(formCompany);
       } else {
         this.insertCompany(formCompany);
