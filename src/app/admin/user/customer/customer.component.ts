@@ -9,6 +9,7 @@ import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { CollectionFormsService } from '../../../core/services/collection-forms.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { AddressInterface } from '../../../core/interfaces/address';
 
 declare var Swal: any;
 
@@ -268,5 +269,31 @@ export class CustomerComponent {
         this.insertCustomer(formCustomer);
       }
     }
+  }
+
+  public deleteAddress(address: AddressInterface) {
+    Swal.fire({
+        title: '¿Desea eliminar la Direccion?',
+        text: "Esta a punto de eliminar la Direccion",
+        type: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar'
+      }).then((result: any) => {
+        if (result.value) {
+          this._addressesService.deleteAddress(address.cmp_uuid!, address.cus_uuid!, address.adr_uuid!)
+            .subscribe(
+              response => {
+                console.info(response);
+                this.getAdresses(address.cmp_uuid!, address.cus_uuid!);
+              },
+              error => {
+                console.log(<any>error);
+              }
+            );
+        }
+      });
   }
 }
