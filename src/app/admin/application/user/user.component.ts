@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
+import { ImageComponent } from '../../../shared/components/image/image.component';
 import { UserInterface } from '../../../core/interfaces/user';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
@@ -14,7 +15,8 @@ declare var Swal: any;
   imports: [
     FormsModule,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    ImageComponent
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss'
@@ -121,6 +123,10 @@ export class UserComponent {
       }).then((result: any) => {
         console.info(result);
       });
+  }
+
+  public onImageSelected(imageSelected: any) {
+    this.user.usr_image = imageSelected["base64"];
   }
 
   private validate(): boolean {
