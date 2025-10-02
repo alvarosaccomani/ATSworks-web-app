@@ -112,7 +112,7 @@ export class UserComponent {
     )
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -122,6 +122,10 @@ export class UserComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -175,6 +179,7 @@ export class UserComponent {
         if(response.success) {
           this.isLoading = false;
           const user = response.user;
+          this.showMessage("Informacion", "El Usuario fue actualizado correctamente.");
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -198,6 +203,7 @@ export class UserComponent {
           if(response.success) {
             this.isLoading = false;
             const user = response.user;
+            this.showMessage("Informacion", "El Usuario fue agregado correctamente.");
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -216,7 +222,7 @@ export class UserComponent {
 
   public onSaveUser(formRegister: NgForm): void {
     if(this.validate()) {
-      if(this.user.usr_uuid) {
+      if(this.user.usr_uuid && this.user.usr_uuid != 'new') {
         this.updateUser(formRegister);
       } else {
         this.insertUser(formRegister);
