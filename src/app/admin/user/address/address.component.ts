@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { AddressInterface } from '../../../core/interfaces/address';
@@ -24,6 +24,7 @@ export class AddressComponent {
   public headerConfig: any = {};
 
   constructor(
+    private _router: Router,
     private _route: ActivatedRoute,
     private _addressesService: AddressesService,
     private _sharedDataService: SharedDataService
@@ -100,7 +101,7 @@ export class AddressComponent {
     )
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -110,6 +111,10 @@ export class AddressComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -144,6 +149,9 @@ export class AddressComponent {
         if(response.success) {
           this.isLoading = false;
           const address = response.address;
+          this.showMessage("Informacion", "La direccion fue actualizada correctamente.", () => {
+            this._router.navigate(['/admin/user/customer', address.cus_uuid]);
+          });
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -167,6 +175,9 @@ export class AddressComponent {
           if(response.success) {
             this.isLoading = false;
             const address = response.address;
+            this.showMessage("Informacion", "La direccion fue agregada correctamente.", () => {
+              this._router.navigate(['/admin/user/customer', address.cus_uuid]);
+            });
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -185,7 +196,7 @@ export class AddressComponent {
 
   public onSaveAddress(formAddress: NgForm): void {
     if(this.validate()) {
-      if(this.address.adr_uuid) {
+      if(this.address.adr_uuid && this.address.adr_uuid != 'new') {
         this.updateAddress(formAddress);
       } else {
         this.insertAddress(formAddress);
