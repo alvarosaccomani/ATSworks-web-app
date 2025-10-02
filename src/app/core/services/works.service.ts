@@ -43,4 +43,10 @@ export class WorksService {
 
     return this._http.put(this._GlobalService.url + 'work/' + work.cmp_uuid + '/' + work.wrk_uuid, params, {headers:headers});
   }
+
+  public deleteWork(cmp_uuid: string, wrk_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'work/' + cmp_uuid + '/' + wrk_uuid, {headers:headers});
+  }
 }
