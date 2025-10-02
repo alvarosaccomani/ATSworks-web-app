@@ -79,21 +79,21 @@ export class WorkSheetComponent {
       {
         id: 2,
         icon: "",
-        name: "work_detail",
-        caption: "Detalle Trabajo",
-        title: "Detalle Trabajo",
+        name: "final_photo",
+        caption: "Foto Final",
+        title: "Foto Final",
         active: false,
         url: ""
       },
       {
         id: 3,
         icon: "",
-        name: "final_photo",
-        caption: "Foto Final",
-        title: "Foto Final",
+        name: "work_detail",
+        caption: "Detalle Trabajo",
+        title: "Detalle Trabajo",
         active: false,
         url: ""
-      }
+      }      
     ]
 
     this.step = this.itemsStep[0];
@@ -158,7 +158,6 @@ export class WorkSheetComponent {
           console.info(response.data);
           this.work.wrk_workdateinit = response.data.wrk_workdateinit;
           console.info(image); // Guardar la imagen recibida
-          this.step = this.itemsStep[this.step.index + 1];
           let workAttachment = {
             cmp_uuid: this.work.cmp_uuid,
             wrk_uuid: this.work.wrk_uuid,
@@ -185,14 +184,11 @@ export class WorkSheetComponent {
   }
 
   public insertFinalPhoto(image: string) {
-    this.work.wrk_workdatefinish = new Date();
     this._worksService.updateWork(this.work).subscribe(
       (response: any) => {
         if(response.success) {
           console.info(response.data);
-          this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
           console.info(image); // Guardar la imagen recibida
-          this.step = this.itemsStep[this.step.index + 1];
           let workAttachment = {
             cmp_uuid: this.work.cmp_uuid,
             wrk_uuid: this.work.wrk_uuid,
@@ -224,6 +220,7 @@ export class WorkSheetComponent {
         if(response.success) {
           console.info(response.data);
           this.work.workAttachments = response.data;
+          this.continue();
         } else {
           //this.status = 'error'
         }
@@ -290,6 +287,29 @@ export class WorkSheetComponent {
       },
       error => {
         this.isLoading = false;
+        var errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  public closeWork(): void {
+    this.work.wrk_workdatefinish = new Date();
+    this.work.wrks_uuid = "598d9ae5-c82a-4bc6-89b4-d166c99e80c7";
+    this._worksService.updateWork(this.work).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
         var errorMessage = <any>error;
         console.log(errorMessage);
 

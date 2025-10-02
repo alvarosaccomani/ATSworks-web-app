@@ -16,6 +16,12 @@
                 >
             </app-camera>
         }
+        @case('final_photo') {
+            <app-camera 
+                (photoSaved)="onPhotoSaved($event)"
+                >
+            </app-camera>
+        }
         @case('work_detail') {
             <div class="table-responsive">
                 <table class="table table-dark table-sm">
@@ -134,22 +140,16 @@
                     type="submit" 
                     class="btn btn-raised btn-info btn-sm"
                     [disabled]="isLoading"
-                    (click)="continue()"
+                    (click)="closeWork()"
                     >
                     @if(isLoading) {
                         <span class="spinner spinner-sm me-2"></span>
                         <span>Procesando...</span>
                     } @else {
-                        <i class="far fa-save"></i> &nbsp; CONTINUAR
+                        <i class="far fa-save"></i> &nbsp; CERRAR TRABAJO
                     }
                 </button>
             </p>
-        }
-        @case('final_photo') {
-            <app-camera 
-                (photoSaved)="onPhotoSaved($event)"
-                >
-            </app-camera>
         }
     }
 </div>
