@@ -129,6 +129,7 @@ export class NavBarComponent implements OnInit {
         localStorage.setItem('companyItems', JSON.stringify(companyItems.data));;
       });
       this._sharedDataService.setSelectedCompany(selectedCompany);
+      this._router.navigate(['/admin/user/dashboard']);
     }
   }
 
