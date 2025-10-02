@@ -43,4 +43,10 @@ export class ItemsService {
 
     return this._http.put(this._GlobalService.url + 'item/' + item.itm_uuid, params, {headers:headers});
   }
+
+  public deleteItem(itm_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'item/' + itm_uuid, {headers:headers});
+  }
 }
