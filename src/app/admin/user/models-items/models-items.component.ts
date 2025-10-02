@@ -83,7 +83,7 @@ export class ModelsItemsComponent {
             .subscribe(
               response => {
                 console.info(response);
-                this.modelItems$ = this._modelItemsService.getModelItems(modelItem.cmp_uuid!);
+                this.modelItems$ = this._modelItemsService.getModelItems(modelItem.cmp_uuid!, "null", this.page, this.perPage);
               },
               error => {
                 console.log(<any>error);
