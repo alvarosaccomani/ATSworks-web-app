@@ -32,9 +32,17 @@
                             <td>{{work.wrks?.wrks_name}}</td>
                             <td>{{work.wrk_description}}</td>
                             <td>
-                                <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
-                                    <i class="fas fa-file-pdf"></i>	
-                                </a>
+                                @if(work.mitm?.mitm_name === "Pendiente" || work.mitm?.mitm_name === "A Recuperar/Reprogramar") {
+                                    <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>	
+                                    </a>
+                                }
+                                @else
+                                {
+                                    <a [routerLink]="['/admin/user/work-sheet-view', work.wrk_uuid]" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>	
+                                    </a>
+                                }
                             </td>
                             <td>
                                 <a [routerLink]="['/admin/user/work', work.wrk_uuid]" class="btn btn-success">
