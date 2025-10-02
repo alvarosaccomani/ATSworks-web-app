@@ -43,4 +43,10 @@ export class AddressesService {
 
     return this._http.put(this._GlobalService.url + 'address/' + address.cmp_uuid + '/' + address.cus_uuid + '/' + address.adr_uuid, params, {headers:headers});
   }
+
+  public deleteAddress(cmp_uuid: string, cus_uuid: string, adr_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'address/' + cmp_uuid + '/' + cus_uuid+ '/' + adr_uuid, {headers:headers});
+  }
 }
