@@ -25,6 +25,12 @@ declare var Swal: any;
 })
 export class ModelsItemsComponent {
 
+  //Pagination
+  public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
+  public perPage: number = 10; //Number of items displayed per page
+  public numElements!: number; //Total existing items
+
+  private cmp_uuid!: string;
   public modelItems$!: Observable<ModelItemResults>;
   public headerConfig: any = {
     title: "LISTA DE MODELOS ITEMS",
@@ -50,13 +56,13 @@ export class ModelsItemsComponent {
   ) { }
   
   ngOnInit(): void {
-    let cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
 
-    this.modelItems$ = this._modelItemsService.getModelItems(cmp_uuid);
+    this.modelItems$ = this._modelItemsService.getModelItems(this.cmp_uuid, "null", this.page, this.perPage);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.modelItems$ = this._modelItemsService.getModelItems(company.cmp.cmp_uuid);
+        this.modelItems$ = this._modelItemsService.getModelItems(company.cmp.cmp_uuid, "null", this.page, this.perPage);
       }
     });
   }
@@ -85,5 +91,10 @@ export class ModelsItemsComponent {
             );
         }
       });
+  }
+
+  public goToPage(page: number): void {
+    this.page = page;
+    this.modelItems$ = this._modelItemsService.getModelItems(this.cmp_uuid, "null", page, this.perPage);
   }
 }
