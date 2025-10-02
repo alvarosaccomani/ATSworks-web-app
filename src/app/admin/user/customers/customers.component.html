@@ -44,6 +44,7 @@
         </div>
         @if(customers.totalPages > 1) {
             <app-pagination
+<<<<<<< HEAD
                 (paginaEmitter)="goToPage($event)"
                 [page]="page"
                 [totalPages]="customers.totalPages"
@@ -52,4 +53,14 @@
             </app-pagination>
         }
     }
+=======
+            (paginaEmitter)="goToPage($event)"
+            [page]="page"
+            [totalPages]="customers.totalPages"
+            [numElements]="numElements"
+            >
+        </app-pagination>
+    }
+}
+>>>>>>> 70d8c1b9596042219b3776a511fc61a702f285e8
 </div>

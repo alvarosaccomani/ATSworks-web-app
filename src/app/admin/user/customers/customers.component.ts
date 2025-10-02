@@ -56,7 +56,11 @@ export class CustomersComponent implements OnInit {
   ngOnInit(): void {
     this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
 
+<<<<<<< HEAD
     this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", this.page, this.perPage);
+=======
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", 1, 20);
+>>>>>>> 70d8c1b9596042219b3776a511fc61a702f285e8
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
