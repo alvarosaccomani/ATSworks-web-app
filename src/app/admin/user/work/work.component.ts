@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
@@ -81,6 +81,7 @@ export class WorkComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _modelsItemsService: ModelItemsService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
@@ -337,7 +338,7 @@ export class WorkComponent {
     }
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -347,6 +348,10 @@ export class WorkComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -478,6 +483,9 @@ export class WorkComponent {
           complete: () => {
             this.isLoading = false;
             console.log('Proceso completado.');
+            this.showMessage("Informacion", "El Trabajo fue agregado/modificado correctamente.", () => {
+              this._router.navigate(['/admin/user/works']);
+            });
           }
         });
     } else {
