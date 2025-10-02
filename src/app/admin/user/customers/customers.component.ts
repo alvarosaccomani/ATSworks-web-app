@@ -23,6 +23,12 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 })
 export class CustomersComponent implements OnInit {
 
+  //Pagination
+  public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
+  public perPage: number = 10; //Number of items displayed per page
+  public numElements!: number; //Total existing items
+
+  private cmp_uuid!: string;
   public customers$!: Observable<CustomerResults>;
   public headerConfig: any = {
     title: "LISTA DE CLIENTES",
@@ -48,14 +54,19 @@ export class CustomersComponent implements OnInit {
   ) { }
   
   ngOnInit(): void {
-    let cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
 
-    this.customers$ = this._customersService.getCustomers(cmp_uuid);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", this.page, this.perPage);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customers$ = this._customersService.getCustomers(company.cmp.cmp_uuid);
+        this.customers$ = this._customersService.getCustomers(company.cmp.cmp_uuid, "null", this.page, this.perPage);
       }
     });
+  }
+
+  public goToPage(page: number): void {
+    this.page = page;
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", page, this.perPage);
   }
 }
