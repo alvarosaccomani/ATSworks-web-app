@@ -178,7 +178,7 @@ export class CustomerComponent {
     }
   }
 
-  private showMessage(title: string, text: string): void {
+  private showMessage(title: string, text: string, callback?: () => void): void {
     Swal.fire({
         title: title,
         text: text,
@@ -188,6 +188,10 @@ export class CustomerComponent {
         confirmButtonText: 'Aceptar',
       }).then((result: any) => {
         console.info(result);
+        // Ejecutar el callback si se proporciona
+        if (callback && typeof callback === 'function') {
+          callback();
+        }
       });
   }
 
@@ -222,6 +226,9 @@ export class CustomerComponent {
         if(response.success) {
           this.isLoading = false;
           const customer = response.customer;
+          this.showMessage("Informacion", "El Cliente fue actualizado correctamente.", () => {
+            this._router.navigate(['/admin/user/customers']);
+          });
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -245,6 +252,9 @@ export class CustomerComponent {
           if(response.success) {
             this.isLoading = false;
             const customer = response.customer;
+            this.showMessage("Informacion", "El Cliente fue agregado correctamente.", () => {
+              this._router.navigate(['/admin/user/customers']);
+            });
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -263,7 +273,7 @@ export class CustomerComponent {
 
   public onSaveCustomer(formCustomer: NgForm): void {
     if(this.validate()) {
-      if(this.customer.cus_uuid) {
+      if(this.customer.cus_uuid && this.customer.cus_uuid != 'new') {
         this.updateCustomer(formCustomer);
       } else {
         this.insertCustomer(formCustomer);
