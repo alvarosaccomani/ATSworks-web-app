@@ -67,4 +67,10 @@ export class UsersService {
 
     return this._http.put(this._GlobalService.url + 'user/' + user.usr_uuid, params, {headers:headers});
   }
+
+  public deleteUser(usr_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(this._GlobalService.url + 'user/' + usr_uuid, {headers:headers});
+  }
 }
