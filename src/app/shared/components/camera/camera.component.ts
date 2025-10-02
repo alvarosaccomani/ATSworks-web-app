@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-camera',
@@ -6,7 +6,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit }
   templateUrl: './camera.component.html',
   styleUrl: './camera.component.scss'
 })
-export class CameraComponent {
+export class CameraComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('video', { static: false }) videoElement!: ElementRef;
   @ViewChild('canvas', { static: false }) canvasElement!: ElementRef;
@@ -102,5 +102,10 @@ export class CameraComponent {
       tracks.forEach((track) => track.stop());
       this.mediaStream = null;
     }
+  }
+
+  ngOnDestroy() {
+    // Detener la cámara cuando el componente se destruye
+    this.stopCamera();
   }
 }
