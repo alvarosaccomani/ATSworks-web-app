@@ -1,1 +1,104 @@
-<p>work-sheet-view works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<!-- Content -->
+<div class="container-fluid">
+    @if(work) {
+        <div class="row info-wrapper">
+            <legend><i class="fas fa-info-circle"></i> &nbsp; Información General</legend>
+            <table class="table-detail">
+                <tbody>
+                    <tr>
+                        <td class="table-detail-key">Rubro</td>
+                        <td class="table-detail-value">{{work.mitm?.mitm_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Fecha Trabajo</td>
+                        <td class="table-detail-value">{{work.wrk_workdate}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Cliente</td>
+                        <td class="table-detail-value">{{work.adr?.cus?.cus_fullname}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Direccion</td>
+                        <td class="table-detail-value">{{work.adr?.adr_address}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Estado</td>
+                        <td class="table-detail-value">{{work.wrks?.wrks_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Fecha Inicio</td>
+                        <td class="table-detail-value">{{work.wrk_workdateinit}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Fecha Fin</td>
+                        <td class="table-detail-value">{{work.wrk_workdatefinish}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Usurio Programacion</td>
+                        <td class="table-detail-value">{{work.wrk_user?.usr_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Usurio Operador</td>
+                        <td class="table-detail-value">{{work.wrk_operator?.usr_name}}</td>
+                    </tr>
+                    <tr>
+                        <td class="table-detail-key">Descripcion</td>
+                        <td class="table-detail-value">
+                            <p>{{work.wrk_description}}</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @if(work.workAttachments)
+        {
+            <div class="row images-wrapper">
+                <legend><i class="far fa-image"></i> &nbsp; Imagenes</legend>
+                @for(workAttachment of work.workAttachments; track workAttachment.wrka_uuid) {
+                    @if($index === 0) {
+                        <h5><i class="far fa-image"></i> &nbsp; Imagen Inicio</h5>
+                        <img class="image-attachment" [src]="workAttachment.wrka_filepath" alt="">
+                    }
+                    @if($index === 1) {
+                        <h5><i class="far fa-image"></i> &nbsp; Imagen Fin</h5>
+                        <img class="image-attachment" [src]="workAttachment.wrka_filepath" alt="">
+                    }
+                }
+            </div>
+        }
+
+        @if(work.workDetails) {
+            <div class="row detail-wrapper">
+                <legend><i class="fas fa-file"></i> &nbsp; Detalle de Trabajo</legend>
+                <table class="table-detail">
+                    <tbody>
+                        @for(workDetail of work.workDetails; track workDetail.wrkd_uuid) {
+                            <tr>
+                                <td class="table-detail-key">{{workDetail.wrkd_name}}</td>
+                                @switch (workDetail.dtp?.dtp_cod) {
+                                    @case ('boolean') {
+                                        @if(workDetail.wrkd_value == 'true') {
+                                            <td class="table-detail-value center">
+                                                <i class="fas fa-check-square"></i>
+                                            </td>
+                                        } @else {
+                                            <td class="table-detail-value center">
+                                                <i class="fas fa-square"></i>
+                                            </td>
+                                        }
+                                    }
+                                    @default {
+                                        <td class="table-detail-value">{{workDetail.wrkd_value}}</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</div>
