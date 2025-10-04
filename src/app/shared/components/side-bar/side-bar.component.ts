@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { UserInterface } from '../../../core/interfaces/user';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
+declare var $:any;
+
 @Component({
   selector: 'app-side-bar',
   imports: [
@@ -195,6 +197,18 @@ export class SideBarComponent {
         }
       }
     });
+  }
+
+  public closeNavBar(): void {
+    var NavLateral = $('.nav-lateral');
+    var PageConten = $('.page-content');
+    if (NavLateral.hasClass('active')) {
+      NavLateral.removeClass('active');
+      PageConten.removeClass('active');
+    } else {
+      NavLateral.addClass('active');
+      PageConten.addClass('active');
+    }
   }
 
   public toggleSubMenu(item: any) {
