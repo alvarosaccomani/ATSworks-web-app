@@ -38,20 +38,6 @@ export class NavBarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    /*  Show/Hidden Nav Lateral */
-    $('.show-nav-lateral').on('click', function(e: any) {
-      e.preventDefault();
-      var NavLateral=$('.nav-lateral');
-      var PageConten=$('.page-content');
-      if (NavLateral.hasClass('active')) {
-        NavLateral.removeClass('active');
-        PageConten.removeClass('active');
-      } else {
-        NavLateral.addClass('active');
-        PageConten.addClass('active');
-      }
-    });
-
     /*  Exit system buttom */
     $('.btn-exit-system').on('click', (e: any) => {
       e.preventDefault();
@@ -88,6 +74,18 @@ export class NavBarComponent implements OnInit {
     if(this.company) {
       this.selectedCompany = this.company.cmp_uuid;
       this._sharedDataService.setSelectedCompany({cmp: this.company});
+    }
+  }
+
+  public showCloseNavBar(): void {
+    var NavLateral = $('.nav-lateral');
+    var PageConten = $('.page-content');
+    if (NavLateral.hasClass('active')) {
+      NavLateral.removeClass('active');
+      PageConten.removeClass('active');
+    } else {
+      NavLateral.addClass('active');
+      PageConten.addClass('active');
     }
   }
 
