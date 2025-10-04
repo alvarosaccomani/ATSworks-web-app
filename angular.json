@@ -29,7 +29,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/service-worker.js"
             ],
             "styles": [
               "src/assets/css/normalize.css",
