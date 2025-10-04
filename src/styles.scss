@@ -318,6 +318,9 @@ table form{
 .nav-lateral-menu ul li ul a{
 	padding-left: 45px;
 }
+.show-nav-lateral {
+	cursor: pointer;
+}
 .show-nav-lateral-submenu{
 	display: block !important;
 }
