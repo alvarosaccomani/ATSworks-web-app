@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,7 @@ import { GlobalService } from './global.service';
 export class DataTypesService {
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
 
   public getDataTypes(filter: string, page?: number, perPage?: number): Observable<any> {
@@ -20,6 +19,6 @@ export class DataTypesService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get(this._GlobalService.url + 'data-types/' + filter, {headers:headers})
+    return this._http.get(environment.apiUrl + 'data-types/' + filter, {headers:headers})
   }
 }
