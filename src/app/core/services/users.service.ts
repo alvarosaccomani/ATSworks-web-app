@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 import { UserResults } from '../interfaces/user';
 
 @Injectable({
@@ -12,8 +12,7 @@ export class UsersService {
   public identity: any;
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
 
   public login(user: any, gettoken: string | null = null): Observable<any> {
@@ -24,7 +23,7 @@ export class UsersService {
     let params = JSON.stringify(user);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.post(this._GlobalService.url + 'login', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'login', params, {headers:headers});
   }
 
   public getIdentity()  {
@@ -45,32 +44,32 @@ export class UsersService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<UserResults>(this._GlobalService.url + 'user/' + filter, {headers:headers})
+    return this._http.get<UserResults>(environment.apiUrl + 'user/' + filter, {headers:headers})
   }
 
   public getUserById(usr_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.get(this._GlobalService.url + 'user/' + usr_uuid, {headers:headers});
+    return this._http.get(environment.apiUrl + 'user/' + usr_uuid, {headers:headers});
   }
 
   public saveUser(user: any): Observable<any> {
     let params = JSON.stringify(user);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.post(this._GlobalService.url + 'register', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'register', params, {headers:headers});
   }
 
   public updateUser(user: any): Observable<any> {
     let params = JSON.stringify(user);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.put(this._GlobalService.url + 'user/' + user.usr_uuid, params, {headers:headers});
+    return this._http.put(environment.apiUrl + 'user/' + user.usr_uuid, params, {headers:headers});
   }
 
   public deleteUser(usr_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.delete(this._GlobalService.url + 'user/' + usr_uuid, {headers:headers});
+    return this._http.delete(environment.apiUrl + 'user/' + usr_uuid, {headers:headers});
   }
 }
