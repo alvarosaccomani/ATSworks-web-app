@@ -1,4 +1,9 @@
 name: ATSworks-web-app
-type: docker
-dockerfile: Dockerfile
-port: 80
+
+build:
+  context: .
+  dockerfile: Dockerfile
+
+deploy:
+  ports:
+    - 80
