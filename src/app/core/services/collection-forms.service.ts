@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 import { CollectionFormResults } from '../interfaces/collection-form';
 
 @Injectable({
@@ -10,8 +10,7 @@ import { CollectionFormResults } from '../interfaces/collection-form';
 export class CollectionFormsService {
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
   
   public getCollectionForms(cmp_uuid: string, filter?: string, page?: number, perPage?: number): Observable<CollectionFormResults> {
@@ -21,6 +20,6 @@ export class CollectionFormsService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<CollectionFormResults>(this._GlobalService.url + 'collection-forms/' + cmp_uuid + '/' + filter, {headers:headers})
+    return this._http.get<CollectionFormResults>(environment.apiUrl + 'collection-forms/' + cmp_uuid + '/' + filter, {headers:headers})
   }
 }
