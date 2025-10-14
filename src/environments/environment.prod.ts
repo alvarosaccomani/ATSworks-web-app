@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.miapp.com/v1'
+  apiUrl: 'http://195.200.2.27:3001/api/',
+  appName: 'ATS Works'
 };
