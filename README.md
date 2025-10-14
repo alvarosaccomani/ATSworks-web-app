@@ -61,8 +61,12 @@ For more information on using the Angular CLI, including detailed command refere
 
 ## Docker build image
 
+```bash
 docker build -t atsworks-web-app .
+```
 
 ## Create container
 
+```bash
 docker run -d -p 8080:80 --name atsworks-web-app atsworks-web-app
+```
