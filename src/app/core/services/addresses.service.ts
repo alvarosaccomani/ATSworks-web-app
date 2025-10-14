@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 import { AddressResults  } from '../interfaces/address';
 
 @Injectable({
@@ -10,8 +10,7 @@ import { AddressResults  } from '../interfaces/address';
 export class AddressesService {
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
 
   public getAddresses(cmp_uuid: string, cus_uuid: string, filter?: string, page?: number, perPage?: number): Observable<AddressResults> {
@@ -21,32 +20,32 @@ export class AddressesService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<AddressResults>(this._GlobalService.url + 'addresses/' + cmp_uuid + '/' + cus_uuid + '/' + filter, {headers:headers})
+    return this._http.get<AddressResults>(environment.apiUrl + 'addresses/' + cmp_uuid + '/' + cus_uuid + '/' + filter, {headers:headers})
   }
 
   public getAddressById(cmp_uuid: string, cus_uuid?: string, adr_uuid?: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.get(this._GlobalService.url + 'address/' + cmp_uuid + '/' + cus_uuid + '/' + adr_uuid, {headers:headers});
+    return this._http.get(environment.apiUrl + 'address/' + cmp_uuid + '/' + cus_uuid + '/' + adr_uuid, {headers:headers});
   }
 
   public saveAddress(address: any): Observable<any> {
     let params = JSON.stringify(address);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.post(this._GlobalService.url + 'address', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'address', params, {headers:headers});
   }
 
   public updateAddress(address: any): Observable<any> {
     let params = JSON.stringify(address);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.put(this._GlobalService.url + 'address/' + address.cmp_uuid + '/' + address.cus_uuid + '/' + address.adr_uuid, params, {headers:headers});
+    return this._http.put(environment.apiUrl + 'address/' + address.cmp_uuid + '/' + address.cus_uuid + '/' + address.adr_uuid, params, {headers:headers});
   }
 
   public deleteAddress(cmp_uuid: string, cus_uuid: string, adr_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.delete(this._GlobalService.url + 'address/' + cmp_uuid + '/' + cus_uuid+ '/' + adr_uuid, {headers:headers});
+    return this._http.delete(environment.apiUrl + 'address/' + cmp_uuid + '/' + cus_uuid+ '/' + adr_uuid, {headers:headers});
   }
 }
