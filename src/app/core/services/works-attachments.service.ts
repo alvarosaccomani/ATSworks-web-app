@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,14 +9,13 @@ import { GlobalService } from './global.service';
 export class WorksAttachmentsService {
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
 
   public insertWorAttachment(workAttachment: any): Observable<any> {
     let params = JSON.stringify(workAttachment);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.post(this._GlobalService.url + 'work-attachment', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'work-attachment', params, {headers:headers});
   }
 }
