@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { environment } from '../../../environments/environment';
 import { ItemResults } from '../interfaces/item/item-results.interface';
 
 @Injectable({
@@ -10,8 +10,7 @@ import { ItemResults } from '../interfaces/item/item-results.interface';
 export class ItemsService {
 
   constructor(
-    private _http: HttpClient,
-    private _GlobalService: GlobalService
+    private _http: HttpClient
   ) { }
 
   public getItems(filter: string, page?: number, perPage?: number): Observable<ItemResults> {
@@ -21,32 +20,32 @@ export class ItemsService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<ItemResults>(this._GlobalService.url + 'items/' + filter, {headers:headers})
+    return this._http.get<ItemResults>(environment.apiUrl + 'items/' + filter, {headers:headers})
   }
 
   public getItemById(itm_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.get(this._GlobalService.url + 'item/' + itm_uuid, {headers:headers});
+    return this._http.get(environment.apiUrl + 'item/' + itm_uuid, {headers:headers});
   }
 
   public saveItem(item: any): Observable<any> {
     let params = JSON.stringify(item);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.post(this._GlobalService.url + 'item', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'item', params, {headers:headers});
   }
 
   public updateItem(item: any): Observable<any> {
     let params = JSON.stringify(item);
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.put(this._GlobalService.url + 'item/' + item.itm_uuid, params, {headers:headers});
+    return this._http.put(environment.apiUrl + 'item/' + item.itm_uuid, params, {headers:headers});
   }
 
   public deleteItem(itm_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
-    return this._http.delete(this._GlobalService.url + 'item/' + itm_uuid, {headers:headers});
+    return this._http.delete(environment.apiUrl + 'item/' + itm_uuid, {headers:headers});
   }
 }
