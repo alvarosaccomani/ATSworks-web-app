@@ -1,9 +1,0 @@
-name: ATSworks-web-app
-
-build:
-  context: .
-  dockerfile: Dockerfile
-
-deploy:
-  ports:
-    - 8081
