@@ -1,11 +1,11 @@
 export interface CollectionFormInterface {
     cmp_uuid: string | null,
-    cfrm_uuid: string | null,
-    cfrm_name: string | null,
-    cfrm_order: number | null,
-    cfrm_bkcolor: string | null,
-    cfrm_frcolor: string | null,
-    cfrm_active: boolean | null,
-    cfrm_createdat: Date | null,
-    cfrm_updatedat: Date | null
+    pmt_uuid: string | null,
+    pmt_name: string | null,
+    pmt_order: number | null,
+    pmt: string | null,
+    pmt_frcolor: string | null,
+    pmt_active: boolean | null,
+    pmt_createdat: Date | null,
+    pmt_updatedat: Date | null
 }

@@ -94,7 +94,7 @@ export class CustomerComponent {
       cus_email: null,
       cus_phone: null,
       cus_dateofbirth: null,
-      cfrm_uuid: null,
+      pmt_uuid: null,
       usr_uuid: null,
       cus_createdat: null,
       cus_updatedat: null
@@ -171,7 +171,7 @@ export class CustomerComponent {
   public onCollectionFormChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
     const selectedCollectionForm = this.collectionForms.find(
-      (selectedCollectionForm: CollectionFormInterface) => selectedCollectionForm.cfrm_uuid === selectedValue
+      (selectedCollectionForm: CollectionFormInterface) => selectedCollectionForm.pmt_uuid === selectedValue
     );
     if (selectedCollectionForm) {
       //this.setModelItem(selectedCollectionForm);

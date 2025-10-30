@@ -111,20 +111,20 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label
-                                for="cfrm_uuid"
+                                for="pmt_uuid"
                                 class="bmd-label-floating">
                                 Forma de Cobro
                             </label>
                             <select 
                                 class="form-control" 
-                                name="cfrm_uuid"
-                                [(ngModel)]="customer.cfrm_uuid"
+                                name="pmt_uuid"
+                                [(ngModel)]="customer.pmt_uuid"
                                 (change)="onCollectionFormChange($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(collectionForm of collectionForms; track collectionForm.cfrm_uuid) {
+                                @for(collectionForm of collectionForms; track collectionForm.pmt_uuid) {
                                     @if(collectionForm){
-                                        <option [value]="collectionForm.cfrm_uuid">
-                                            {{collectionForm.cfrm_name}}
+                                        <option [value]="collectionForm.pmt_uuid">
+                                            {{collectionForm.pmt_name}}
                                         </option>
                                     }
                                 }
