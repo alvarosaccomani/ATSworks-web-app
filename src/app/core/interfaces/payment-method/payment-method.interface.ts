@@ -1,4 +1,4 @@
-export interface CollectionFormInterface {
+export interface PaymentMethodInterface {
     cmp_uuid: string | null,
     pmt_uuid: string | null,
     pmt_name: string | null,

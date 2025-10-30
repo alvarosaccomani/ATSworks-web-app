@@ -119,12 +119,12 @@
                                 class="form-control" 
                                 name="pmt_uuid"
                                 [(ngModel)]="customer.pmt_uuid"
-                                (change)="onCollectionFormChange($event)">
+                                (change)="onPaymentMethodChange($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(collectionForm of collectionForms; track collectionForm.pmt_uuid) {
-                                    @if(collectionForm){
-                                        <option [value]="collectionForm.pmt_uuid">
-                                            {{collectionForm.pmt_name}}
+                                @for(paymentMethod of paymentMethods; track paymentMethod.pmt_uuid) {
+                                    @if(paymentMethod){
+                                        <option [value]="paymentMethod.pmt_uuid">
+                                            {{paymentMethod.pmt_name}}
                                         </option>
                                     }
                                 }

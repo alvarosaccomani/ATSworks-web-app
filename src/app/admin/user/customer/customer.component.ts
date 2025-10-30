@@ -4,10 +4,10 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
-import { CollectionFormInterface } from '../../../core/interfaces/collection-form';
+import { PaymentMethodInterface } from '../../../core/interfaces/payment-method';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
-import { CollectionFormsService } from '../../../core/services/collection-forms.service';
+import { PaymentMethodsService } from '../../../core/services/payment-methods.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { AddressInterface } from '../../../core/interfaces/address';
 
@@ -27,7 +27,7 @@ declare var Swal: any;
 export class CustomerComponent {
 
   public customer!: CustomerInterface;
-  public collectionForms: CollectionFormInterface[] = [];
+  public paymentMethods: PaymentMethodInterface[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -48,7 +48,7 @@ export class CustomerComponent {
     private _router: Router,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
-    private _collectionFormsService: CollectionFormsService,
+    private _paymentMethodsService: PaymentMethodsService,
     private _sharedDataService: SharedDataService
   ) {
     this.isLoading = false;
@@ -57,7 +57,7 @@ export class CustomerComponent {
 
   ngOnInit(): void {
     this.customer.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
-    this.getCollectionForms(this.customer.cmp_uuid!);
+    this.getPaymentMethods(this.customer.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
@@ -143,12 +143,12 @@ export class CustomerComponent {
     )
   }
   
-  private getCollectionForms(cmp_uuid: string) {
-    this._collectionFormsService.getCollectionForms(cmp_uuid).subscribe(
+  private getPaymentMethods(cmp_uuid: string) {
+    this._paymentMethodsService.getPaymentMethods(cmp_uuid).subscribe(
       (response: any) => {
         if(response.success) {
           console.info(response.data);
-          this.collectionForms = response.data;
+          this.paymentMethods = response.data;
         } else {
           //this.status = 'error'
         }
@@ -168,13 +168,13 @@ export class CustomerComponent {
     this._router.navigate(['/admin/user/address', 'new', '']);
   }
 
-  public onCollectionFormChange(event: Event): void {
+  public onPaymentMethodChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
-    const selectedCollectionForm = this.collectionForms.find(
-      (selectedCollectionForm: CollectionFormInterface) => selectedCollectionForm.pmt_uuid === selectedValue
+    const selectedPaymentMethod = this.paymentMethods.find(
+      (selectedPaymentMethod: PaymentMethodInterface) => selectedPaymentMethod.pmt_uuid === selectedValue
     );
-    if (selectedCollectionForm) {
-      //this.setModelItem(selectedCollectionForm);
+    if (selectedPaymentMethod) {
+      //this.setModelItem(selectedPaymentMethod);
     }
   }
 
