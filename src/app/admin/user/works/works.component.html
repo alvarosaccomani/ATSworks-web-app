@@ -32,7 +32,7 @@
                             <td>{{work.wrks?.wrks_name}}</td>
                             <td>{{work.wrk_description}}</td>
                             <td>
-                                @if(work.mitm?.mitm_name === "Pendiente" || work.mitm?.mitm_name === "A Recuperar/Reprogramar") {
+                                @if(work.wrks?.wrks_name === "Pendiente" || work.wrks?.wrks_name === "A Recuperar/Reprogramar") {
                                     <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
                                         <i class="fas fa-file-pdf"></i>	
                                     </a>
