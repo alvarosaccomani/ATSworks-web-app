@@ -10,6 +10,7 @@ export interface WorkDetailInterface {
     dtp_uuid: string | null,
     dtp?: DataTypeInterface | null,
     wrkd_value: string | null,
+    wrkd_groupkey: string | null,
     wrkd_createdat: Date | null,
     wrkd_updatedat?: Date | null
 }

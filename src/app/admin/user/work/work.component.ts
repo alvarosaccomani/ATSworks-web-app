@@ -210,6 +210,7 @@ export class WorkComponent {
               dtp_uuid: e.dtp_uuid,
               wrkd_value: e.dmitm_defaultvalue,
               wrkd_order: e.dmitm_order,
+              wrkd_groupkey: (e.gdmitm ? e.gdmitm?.gdmitm_key : null),
               wrkd_createdat: null,
               wrkd_updatedat: null
             }
