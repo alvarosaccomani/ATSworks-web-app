@@ -28,6 +28,8 @@ export class WorkSheetComponent {
   public work: WorkInterface;
   public status: string = "";
   public isLoading: boolean = false;
+  public workDetailsDetail: any;
+  public workDetailsObservations: any;
   public headerConfig: any = {
     title: "HOJA DE TRABAJO",
     description: "Ficha de Hoja de Trabajo.",
@@ -81,6 +83,15 @@ export class WorkSheetComponent {
       {
         id: 2,
         icon: "",
+        name: "work_detail",
+        caption: "Detalle Trabajo",
+        title: "Detalle Trabajo",
+        active: false,
+        url: ""
+      },
+      {
+        id: 3,
+        icon: "",
         name: "final_photo",
         caption: "Foto Final",
         title: "Foto Final",
@@ -88,11 +99,11 @@ export class WorkSheetComponent {
         url: ""
       },
       {
-        id: 3,
+        id: 4,
         icon: "",
-        name: "work_detail",
-        caption: "Detalle Trabajo",
-        title: "Detalle Trabajo",
+        name: "work_observations",
+        caption: "Observaciones",
+        title: "Observaciones",
         active: false,
         url: ""
       }      
@@ -115,6 +126,10 @@ export class WorkSheetComponent {
         if(response.success) {
           console.info(response.data);
           this.work = response.data;
+          if(this.work.workDetails) {
+            this.workDetailsDetail = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_detail');
+            this.workDetailsObservations = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_observations');
+          }
         } else {
           //this.status = 'error'
         }
