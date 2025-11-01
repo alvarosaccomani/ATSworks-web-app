@@ -1,3 +1,5 @@
+import { GroupDetailModelItemInterface } from "../group-detail-model-item"
+
 export interface DetailModelItemInterface {
     cmp_uuid: string | null,
     itm_uuid: string | null,
@@ -11,6 +13,8 @@ export interface DetailModelItemInterface {
 	dmitm_arrayvalues: string | null,
 	dmitm_defaultvalue: string | null,
 	dmitm_order: string | null,
+	gdmitm_uuid: string | null,
+	gdmitm: GroupDetailModelItemInterface | null,
 	dmitm_active: boolean | null,
 	dmitm_createdat: Date | null,
     dmitm_updatedat: Date | null
