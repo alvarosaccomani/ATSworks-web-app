@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CompanyInterface } from '../../../core/interfaces/company';
+import { MessageService } from '../../../core/services/message.service';
 import { CompaniesService } from '../../../core/services/companies.service';
 
 declare var Swal: any;
@@ -21,6 +22,7 @@ export class CompanyProfileComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _messageService: MessageService,
     private _companiesService: CompaniesService
   ) {
     this.isLoading = false;
@@ -67,43 +69,38 @@ export class CompanyProfileComponent {
         }
       }
     )
-  }  
-
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
   }
 
   private validate(): boolean {
     if(!this.company.cmp_name) {
-      this.showMessage("Error", "El nombre de empresa no puede estar vacio");
+      this._messageService.error(
+        "Error", 
+        "El nombre de empresa no puede estar vacio."
+      );
       return false;
     }
 
     if(this.company.cmp_name.length > 150) {
-      this.showMessage("Error", "El nombre no puede superar los 150 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El nombre no puede superar los 150 caracteres."
+      );
       return false;
     }
 
     if(this.company.cmp_phone && this.company.cmp_phone.length > 20) {
-      this.showMessage("Error", "El telefono no puede superar los 20 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El telefono no puede superar los 20 caracteres."
+      );
       return false;
     }
 
     if(this.company.cmp_email && this.company.cmp_email.length > 100) {
-      this.showMessage("Error", "El email no puede superar los 100 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El email no puede superar los 100 caracteres."
+      );
       return false;
     }
 
@@ -117,7 +114,10 @@ export class CompanyProfileComponent {
         if(response.success) {
           this.isLoading = false;
           const company = response.company;
-          this.showMessage("Informacion", "La Empresa fue actualizada correctamente.");
+          this._messageService.success(
+            "Informacion", 
+            "La Empresa fue actualizada correctamente."
+          );
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -141,7 +141,10 @@ export class CompanyProfileComponent {
           if(response.success) {
             this.isLoading = false;
             const company = response.company;
-            this.showMessage("Informacion", "La Empresa fue agregada correctamente.");
+            this._messageService.success(
+              "Informacion", 
+              "La Empresa fue agregada correctamente."
+            );
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -152,7 +155,10 @@ export class CompanyProfileComponent {
             let errorMessage = <any>error;
             console.log(errorMessage);
             if(errorMessage != null) {
-                this.showMessage("Error", errorMessage.error.error);
+              this._messageService.error(
+                "Error", 
+                errorMessage.error.error
+              );
             }
         }
       )
