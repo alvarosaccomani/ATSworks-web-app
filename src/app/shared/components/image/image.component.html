@@ -22,7 +22,11 @@
     </div>
     <br>
     <p class="text-muted text-center file-name">
-        <!--Archivo...-->
-        {{imageSrc.name}}
+        @if(!imageSrc) {
+            Sin Imagen
+        } @else {
+            <!--Archivo...-->
+            {{imageSrc.name}}
+        }
     </p>
 </div>
