@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { AddressInterface } from '../../../core/interfaces/address';
+import { MessageService } from '../../../core/services/message.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
@@ -26,6 +27,7 @@ export class AddressComponent {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private _messageService: MessageService,
     private _addressesService: AddressesService,
     private _sharedDataService: SharedDataService
   )
@@ -101,41 +103,36 @@ export class AddressComponent {
     )
   }
 
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
-  }
-
   private validate(): boolean {
     if(!this.address.adr_address) {
-      this.showMessage("Error", "El nombre de la direccion no puede estar vacio");
+      this._messageService.error(
+        "Error", 
+        "El nombre de la direccion no puede estar vacio."
+      );
       return false;
     }
 
     if(this.address.adr_city && this.address.adr_city.length > 100) {
-      this.showMessage("Error", "La ciudad no puede superar los 100 caracteres");
+      this._messageService.error(
+        "Error", 
+        "La ciudad no puede superar los 100 caracteres."
+      );
       return false;
     }
 
     if(this.address.adr_province && this.address.adr_province.length > 100) {
-      this.showMessage("Error", "La provincia no puede superar los 100 caracteres");
+      this._messageService.error(
+        "Error", 
+        "La provincia no puede superar los 100 caracteres."
+      );
       return false;
     }
     
     if(this.address.adr_postalcode && this.address.adr_postalcode.length > 20) {
-      this.showMessage("Error", "El codigo postal no puede superar los 20 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El codigo postal no puede superar los 20 caracteres."
+      );
       return false;
     }
 
@@ -149,9 +146,13 @@ export class AddressComponent {
         if(response.success) {
           this.isLoading = false;
           const address = response.address;
-          this.showMessage("Informacion", "La direccion fue actualizada correctamente.", () => {
-            this._router.navigate(['/admin/user/customer', address.cus_uuid]);
-          });
+          this._messageService.success(
+            "Informacion", 
+            "La direccion fue actualizada correctamente.",
+            () => {
+              this._router.navigate(['/admin/user/customer', address.cus_uuid]);
+            }
+          );
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -162,7 +163,10 @@ export class AddressComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
         if(errorMessage != null) {
-          this.showMessage("Error", errorMessage.error.error);
+          this._messageService.error(
+            "Error", 
+            errorMessage.error.error
+          );
         }
       }
     )
@@ -175,9 +179,13 @@ export class AddressComponent {
           if(response.success) {
             this.isLoading = false;
             const address = response.address;
-            this.showMessage("Informacion", "La direccion fue agregada correctamente.", () => {
-              this._router.navigate(['/admin/user/customer', address.cus_uuid]);
-            });
+            this._messageService.success(
+              "Informacion", 
+              "La direccion fue agregada correctamente.",
+              () => {
+                this._router.navigate(['/admin/user/customer', address.cus_uuid]);
+              }
+            );
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -188,7 +196,10 @@ export class AddressComponent {
             let errorMessage = <any>error;
             console.log(errorMessage);
             if(errorMessage != null) {
-                this.showMessage("Error", errorMessage.error.error);
+              this._messageService.error(
+                "Error", 
+                errorMessage.error.error
+              );
             }
         }
       )
