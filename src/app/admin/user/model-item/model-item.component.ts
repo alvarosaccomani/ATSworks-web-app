@@ -8,6 +8,7 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
 import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-item';
+import { MessageService } from '../../../core/services/message.service';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { DetailModelItemsService } from '../../../core/services/detail-model-items.service';
 import { DataTypesService } from '../../../core/services/data-types.service';
@@ -89,6 +90,7 @@ export class ModelItemComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _messageService: MessageService,
     private _modelsItemsService: ModelItemsService,
     private _detailModelItemsService: DetailModelItemsService,
     private _dataTypesService: DataTypesService
@@ -169,31 +171,20 @@ export class ModelItemComponent {
     }
   }
 
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
-  }
-
   private validate(): boolean {
     if(!this.modelItem.mitm_name) {
-      this.showMessage("Error", "El nombre de modelo de item no puede estar vacio");
+      this._messageService.error(
+        "Error", 
+        "El nombre de modelo de item no puede estar vacio."
+      );
       return false;
     }
 
     if(this.modelItem.mitm_name.length > 50) {
-      this.showMessage("Error", "El nombre no puede superar los 50 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El nombre no puede superar los 50 caracteres."
+      );
       return false;
     }
 
@@ -237,7 +228,10 @@ export class ModelItemComponent {
             let errorMessage = <any>error;
             console.log(errorMessage);
             if(errorMessage != null) {
-                this.showMessage("Error", errorMessage.error.error);
+              this._messageService.error(
+                "Error", 
+                errorMessage.error.error
+              );
             }
         }
       )
@@ -306,9 +300,13 @@ export class ModelItemComponent {
         complete: () => {
           this.isLoading = false;
           console.log('Proceso completado.');
-          this.showMessage("Informacion", "El Modelo de rubro fue agregado/modificado correctamente.", () => {
-            this._router.navigate(['/admin/user/models-items']);
-          });
+          this._messageService.success(
+            "Informacion", 
+            "El Modelo de rubro fue agregado/modificado correctamente.",
+            () => {
+              this._router.navigate(['/admin/user/models-items']);
+            }
+          );
         }
       });
   } else {
