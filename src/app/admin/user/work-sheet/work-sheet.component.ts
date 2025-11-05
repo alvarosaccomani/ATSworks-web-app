@@ -7,6 +7,7 @@ import { CameraComponent } from '../../../shared/components/camera/camera.compon
 import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail';
 import { WorkAttachmentInterface } from '../../../core/interfaces/work-attachment';
+import { MessageService } from '../../../core/services/message.service';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service';
 import { WorksAttachmentsService } from '../../../core/services/works-attachments.service';
@@ -40,6 +41,7 @@ export class WorkSheetComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _messageService: MessageService,
     private _worksService: WorksService,
     private _worksDetailsService: WorksDetailsService,
     private _worksAttachmentsService: WorksAttachmentsService
@@ -153,19 +155,6 @@ export class WorkSheetComponent {
     this.isLoading = true;
     this.step = this.itemsStep[this.step.index + 1];
     this.isLoading = false;
-  }
-
-  private showMessage(title: string, text: string): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-      });
   }
 
   public onPhotoSaved(image: string) {
@@ -335,7 +324,10 @@ export class WorkSheetComponent {
         if(response.success) {
           console.info(response.data);
           this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
-          this.showMessage("Informacion", "El trabajo fue cerrado de manera correcta");
+          this._messageService.success(
+            "Informacion", 
+            "El trabajo fue cerrado de manera correcta"
+          );
         } else {
           //this.status = 'error'
         }
