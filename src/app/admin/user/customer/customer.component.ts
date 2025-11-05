@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { PaymentMethodInterface } from '../../../core/interfaces/payment-method';
+import { MessageService } from '../../../core/services/message.service';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { PaymentMethodsService } from '../../../core/services/payment-methods.service';
@@ -46,6 +47,7 @@ export class CustomerComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _messageService: MessageService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
     private _paymentMethodsService: PaymentMethodsService,
@@ -178,41 +180,36 @@ export class CustomerComponent {
     }
   }
 
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
-  }
-
   private validate(): boolean {
     if(!this.customer.cus_fullname) {
-      this.showMessage("Error", "El nombre de cliente no puede estar vacio");
+      this._messageService.error(
+        "Error", 
+        "El nombre de cliente no puede estar vacio."
+      );
       return false;
     }
 
     if(this.customer.cus_fullname.length > 255) {
-      this.showMessage("Error", "El nombre no puede superar los 255 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El nombre no puede superar los 255 caracteres."
+      );
       return false;
     }
 
     if(this.customer.cus_email && this.customer.cus_email.length > 255) {
-      this.showMessage("Error", "El email no puede superar los 255 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El email no puede superar los 255 caracteres."
+      );
       return false;
     }
 
     if(this.customer.cus_phone && this.customer.cus_phone.length > 20) {
-      this.showMessage("Error", "El telefono no puede superar los 20 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El telefono no puede superar los 20 caracteres."
+      );
       return false;
     } 
 
@@ -226,9 +223,13 @@ export class CustomerComponent {
         if(response.success) {
           this.isLoading = false;
           const customer = response.customer;
-          this.showMessage("Informacion", "El Cliente fue actualizado correctamente.", () => {
-            this._router.navigate(['/admin/user/customers']);
-          });
+          this._messageService.success(
+            "Informacion", 
+            "El Cliente fue actualizado correctamente.",
+            () => {
+              this._router.navigate(['/admin/user/customers']);
+            }
+          );
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -252,9 +253,13 @@ export class CustomerComponent {
           if(response.success) {
             this.isLoading = false;
             const customer = response.customer;
-            this.showMessage("Informacion", "El Cliente fue agregado correctamente.", () => {
-              this._router.navigate(['/admin/user/customers']);
-            });
+            this._messageService.success(
+              "Informacion", 
+              "El Cliente fue agregado correctamente.",
+              () => {
+                this._router.navigate(['/admin/user/customers']);
+              }
+            );
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -265,7 +270,10 @@ export class CustomerComponent {
             let errorMessage = <any>error;
             console.log(errorMessage);
             if(errorMessage != null) {
-                this.showMessage("Error", errorMessage.error.error);
+              this._messageService.error(
+                "Error", 
+                errorMessage.error.error
+              );
             }
         }
       )
