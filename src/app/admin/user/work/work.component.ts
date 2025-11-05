@@ -13,6 +13,7 @@ import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { AddressInterface } from '../../../core/interfaces/address/address.interface';
 import { UserRolCompanyInterface } from '../../../core/interfaces/user-rol-company';
+import { MessageService } from '../../../core/services/message.service';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
@@ -82,6 +83,7 @@ export class WorkComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _messageService: MessageService,
     private _modelsItemsService: ModelItemsService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
@@ -339,41 +341,36 @@ export class WorkComponent {
     }
   }
 
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
-  }
-
   private validate(): boolean {
     if(!this.work.mitm_uuid) {
-      this.showMessage("Error", "Debe seleccionar un modelo de rubro.");
+      this._messageService.error(
+        "Error", 
+        "Debe seleccionar un modelo de rubro."
+      );
       return false;
     }
 
     if(!this.customer) {
-      this.showMessage("Error", "Debe seleccionar un cliente.");
+      this._messageService.error(
+        "Error", 
+        "Debe seleccionar un cliente."
+      );
       return false;
     }
 
     if(!this.work.adr_uuid) {
-      this.showMessage("Error", "Debe seleccionar una direccion.");
+      this._messageService.error(
+        "Error", 
+        "Debe seleccionar una direccion."
+      );
       return false;
     }
 
     if(!this.work.wrk_operator_uuid) {
-      this.showMessage("Error", "Debe seleccionar un usuario.");
+      this._messageService.error(
+        "Error", 
+        "Debe seleccionar un usuario."
+      );
       return false;
     }
 
@@ -417,7 +414,10 @@ export class WorkComponent {
             let errorMessage = <any>error;
             console.log(errorMessage);
             if(errorMessage != null) {
-                this.showMessage("Error", errorMessage.error.error);
+                this._messageService.error(
+                  "Error", 
+                  errorMessage.error.error
+                );
             }
         }
       )
@@ -484,9 +484,13 @@ export class WorkComponent {
           complete: () => {
             this.isLoading = false;
             console.log('Proceso completado.');
-            this.showMessage("Informacion", "El Trabajo fue agregado/modificado correctamente.", () => {
-              this._router.navigate(['/admin/user/works']);
-            });
+            this._messageService.success(
+              "¡Éxito!", 
+              "El Trabajo fue agregado/modificado correctamente.",
+              () => {
+                this._router.navigate(['/admin/user/works']);
+              }
+            );
           }
         });
     } else {
