@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
+import { MessageService } from '../../../core/services/message.service';
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
 
@@ -39,6 +40,7 @@ export class ItemComponent {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private _messageService: MessageService,
     private _itemsService: ItemsService
   ) {
     this.isLoading = false;
@@ -96,30 +98,19 @@ export class ItemComponent {
     )
   }
 
-  private showMessage(title: string, text: string, callback?: () => void): void {
-    Swal.fire({
-        title: title,
-        text: text,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonColor: '#3085d6',
-        confirmButtonText: 'Aceptar',
-      }).then((result: any) => {
-        console.info(result);
-        // Ejecutar el callback si se proporciona
-        if (callback && typeof callback === 'function') {
-          callback();
-        }
-      });
-  }
-
   private validate(): boolean {
     if(!this.item.itm_name) {
-      this.showMessage("Error", "El nombre del item no puede estar vacio");
+      this._messageService.error(
+        "Error", 
+        "El nombre del item no puede estar vacio."
+      );
       return false;
     }
     if(this.item.itm_name.length > 100) {
-      this.showMessage("Error", "El nombre del item no puede superar los 100 caracteres");
+      this._messageService.error(
+        "Error", 
+        "El nombre del item no puede superar los 100 caracteres."
+      );
       return false;
     }
 
@@ -133,9 +124,13 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
-          this.showMessage("Informacion", "El Rubro fue actualizado correctamente.", () => {
-            this._router.navigate(['/admin/application/items']);
-          });
+          this._messageService.success(
+            "Informacion", 
+            "El Rubro fue actualizado correctamente.",
+            () => {
+              this._router.navigate(['/admin/application/items']);
+            }
+          );
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -146,7 +141,10 @@ export class ItemComponent {
           let errorMessage = <any>error;
           console.log(errorMessage);
           if(errorMessage != null) {
-              this.showMessage("Error", errorMessage.error.error);
+            this._messageService.error(
+              "Error", 
+              errorMessage.error.error
+            );
           }
       }
     )
@@ -159,9 +157,13 @@ export class ItemComponent {
         if(response.success) {
           this.isLoading = false;
           const item = response.item;
-          this.showMessage("Informacion", "El Rubro fue agregado correctamente.", () => {
-            this._router.navigate(['/admin/application/items']);
-          });
+          this._messageService.success(
+            "Informacion", 
+            "El Rubro fue agregado correctamente.",
+            () => {
+              this._router.navigate(['/admin/application/items']);
+            }
+          );
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -172,7 +174,10 @@ export class ItemComponent {
           let errorMessage = <any>error;
           console.log(errorMessage);
           if(errorMessage != null) {
-              this.showMessage("Error", errorMessage.error.error);
+            this._messageService.error(
+              "Error", 
+              errorMessage.error.error
+            );
           }
       }
     )
