@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { from, of } from 'rxjs';
+import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
 import { Observable } from 'rxjs';
@@ -33,10 +35,12 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 })
 export class UserComponent {
 
+  private cmp_uuid!: string;
   public user!: UserInterface;
   public roles$!: Observable<RolResults>;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public userRolesSelected: any;
+  private userRolesSelectedSaved: any;
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
   public headerConfig: any = {};
@@ -66,6 +70,8 @@ export class UserComponent {
   }
 
   ngOnInit(): void {
+    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+
     this._route.params.subscribe( (params) => {
       if(params['usr_uuid'] && params['usr_uuid'] != 'new') {
         this.headerConfig = {
@@ -136,6 +142,13 @@ export class UserComponent {
         if(response.success) {
           console.info(response.data);
           this.userRolesSelected = response.data.map((e: any) => e.rol_uuid);
+          this.userRolesSelectedSaved = response.data.map((e: any) => {
+              return {
+                cmp_uuid: e.rol_uuid,
+                rol_uuid: e.rol_uuid,
+                status: 'read'
+            }
+          });
         } else {
           //this.status = 'error'
         }
@@ -153,6 +166,37 @@ export class UserComponent {
 
   public onImageSelected(imageSelected: any) {
     this.user.usr_image = imageSelected["base64"];
+  }
+
+  private manageRolesStates(newSelection: string[]) {
+    // 1. Marcar roles eliminados como 'delete'
+    this.userRolesSelectedSaved.forEach((role: any) => {
+      if (!newSelection.includes(role.rol_uuid) && role.status !== 'delete') {
+        role.status = 'delete';
+      }
+    });
+
+    // 2. Agregar nuevos roles como 'insert'
+    newSelection.forEach(rolUuid => {
+      const existingRole = this.userRolesSelectedSaved.find(
+        (role: any) => role.rol_uuid === rolUuid
+      );
+
+      if (!existingRole) {
+        // Es un rol nuevo - agregar con status 'insert'
+        this.userRolesSelectedSaved.push({
+          rol_uuid: rolUuid,
+          status: 'insert'
+        });
+      } else if (existingRole.status === 'delete') {
+        // Si estaba marcado para eliminar pero ahora se seleccionó nuevamente
+        existingRole.status = 'read'; // O 'update' según tu lógica
+      }
+    });
+  }
+
+  public onSelectChange(selectedRolesUuids: string[]) {
+    this.manageRolesStates(selectedRolesUuids);
   }
 
   private validate(): boolean {
@@ -221,11 +265,8 @@ export class UserComponent {
       response => {
         if(response.success) {
           this.isLoading = false;
-          const user = response.user;
-          this._messageService.success(
-            "Informacion", 
-            "El Usuario fue actualizado correctamente."
-          );
+          const user = response.data;
+          this.onSaveUserRolCompany(user.usr_uuid);
         } else {
           this.isLoading = false;
           //this.status = 'error'
@@ -251,11 +292,8 @@ export class UserComponent {
         response => {
           if(response.success) {
             this.isLoading = false;
-            const user = response.user;
-            this._messageService.success(
-              "Informacion", 
-              "El Usuario fue agregado correctamente."
-            );
+            const user = response.data;
+            this.onSaveUserRolCompany(user.usr_uuid);
           } else {
             this.isLoading = false;
             //this.status = 'error'
@@ -282,6 +320,69 @@ export class UserComponent {
       } else {
         this.insertUser(formRegister);
       }
+    }
+  }
+
+  public onSaveUserRolCompany(usr_uuid: string): void {
+    // Verificar si hay elementos en UserRolCompany
+    if (this.userRolesSelectedSaved?.length) {
+      this.userRolesSelectedSaved.forEach((e: any) => {
+        e.cmp_uuid = this.cmp_uuid,
+        e.usr_uuid = usr_uuid
+      });
+      // Convertir el array en un observable
+      from(this.userRolesSelectedSaved)
+        .pipe(
+          // Procesar cada elemento del array
+          mergeMap((userRolCompany: any) => {
+            // Si es un nuevo registro, asignar la fecha de creación
+            if (userRolCompany.usrrolcmp_createdat === null) {
+              userRolCompany.usrrolcmp_createdat = new Date();
+            }
+  
+            // Determinar si es una inserción o una actualización
+            if (userRolCompany.status === 'insert') {
+              // Inserción
+              return this._userRolesCompanyService.insertUserRolCompany(userRolCompany).pipe(
+                catchError((error) => {
+                  console.error('Error al insertar:', error);
+                  return of(null); // Devolver un Observable vacío en caso de error
+                })
+              );
+            } else if(userRolCompany.status === 'delete') {
+              // Actualización 
+              return this._userRolesCompanyService.deleteUserRolCompany(userRolCompany.cmp_uuid, userRolCompany.usr_uuid, userRolCompany.rol_uuid).pipe(
+                catchError((error) => {
+                  console.error('Error al eliminar:', error);
+                  return of(null); // Devolver un Observable vacío en caso de error
+                })
+              );
+            }
+            return of(null); // Devolver un Observable vacío si no hay actualización
+          }),
+          // Agrupar todas las respuestas en un solo array
+          toArray()
+        )
+        .subscribe({
+          next: (responses) => {
+            console.log('Respuestas de las llamadas:', responses);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error al procesar las llamadas:', error);
+          },
+          complete: () => {
+            this.isLoading = false;
+            console.log('Proceso completado.');
+            this._messageService.success(
+              "Informacion", 
+              "El Usuario fue actualizado correctamente."
+            );
+          }
+        });
+    } else {
+      console.warn('No hay elementos en workDetails para procesar.');
+      this.isLoading = false;
     }
   }
 }

@@ -153,6 +153,7 @@
                             <nz-select 
                                 name="usr_roles" 
                                 [(ngModel)]="userRolesSelected" 
+                                (ngModelChange)="onSelectChange($event)"
                                 nzSize="large" 
                                 nzMode="multiple" 
                                 nzPlaceHolder="Seleccione Roles"
