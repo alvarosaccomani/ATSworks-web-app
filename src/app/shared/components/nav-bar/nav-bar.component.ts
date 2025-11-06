@@ -7,10 +7,10 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 import { CompanyItemResults } from '../../../core/interfaces/company-item';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { MessageService } from '../../../core/services/message.service';
 import { CompanyItemsService } from '../../../core/services/company-items.service';
 
 declare var $:any;
-declare var Swal: any;
 
 @Component({
   selector: 'app-nav-bar',
@@ -33,6 +33,7 @@ export class NavBarComponent implements OnInit {
   constructor(
     private _router: Router,
     private _sharedDataService: SharedDataService,
+    private _messageService: MessageService,
     private _userRolesCompanyService: UserRolesCompanyService,
     private _companyItemsService: CompanyItemsService
   ) { }
@@ -41,21 +42,23 @@ export class NavBarComponent implements OnInit {
     /*  Exit system buttom */
     $('.btn-exit-system').on('click', (e: any) => {
       e.preventDefault();
-      Swal.fire({
-        title: '¿Estás seguro de cerrar la sesión?',
-        text: "Estás a punto de cerrar la sesión y salir del sistema.",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si',
-        cancelButtonText: 'No'
-      }).then((result: any) => {
-        if (result.value) {
-          localStorage.clear();
-          this._router.navigate(['/auth/login']);
+      this._messageService.showCustomMessage({
+          title: "¿Estás seguro de cerrar la sesión?",
+          type: "question",
+          text: "Estás a punto de cerrar la sesión y salir del sistema.",
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: "Sí, cerrar sesión",
+          cancelButtonText: "Cancelar"
+        },
+        (result: any) => {
+          if (result.value) {
+            localStorage.clear();
+            this._router.navigate(['/auth/login']);
+          }
         }
-      });
+      );
     });
 
     if(this.identity) {
