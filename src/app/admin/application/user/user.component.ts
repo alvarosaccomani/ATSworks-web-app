@@ -1,20 +1,31 @@
 import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
+import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ImageComponent } from '../../../shared/components/image/image.component';
 import { UserInterface } from '../../../core/interfaces/user';
+import { RolResults } from '../../../core/interfaces/rol';
+import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 import { MessageService } from '../../../core/services/message.service';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
+import { RolesService } from '../../../core/services/roles.service';
+import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 
 declare var Swal: any;
 
 @Component({
   selector: 'app-user',
   imports: [
+    AsyncPipe,
     FormsModule,
+    NzRadioModule,
+    NzSelectModule,
     HeaderComponent,
     PageNavTabsComponent,
     ImageComponent
@@ -25,6 +36,9 @@ declare var Swal: any;
 export class UserComponent {
 
   public user!: UserInterface;
+  public roles$!: Observable<RolResults>;
+  public userRolesCompany$!: Observable<UserRolCompanyResults>;
+  public userRolesSelected: any;
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
   public headerConfig: any = {};
@@ -45,7 +59,9 @@ export class UserComponent {
     private _route: ActivatedRoute,
     private _messageService: MessageService,
     private _usersService: UsersService,
-    private _validationService: ValidationService
+    private _validationService: ValidationService,
+    private _rolesService: RolesService,
+    private _userRolesCompanyService: UserRolesCompanyService
   ) {
     this.isLoading = false;
     this.userInit();
@@ -69,6 +85,7 @@ export class UserComponent {
         }
       }
     });
+    this.roles$ = this._rolesService.getRoles('');
   }
 
   public userInit(): void {
@@ -99,6 +116,28 @@ export class UserComponent {
         if(response.success) {
           console.info(response.data);
           this.user = response.data;
+          this.getUserRoles(usr_uuid);
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  private getUserRoles(usr_uuid: string): void {
+    this._userRolesCompanyService.getUserRolesCompanyByUser(usr_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.userRolesSelected = response.data.map((e: any) => e.rol_uuid);
         } else {
           //this.status = 'error'
         }

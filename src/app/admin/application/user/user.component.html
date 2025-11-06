@@ -142,6 +142,31 @@
                                 >
                         </div>
                     </div>
+                    <div class="col-12 col-md-6">
+                        <label 
+                            for="usr_roles" 
+                            class="bmd-label-floating"
+                            >
+                            Roles
+                        </label>
+                        @if(roles$ | async; as roles) {
+                            <nz-select 
+                                name="usr_roles" 
+                                [(ngModel)]="userRolesSelected" 
+                                nzSize="large" 
+                                nzMode="multiple" 
+                                nzPlaceHolder="Seleccione Roles"
+                                style="width: 100%;"
+                                >
+                                @for (rol of roles.data; track rol.rol_uuid) {
+                                    <nz-option 
+                                        [nzLabel]="rol.rol_name" 
+                                        [nzValue]="rol.rol_uuid">
+                                    </nz-option>
+                                }
+                            </nz-select>
+                        }
+                    </div>
                 </div>
             </div>
         </fieldset>
