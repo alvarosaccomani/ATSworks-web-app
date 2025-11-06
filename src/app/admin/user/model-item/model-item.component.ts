@@ -13,8 +13,6 @@ import { ModelItemsService } from '../../../core/services/model-items.service';
 import { DetailModelItemsService } from '../../../core/services/detail-model-items.service';
 import { DataTypesService } from '../../../core/services/data-types.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-model-item',
   imports: [
