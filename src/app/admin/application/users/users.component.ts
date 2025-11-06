@@ -5,10 +5,9 @@ import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { UserInterface, UserResults } from '../../../core/interfaces/user';
+import { MessageService } from '../../../core/services/message.service';
 import { UsersService } from '../../../core/services/users.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-
-declare var Swal: any;
 
 @Component({
   selector: 'app-users',
@@ -49,6 +48,7 @@ export class UsersComponent implements OnInit {
   ]
   
     constructor(
+      private _messageService: MessageService,
       private _usersService: UsersService
     ) { }
     
@@ -57,29 +57,31 @@ export class UsersComponent implements OnInit {
     }
 
     public deleteUser(user: UserInterface) {
-      Swal.fire({
-        title: '¿Desea eliminar el Usuario?',
-        text: "Esta a punto de eliminar el Usuario",
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
-        if (result.value) {
-          this._usersService.deleteUser(user.usr_uuid!)
-            .subscribe(
-              response => {
-                console.info(response);
-                this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
-              },
-              error => {
-                console.log(<any>error);
-              }
-            );
+      this._messageService.showCustomMessage({
+          title: "¿Estás seguro de eliminar el Usuario?",
+          type: "question",
+          text: "Estás a punto de eliminar el Usuario.",
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: "Sí, eliminar!",
+          cancelButtonText: "No, cancelar"
+        },
+        (result: any) => {
+          if (result.value) {
+            this._usersService.deleteUser(user.usr_uuid!)
+              .subscribe(
+                response => {
+                  console.info(response);
+                  this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
+                },
+                error => {
+                  console.log(<any>error);
+                }
+              );
+          }
         }
-      });
+      );
     }
 
   public goToPage(page: number): void {
