@@ -5,7 +5,6 @@ import { UserInterface } from "../user/user.interface"
 export interface UserRolCompanyInterface {
     cmp_uuid: string | null,
     cmp: CompanyInterface | null,
-    usrrolcmp_uuid: string | null,
     usr_uuid: string | null,
     usr: UserInterface | null,
     rol_uuid: string | null,
