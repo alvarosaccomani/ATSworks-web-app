@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-
-declare var Swal: any;
+import Swal, { SweetAlertResult } from 'sweetalert2';
 
 export interface MessageConfig {
   title: string;
@@ -9,8 +8,11 @@ export interface MessageConfig {
   confirmButtonText?: string;
   confirmButtonColor?: string;
   showCancelButton?: boolean;
+  cancelButtonColor?: string;
   cancelButtonText?: string;
 }
+
+export type MessageCallback = (result: SweetAlertResult<any>) => void;
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +24,8 @@ export class MessageService {
   private defaultConfig: Partial<MessageConfig> = {
     confirmButtonText: 'Aceptar',
     confirmButtonColor: '#3085d6',
-    showCancelButton: false
+    showCancelButton: false,
+    cancelButtonColor: '#d33'
   };
 
   /**
@@ -30,9 +33,9 @@ export class MessageService {
    * @param title Título del mensaje
    * @param type Tipo de mensaje
    * @param text Texto del mensaje
-   * @param callback Función a ejecutar después de aceptar
+   * @param callback Función a ejecutar después de aceptar (recibe el resultado)
    */
-  public showMessage(title: string, type: MessageConfig['type'], text: string, callback?: () => void): void {
+  showMessage(title: string, type: MessageConfig['type'], text: string, callback?: MessageCallback): void {
     const config: MessageConfig = {
       title,
       type,
@@ -46,9 +49,9 @@ export class MessageService {
   /**
    * Muestra un mensaje con configuración personalizada
    * @param config Configuración del mensaje
-   * @param callback Función a ejecutar después de aceptar
+   * @param callback Función a ejecutar que recibe el resultado
    */
-  public showCustomMessage(config: MessageConfig, callback?: () => void): void {
+  showCustomMessage(config: MessageConfig, callback?: MessageCallback): void {
     Swal.fire({
       title: config.title,
       text: config.text,
@@ -57,13 +60,13 @@ export class MessageService {
       confirmButtonColor: config.confirmButtonColor || '#3085d6',
       confirmButtonText: config.confirmButtonText || 'Aceptar',
       cancelButtonText: config.cancelButtonText || 'Cancelar',
-      cancelButtonColor: '#d33'
-    }).then((result: any) => {
+      cancelButtonColor: config.cancelButtonColor || '#d33'
+    }).then((result: SweetAlertResult<any>) => {
       console.info('Message result:', result);
       
-      // Ejecutar el callback si se confirma y se proporciona un callback
-      if (result.isConfirmed && callback && typeof callback === 'function') {
-        callback();
+      // Ejecutar el callback si se proporciona
+      if (callback && typeof callback === 'function') {
+        callback(result);
       }
     });
   }
@@ -72,48 +75,42 @@ export class MessageService {
    * Métodos rápidos para tipos de mensaje comunes
    */
 
-  public success(title: string, text: string, callback?: () => void): void {
+  success(title: string, text: string, callback?: MessageCallback): void {
     this.showMessage(title, 'success', text, callback);
   }
 
-  public error(title: string, text: string, callback?: () => void): void {
+  error(title: string, text: string, callback?: MessageCallback): void {
     this.showMessage(title, 'error', text, callback);
   }
 
-  public warning(title: string, text: string, callback?: () => void): void {
+  warning(title: string, text: string, callback?: MessageCallback): void {
     this.showMessage(title, 'warning', text, callback);
   }
 
-  public info(title: string, text: string, callback?: () => void): void {
+  info(title: string, text: string, callback?: MessageCallback): void {
     this.showMessage(title, 'info', text, callback);
   }
 
-  public confirm(
+  confirm(
     title: string, 
     text: string, 
     confirmCallback?: () => void, 
-    cancelCallback?: () => void
+    cancelCallback?: () => void,
+    confirmButtonText: string = 'Sí',
+    cancelButtonText: string = 'No',
+    confirmButtonColor: string = '#3085d6',
+    cancelButtonColor: string = '#d33'
   ): void {
-    this.showCustomMessage({
-      title,
-      text,
-      type: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'No'
-    }, confirmCallback);
-
-    // Si se cancela y hay callback de cancelación
     Swal.fire({
       title,
       text,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí',
-      cancelButtonText: 'No'
-    }).then((result: any) => {
+      confirmButtonColor,
+      cancelButtonColor,
+      confirmButtonText,
+      cancelButtonText
+    }).then((result: SweetAlertResult<any>) => {
       if (result.isConfirmed && confirmCallback) {
         confirmCallback();
       } else if (result.isDismissed && cancelCallback) {
