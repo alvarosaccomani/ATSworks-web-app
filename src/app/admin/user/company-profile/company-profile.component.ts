@@ -5,8 +5,6 @@ import { CompanyInterface } from '../../../core/interfaces/company';
 import { MessageService } from '../../../core/services/message.service';
 import { CompaniesService } from '../../../core/services/companies.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-company-profile',
   imports: [
