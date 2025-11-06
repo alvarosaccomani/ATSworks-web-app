@@ -12,8 +12,6 @@ import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service';
 import { WorksAttachmentsService } from '../../../core/services/works-attachments.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-work-sheet',
   imports: [
