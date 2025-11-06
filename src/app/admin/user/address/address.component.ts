@@ -7,8 +7,6 @@ import { MessageService } from '../../../core/services/message.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-address',
   imports: [
