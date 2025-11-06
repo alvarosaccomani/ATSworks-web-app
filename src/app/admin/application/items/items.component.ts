@@ -5,10 +5,9 @@ import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ItemInterface, ItemResults } from '../../../core/interfaces/item';
+import { MessageService } from '../../../core/services/message.service';
 import { ItemsService } from '../../../core/services/items.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-
-declare var Swal: any;
 
 @Component({
   selector: 'app-items',
@@ -50,6 +49,7 @@ export class ItemsComponent implements OnInit {
   ] 
   
     constructor(
+      private _messageService: MessageService,
       private _itemsService: ItemsService
     ) { }
     
@@ -58,16 +58,17 @@ export class ItemsComponent implements OnInit {
   }
 
   public deleteItem(item: ItemInterface) {
-    Swal.fire({
-        title: '¿Desea eliminar el Rubro?',
-        text: "Esta a punto de eliminar el Rubro",
-        type: 'question',
+    this._messageService.showCustomMessage({
+        title: "¿Estás seguro de eliminar el Rubro?",
+        type: "question",
+        text: "Estás a punto de eliminar el Rubro.",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar"
+      },
+      (result: any) => {
         if (result.value) {
           this._itemsService.deleteItem(item.itm_uuid!)
             .subscribe(
@@ -80,7 +81,8 @@ export class ItemsComponent implements OnInit {
               }
             );
         }
-      });
+      }
+    );
   }
 
   public goToPage(page: number): void {
