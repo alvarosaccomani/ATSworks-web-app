@@ -17,8 +17,6 @@ import { ValidationService } from '../../../core/services/validation.service';
 import { RolesService } from '../../../core/services/roles.service';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-user',
   imports: [
