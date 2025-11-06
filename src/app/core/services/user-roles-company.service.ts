@@ -24,4 +24,17 @@ export class UserRolesCompanyService {
 
     return this._http.get<UserRolCompanyResults>(environment.apiUrl + 'user-roles-company-by-user/' + usr_uuid, {headers:headers})
   }
+
+  public insertUserRolCompany(userRolCompany: any): Observable<any> {
+    let params = JSON.stringify(userRolCompany);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(environment.apiUrl + 'user-rol-company', params, {headers:headers});
+  }
+
+  public deleteUserRolCompany(cmp_uuid: string, usr_uuid: string, rol_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(environment.apiUrl + 'user-rol-company/' + cmp_uuid + '/' + usr_uuid + '/' + rol_uuid, {headers:headers});
+  }
 }
