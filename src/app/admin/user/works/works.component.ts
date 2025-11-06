@@ -6,10 +6,9 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { WorksService } from '../../../core/services/works.service';
 import { WorkInterface, WorkResults } from '../../../core/interfaces/work';
+import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-
-declare var Swal: any;
 
 @Component({
   selector: 'app-works',
@@ -56,6 +55,7 @@ export class WorksComponent {
   ]
 
   constructor(
+      private _messageService: MessageService,
       private _worksService: WorksService,
       private _sharedDataService: SharedDataService
     ) { }
@@ -73,16 +73,17 @@ export class WorksComponent {
   }
 
   public deleteWork(work: WorkInterface) {
-    Swal.fire({
-        title: '¿Desea eliminar el Trabajo?',
-        text: "Esta a punto de eliminar el Trabajo",
-        type: 'question',
+    this._messageService.showCustomMessage({
+        title: "¿Estás seguro de eliminar el Trabajo?",
+        type: "question",
+        text: "Estás a punto de eliminar el Trabajo.",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar"
+      },
+      (result: any) => {
         if (result.value) {
           this._worksService.deleteWork(work.cmp_uuid!, work.wrk_uuid!)
             .subscribe(
@@ -95,7 +96,8 @@ export class WorksComponent {
               }
             );
         }
-      });
+      }
+    );
   }
 
   public goToPage(page: number): void {
