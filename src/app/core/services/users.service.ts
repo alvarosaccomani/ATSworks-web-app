@@ -44,7 +44,7 @@ export class UsersService {
       filter = `${filter}/${page}/${perPage}`;
     }
 
-    return this._http.get<UserResults>(environment.apiUrl + 'user/' + filter, {headers:headers})
+    return this._http.get<UserResults>(environment.apiUrl + 'users/' + filter, {headers:headers})
   }
 
   public getUserById(usr_uuid: string): Observable<any> {
