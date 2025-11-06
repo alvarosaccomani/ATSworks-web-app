@@ -7,8 +7,6 @@ import { MessageService } from '../../../core/services/message.service';
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-item',
   imports: [
