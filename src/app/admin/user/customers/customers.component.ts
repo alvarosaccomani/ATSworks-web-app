@@ -6,10 +6,9 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomersService } from '../../../core/services/customers.service';
 import { CustomerInterface, CustomerResults } from '../../../core/interfaces/customer';
+import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-
-declare var Swal: any;
 
 @Component({
   selector: 'app-customers',
@@ -51,6 +50,7 @@ export class CustomersComponent implements OnInit {
   ]
 
   constructor(
+    private _messageService: MessageService,
     private _customersService: CustomersService,
     private _sharedDataService: SharedDataService
   ) { }
@@ -68,16 +68,17 @@ export class CustomersComponent implements OnInit {
   }
 
   public deleteCustomer(customer: CustomerInterface) {
-    Swal.fire({
-        title: '¿Desea eliminar el Cliente?',
-        text: "Esta a punto de eliminar el Cliente",
-        type: 'question',
+    this._messageService.showCustomMessage({
+        title: "¿Estás seguro de eliminar el Cliente?",
+        type: "question",
+        text: "Estás a punto de eliminar el Cliente.",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar"
+      },
+      (result: any) => {
         if (result.value) {
           this._customersService.deleteCustomer(customer.cmp_uuid!, customer.cus_uuid!)
             .subscribe(
@@ -90,7 +91,8 @@ export class CustomersComponent implements OnInit {
               }
             );
         }
-      });
+      }
+    );
   }
 
   public goToPage(page: number): void {
