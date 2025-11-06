@@ -21,8 +21,6 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service'
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-work',
   imports: [
