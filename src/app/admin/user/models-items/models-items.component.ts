@@ -6,10 +6,9 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { ModelItemInterface, ModelItemResults } from '../../../core/interfaces/model-item';
+import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-
-declare var Swal: any;
 
 @Component({
   selector: 'app-models-items',
@@ -51,6 +50,7 @@ export class ModelsItemsComponent {
   ]
 
   constructor(
+    private _messageService: MessageService,
     private _modelItemsService: ModelItemsService,
     private _sharedDataService: SharedDataService
   ) { }
@@ -68,16 +68,17 @@ export class ModelsItemsComponent {
   }
 
   public deleteModelItem(modelItem: ModelItemInterface) {
-    Swal.fire({
-        title: '¿Desea eliminar el Modelo de Rubro?',
-        text: "Esta a punto de eliminar el Modelo De Rubro",
-        type: 'question',
+    this._messageService.showCustomMessage({
+        title: "¿Estás seguro de eliminar el Modelo de Rubro?",
+        type: "question",
+        text: "Estás a punto de eliminar el Modelo de Rubro.",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar"
+      },
+      (result: any) => {
         if (result.value) {
           this._modelItemsService.deleteModelItem(modelItem.cmp_uuid!, modelItem.itm_uuid!, modelItem.cmpitm_uuid!, modelItem.mitm_uuid!)
             .subscribe(
@@ -90,7 +91,8 @@ export class ModelsItemsComponent {
               }
             );
         }
-      });
+      }
+    );
   }
 
   public goToPage(page: number): void {
