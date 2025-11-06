@@ -12,8 +12,6 @@ import { PaymentMethodsService } from '../../../core/services/payment-methods.se
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { AddressInterface } from '../../../core/interfaces/address';
 
-declare var Swal: any;
-
 @Component({
   selector: 'app-customer',
   imports: [
@@ -290,16 +288,17 @@ export class CustomerComponent {
   }
 
   public deleteAddress(address: AddressInterface) {
-    Swal.fire({
-        title: '¿Desea eliminar la Direccion?',
-        text: "Esta a punto de eliminar la Direccion",
-        type: 'question',
+    this._messageService.showCustomMessage({
+        title: "¿Estás seguro de eliminar la Direccion?",
+        type: "question",
+        text: "Estás a punto de eliminar la Direccion.",
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar'
-      }).then((result: any) => {
+        confirmButtonText: "Sí, eliminar!",
+        cancelButtonText: "No, cancelar"
+      },
+      (result: any) => {
         if (result.value) {
           this._addressesService.deleteAddress(address.cmp_uuid!, address.cus_uuid!, address.adr_uuid!)
             .subscribe(
@@ -312,6 +311,7 @@ export class CustomerComponent {
               }
             );
         }
-      });
+      }
+    );
   }
 }
