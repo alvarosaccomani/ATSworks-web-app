@@ -25,6 +25,12 @@ export class UserRolesCompanyService {
     return this._http.get<UserRolCompanyResults>(environment.apiUrl + 'user-roles-company-by-user/' + usr_uuid, {headers:headers})
   }
 
+  public getUserRolesCompanyByCompanyUser(cmp_uuid: string, usr_uuid: string): Observable<UserRolCompanyResults> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get<UserRolCompanyResults>(environment.apiUrl + 'user-roles-company-by-company-user/' + cmp_uuid + '/' + usr_uuid, {headers:headers})
+  }
+
   public insertUserRolCompany(userRolCompany: any): Observable<any> {
     let params = JSON.stringify(userRolCompany);
     let headers = new HttpHeaders().set('content-type','application/json');
