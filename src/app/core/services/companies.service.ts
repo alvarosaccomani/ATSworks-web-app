@@ -13,6 +13,16 @@ export class CompaniesService {
     private _http: HttpClient
   ) { }
 
+  public getCompanies(filter?: string, page?: number, perPage?: number): Observable<CompanyResults> {
+      let headers = new HttpHeaders().set('content-type','application/json');
+  
+      if(page && perPage) {
+        filter = `${filter}/${page}/${perPage}`;
+      }
+  
+      return this._http.get<CompanyResults>(environment.apiUrl + 'companies/' + filter, {headers:headers})
+    }
+
   public getCompanyById(cmp_uuid: string): Observable<CompanyResults> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
