@@ -65,6 +65,9 @@ export class NavBarComponent implements OnInit {
       this.userRolesCompany$ = this._userRolesCompanyService.getUserRolesCompanyByUser(this.identity.usr_uuid!);
       this.userRolesCompany$.subscribe((userRolesCompany: any) => {
         this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
+        if(this.userRolesCompany.length === 1) {
+          this.selectedCompany = this.userRolesCompany[0].cmp.cmp_uuid;
+        }
         //Obtengo Company Items
         this.companyItems$ = this._companyItemsService.getCompanyItems(userRolesCompany.data[0].cmp.cmp_uuid!);
         this.companyItems$.subscribe((companyItems: any) => {
