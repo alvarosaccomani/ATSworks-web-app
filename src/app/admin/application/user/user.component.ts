@@ -82,6 +82,10 @@ export class UserComponent {
 
   ngOnInit(): void {
     this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    if(this.cmp_uuid) {
+      this.selectedCompany = this.cmp_uuid;
+      this.onChangeCompany(this.cmp_uuid);
+    }
     this.sysadmin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "sysadmin") != null);
     this.admin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "admin") != null);
 
