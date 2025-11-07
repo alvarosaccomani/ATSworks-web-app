@@ -108,40 +108,57 @@
                                 >
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label 
-                                for="usr_password" 
-                                class="bmd-label-floating"
+                    <!-- Botón para mostrar/ocultar campos de contraseña -->
+                    <div class="col-12">
+                        <div class="form-group text-center mb-3">
+                            <button 
+                                type="button" 
+                                class="btn btn-outline-warning btn-sm"
+                                (click)="togglePasswordFields()"
                                 >
-                                Contraseña
-                            </label>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="usr_password" 
-                                name="usr_password" 
-                                [(ngModel)]="user.usr_password"
-                                >
+                                <i class="fas fa-key"></i> &nbsp; 
+                                {{ showPasswordFields ? 'OCULTAR CONTRASEÑA' : 'CAMBIAR CONTRASEÑA' }}
+                            </button>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label 
-                                for="usr_password_repeat" 
-                                class="bmd-label-floating"
-                                >
-                                Repetir contraseña
-                            </label>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="usr_password_repeat" 
-                                name="usr_password_repeat" 
-                                [(ngModel)]="usr_password_repeat"
-                                >
+
+                    <!-- Campos de contraseña (ocultos por defecto) -->
+                    @if(showPasswordFields) {
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label 
+                                    for="usr_password" 
+                                    class="bmd-label-floating"
+                                    >
+                                    Contraseña
+                                </label>
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="usr_password" 
+                                    name="usr_password" 
+                                    [(ngModel)]="user.usr_password"
+                                    >
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label 
+                                    for="usr_password_repeat" 
+                                    class="bmd-label-floating"
+                                    >
+                                    Repetir contraseña
+                                </label>
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="usr_password_repeat" 
+                                    name="usr_password_repeat" 
+                                    [(ngModel)]="usr_password_repeat"
+                                    >
+                            </div>
+                        </div>
+                    }
                     <div class="col-12 col-md-6">
                         <label 
                             for="usr_roles" 

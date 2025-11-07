@@ -39,6 +39,7 @@ export class UserComponent {
   public user!: UserInterface;
   public roles$!: Observable<RolResults>;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
+  public showPasswordFields: boolean = false;
   public userRolesSelected: any;
   private userRolesSelectedSaved: any;
   public isLoading: boolean = false;
@@ -168,6 +169,17 @@ export class UserComponent {
     this.user.usr_image = imageSelected["base64"];
   }
 
+  // Método para alternar la visibilidad de los campos de contraseña
+  public togglePasswordFields(): void {
+    this.showPasswordFields = !this.showPasswordFields;
+    
+    // Si se ocultan los campos, limpiar las contraseñas
+    if (!this.showPasswordFields) {
+      this.user.usr_password = '';
+      this.usr_password_repeat = '';
+    }
+  }
+
   private manageRolesStates(newSelection: string[]) {
     // 1. Marcar roles eliminados como 'delete'
     this.userRolesSelectedSaved.forEach((role: any) => {
@@ -216,7 +228,7 @@ export class UserComponent {
       return false;
     }
 
-    if(!this.user.usr_password) {
+    if(this.showPasswordFields && !this.user.usr_password) {
       this._messageService.error(
         "Error", 
         "La contraseña no puede estar vacia."
@@ -240,7 +252,7 @@ export class UserComponent {
       return false;
     }
 
-    if(this.user.usr_password.length > 100) {
+    if(this.showPasswordFields && this.user.usr_password && this.user.usr_password.length > 100) {
       this._messageService.error(
         "Error", 
         "El password del usuario no puede superar los 100 caracteres."
