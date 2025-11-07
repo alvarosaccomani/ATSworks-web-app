@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule, NzSelectSizeType } from 'ng-zorro-antd/select';
 import { Observable } from 'rxjs';
@@ -11,11 +12,13 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { ImageComponent } from '../../../shared/components/image/image.component';
 import { UserInterface } from '../../../core/interfaces/user';
+import { CompanyResults } from '../../../core/interfaces/company';
 import { RolResults } from '../../../core/interfaces/rol';
 import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 import { MessageService } from '../../../core/services/message.service';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
+import { CompaniesService } from '../../../core/services/companies.service';
 import { RolesService } from '../../../core/services/roles.service';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 
@@ -24,6 +27,7 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
   imports: [
     AsyncPipe,
     FormsModule,
+    NzIconModule,
     NzRadioModule,
     NzSelectModule,
     HeaderComponent,
@@ -36,12 +40,17 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 export class UserComponent {
 
   private cmp_uuid!: string;
+  public sysadmin!: boolean;
+  public admin!: boolean;
   public user!: UserInterface;
+  public companies$!: Observable<CompanyResults>;
   public roles$!: Observable<RolResults>;
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public showPasswordFields: boolean = false;
   public userRolesSelected: any;
   private userRolesSelectedSaved: any;
+  public selectedCompany: any;
+  public loadingCompanies: boolean = false;
   public isLoading: boolean = false;
   public usr_password_repeat!: string;
   public headerConfig: any = {};
@@ -63,6 +72,7 @@ export class UserComponent {
     private _messageService: MessageService,
     private _usersService: UsersService,
     private _validationService: ValidationService,
+    private _companiesService: CompaniesService,
     private _rolesService: RolesService,
     private _userRolesCompanyService: UserRolesCompanyService
   ) {
@@ -72,6 +82,8 @@ export class UserComponent {
 
   ngOnInit(): void {
     this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.sysadmin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "sysadmin") != null);
+    this.admin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "admin") != null);
 
     this._route.params.subscribe( (params) => {
       if(params['usr_uuid'] && params['usr_uuid'] != 'new') {
@@ -90,6 +102,7 @@ export class UserComponent {
         }
       }
     });
+    this.companies$ = this._companiesService.getCompanies();
     this.roles$ = this._rolesService.getRoles('');
   }
 
@@ -121,7 +134,10 @@ export class UserComponent {
         if(response.success) {
           console.info(response.data);
           this.user = response.data;
-          this.getUserRoles(this.cmp_uuid, usr_uuid);
+          if(!this.sysadmin)
+          {
+            this.getUserRoles(this.cmp_uuid, usr_uuid);
+          }
         } else {
           //this.status = 'error'
         }
@@ -178,6 +194,22 @@ export class UserComponent {
       this.user.usr_password = '';
       this.usr_password_repeat = '';
     }
+  }
+
+  public onSearchCompany(value: string): void {
+    this.loadingCompanies = true;
+    if(value) {
+      this._companiesService.getCompanies(value)
+        .subscribe(data => {
+          if(data) {
+            this.loadingCompanies = false;
+          }
+        });
+    }
+  }
+
+  public onChangeCompany(value: string): void {
+    this.getUserRoles(value, this.user.usr_uuid!);
   }
 
   private manageRolesStates(newSelection: string[]) {

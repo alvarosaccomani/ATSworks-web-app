@@ -159,32 +159,79 @@
                             </div>
                         </div>
                     }
-                    <div class="col-12 col-md-6">
-                        <label 
-                            for="usr_roles" 
-                            class="bmd-label-floating"
-                            >
-                            Roles
-                        </label>
-                        @if(roles$ | async; as roles) {
-                            <nz-select 
-                                name="usr_roles" 
-                                [(ngModel)]="userRolesSelected" 
-                                (ngModelChange)="onSelectChange($event)"
-                                nzSize="large" 
-                                nzMode="multiple" 
-                                nzPlaceHolder="Seleccione Roles"
-                                style="width: 100%;"
+                    @if(sysadmin) {
+                        <div class="col-12 col-md-6">
+                            <label 
+                                for="usr_company" 
+                                class="bmd-label-floating"
                                 >
-                                @for (rol of roles.data; track rol.rol_uuid) {
-                                    <nz-option 
-                                        [nzLabel]="rol.rol_name" 
-                                        [nzValue]="rol.rol_uuid">
-                                    </nz-option>
-                                }
-                            </nz-select>
-                        }
-                    </div>
+                                Empresa
+                            </label>
+                            @if(companies$ | async; as companies) {
+                                <nz-select
+                                    name="usr_company"
+                                    nzSize="large" 
+                                    nzAllowClear
+                                    nzShowSearch
+                                    nzServerSearch
+                                    [(ngModel)]="selectedCompany"
+                                    (nzOnSearch)="onSearchCompany($event)"
+                                    (ngModelChange)="onChangeCompany($event)"
+                                    nzPlaceHolder="Seleccione Empresa"
+                                    >
+                                    @if (!loadingCompanies) {
+                                        @for (company of companies.data; track company.cmp_uuid) {
+                                            <nz-option 
+                                                [nzValue]="company.cmp_uuid" 
+                                                [nzLabel]="company.cmp_name">
+                                            </nz-option>
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                        Loading Data...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            }
+                        </div>
+                    }
+                    @if(admin) {
+                        <div class="col-12 col-md-6">
+                            <label 
+                                for="usr_roles" 
+                                class="bmd-label-floating"
+                                >
+                                Roles
+                            </label>
+                            @if(roles$ | async; as roles) {
+                                <nz-select 
+                                    name="usr_roles" 
+                                    [(ngModel)]="userRolesSelected" 
+                                    (ngModelChange)="onSelectChange($event)"
+                                    nzSize="large" 
+                                    nzMode="multiple" 
+                                    nzPlaceHolder="Seleccione Roles"
+                                    >
+                                    @for (rol of roles.data; track rol.rol_uuid) {
+                                        @if(sysadmin) {
+                                            <nz-option 
+                                                [nzLabel]="rol.rol_name" 
+                                                [nzValue]="rol.rol_uuid">
+                                            </nz-option>
+                                        } @else {
+                                            @if(rol.rol_name != "sysadmin") {
+                                                <nz-option 
+                                                    [nzLabel]="rol.rol_name" 
+                                                    [nzValue]="rol.rol_uuid">
+                                                </nz-option>
+                                            }
+                                        }
+                                    }
+                                </nz-select>
+                            }
+                        </div>
+                    }
                 </div>
             </div>
         </fieldset>
