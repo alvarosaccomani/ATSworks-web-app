@@ -121,7 +121,7 @@ export class UserComponent {
         if(response.success) {
           console.info(response.data);
           this.user = response.data;
-          this.getUserRoles(usr_uuid);
+          this.getUserRoles(this.cmp_uuid, usr_uuid);
         } else {
           //this.status = 'error'
         }
@@ -137,8 +137,8 @@ export class UserComponent {
     )
   }
 
-  private getUserRoles(usr_uuid: string): void {
-    this._userRolesCompanyService.getUserRolesCompanyByUser(usr_uuid).subscribe(
+  private getUserRoles(cmp_uuid: string, usr_uuid: string): void {
+    this._userRolesCompanyService.getUserRolesCompanyByCompanyUser(cmp_uuid, usr_uuid).subscribe(
       (response: any) => {
         if(response.success) {
           console.info(response.data);
