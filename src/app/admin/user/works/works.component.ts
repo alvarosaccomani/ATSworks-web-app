@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { WorksService } from '../../../core/services/works.service';
 import { WorkInterface, WorkResults } from '../../../core/interfaces/work';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -55,19 +56,20 @@ export class WorksComponent {
   ]
 
   constructor(
+      private _sessionService: SessionService,
       private _messageService: MessageService,
       private _worksService: WorksService,
       private _sharedDataService: SharedDataService
     ) { }
 
   ngOnInit(): void {
-    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
     this.works$ = this._worksService.getWorks(this.cmp_uuid, "null", this.page, this.perPage);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.works$ = this._worksService.getWorks(company.cmp.cmp_uuid, "null", this.page, this.perPage);
+        this.works$ = this._worksService.getWorks(company.cmp_uuid, "null", this.page, this.perPage);
       }
     });
   }
