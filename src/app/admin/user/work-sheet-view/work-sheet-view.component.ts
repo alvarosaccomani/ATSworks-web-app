@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { WorkInterface } from '../../../core/interfaces/work';
+import { SessionService } from '../../../core/services/session.service';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksAttachmentsService } from '../../../core/services/works-attachments.service';
 
@@ -24,6 +25,7 @@ export class WorkSheetViewComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _sessionService: SessionService,
     private _worksService: WorksService,
     private _worksAttachmentsService: WorksAttachmentsService    
   )
@@ -53,7 +55,7 @@ export class WorkSheetViewComponent {
   }
 
   ngOnInit(): void {
-    this.work.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.work.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this._route.params.subscribe( (params) => {
       if(params['wrk_uuid'] != 'new') {
         this.work.wrk_uuid = params['wrk_uuid'];
