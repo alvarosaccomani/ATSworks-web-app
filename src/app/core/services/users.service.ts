@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserResults } from '../interfaces/user';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class UsersService {
   public identity: any;
 
   constructor(
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _sessionService: SessionService
   ) { }
 
   public login(user: any, gettoken: string | null = null): Observable<any> {
@@ -27,7 +29,7 @@ export class UsersService {
   }
 
   public getIdentity()  {
-    let identity = JSON.parse(localStorage.getItem('identity')!);
+    let identity = this._sessionService.getIdentity();
 
     if(identity !== 'undefined') {
         this.identity = identity;
