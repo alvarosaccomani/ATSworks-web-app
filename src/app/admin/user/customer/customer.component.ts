@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { PaymentMethodInterface } from '../../../core/interfaces/payment-method';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
@@ -45,6 +46,7 @@ export class CustomerComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
@@ -56,7 +58,7 @@ export class CustomerComponent {
   }
 
   ngOnInit(): void {
-    this.customer.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.customer.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this.getPaymentMethods(this.customer.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
@@ -80,7 +82,7 @@ export class CustomerComponent {
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customer.cmp_uuid = company.cmp.cmp_uuid;
+        this.customer.cmp_uuid = company.cmp_uuid;
         this.getCustomerById(this.customer.cmp_uuid!, this.customer.cus_uuid!);
       }
     });
