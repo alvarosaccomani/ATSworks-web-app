@@ -7,6 +7,7 @@ import { CameraComponent } from '../../../shared/components/camera/camera.compon
 import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail';
 import { WorkAttachmentInterface } from '../../../core/interfaces/work-attachment';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service';
@@ -39,6 +40,7 @@ export class WorkSheetComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _worksService: WorksService,
     private _worksDetailsService: WorksDetailsService,
@@ -111,7 +113,7 @@ export class WorkSheetComponent {
 
     this.step = this.itemsStep[0];
 
-    this.work.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.work.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this._route.params.subscribe( (params) => {
       if(params['wrk_uuid'] != 'new') {
         this.work.wrk_uuid = params['wrk_uuid'];
