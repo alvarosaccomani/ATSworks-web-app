@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { AddressInterface } from '../../../core/interfaces/address';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
@@ -25,6 +26,7 @@ export class AddressComponent {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _addressesService: AddressesService,
     private _sharedDataService: SharedDataService
@@ -35,7 +37,7 @@ export class AddressComponent {
   }
 
   ngOnInit(): void {
-    this.address.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.address.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
     this._route.params.subscribe( (params) => {
       if(params['adr_uuid'] && params['adr_uuid'] != 'new') {
@@ -59,7 +61,7 @@ export class AddressComponent {
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.address.cmp_uuid = company.cmp.cmp_uuid;
+        this.address.cmp_uuid = company.cmp_uuid;
         this.getAddressById(this.address.cmp_uuid!, this.address.cus_uuid!, this.address.adr_uuid!);
       }
     });
