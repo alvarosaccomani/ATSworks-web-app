@@ -6,7 +6,10 @@ import { UserInterface } from '../../../core/interfaces/user';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
 import { CompanyItemResults } from '../../../core/interfaces/company-item';
+import { RouteService } from '../../../core/services/route.service';
+import { SessionService } from '../../../core/services/session.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { MenuService } from '../../../core/services/menu.service';
 import { MessageService } from '../../../core/services/message.service';
 import { CompanyItemsService } from '../../../core/services/company-items.service';
 
@@ -32,8 +35,11 @@ export class NavBarComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _route: RouteService,
+    private _sessionService: SessionService,
     private _sharedDataService: SharedDataService,
     private _messageService: MessageService,
+    private _menuService: MenuService,
     private _userRolesCompanyService: UserRolesCompanyService,
     private _companyItemsService: CompanyItemsService
   ) { }
@@ -66,20 +72,35 @@ export class NavBarComponent implements OnInit {
       this.userRolesCompany$.subscribe((userRolesCompany: any) => {
         this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
         if(this.userRolesCompany.length === 1) {
-          this.selectedCompany = this.userRolesCompany[0].cmp.cmp_uuid;
+          let company = this.userRolesCompany[0];
+          this.selectedCompany = company.cmp_uuid;
+          this._sessionService.setCompany(JSON.stringify(company));
         }
         //Obtengo Company Items
         this.companyItems$ = this._companyItemsService.getCompanyItems(userRolesCompany.data[0].cmp.cmp_uuid!);
         this.companyItems$.subscribe((companyItems: any) => {
-          localStorage.setItem('companyItems', JSON.stringify(companyItems.data));;
+          this._sessionService.setCompanyItems(companyItems.data);
         });
+
+        if(!this.selectedCompany) {
+          this._router.navigate(['/admin/user/no-company']);
+        } else {
+          // Inicializar el menú con los datos del usuario
+          this._menuService.initialize(
+            this.userRolesCompany[0].roles.map((item: any) => item.rol_name),
+            this.selectedCompany
+          );
+          if(this._route.getCurrentRoute() === '/admin/user/dashboard') {
+            this._router.navigate(['/admin/user/dashboard']);
+          }
+        }
       });
     }
 
-    this.company = JSON.parse(localStorage.getItem('company')!);
+    this.company = this._sessionService.getCompany();
     if(this.company) {
       this.selectedCompany = this.company.cmp_uuid;
-      this._sharedDataService.setSelectedCompany({cmp: this.company});
+      this._sharedDataService.setSelectedCompany(this.company);
     }
   }
 
@@ -103,15 +124,13 @@ export class NavBarComponent implements OnInit {
 
       if (!grouped.has(cmpUuid)) {
         grouped.set(cmpUuid, {
-          cmp: {
-            cmp_uuid: item.cmp.cmp_uuid,
-            cmp_name: item.cmp.cmp_name,
-            roles: [],
-          },
+          cmp_uuid: item.cmp.cmp_uuid,
+          cmp_name: item.cmp.cmp_name,
+          roles: [],
         });
       }
 
-      grouped.get(cmpUuid).cmp.roles.push({
+      grouped.get(cmpUuid).roles.push({
         rol_uuid: item.rol.rol_uuid,
         rol_name: item.rol.rol_name,
       });
@@ -123,14 +142,22 @@ export class NavBarComponent implements OnInit {
   public onCompanyChange(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
     const selectedCompany = this.userRolesCompany.find(
-      (company: any) => company.cmp.cmp_uuid === selectedValue
+      (company: any) => company.cmp_uuid === selectedValue
     );
     if (selectedCompany) {
-      localStorage.setItem('company', JSON.stringify(selectedCompany.cmp));
+      let company = selectedCompany;
+      this._sessionService.setCompany(JSON.stringify(company));
+      
+      // Inicializar el menú con los datos del usuario
+      this._menuService.initialize(
+        company.roles.map((item: any) => item.rol_name),
+        company.cmp_uuid
+      );
+
       //Obtengo Company Items
-      this.companyItems$ = this._companyItemsService.getCompanyItems(selectedCompany.cmp.cmp_uuid!);
+      this.companyItems$ = this._companyItemsService.getCompanyItems(company.cmp_uuid!);
       this.companyItems$.subscribe((companyItems: any) => {
-        localStorage.setItem('companyItems', JSON.stringify(companyItems.data));;
+        this._sessionService.setCompanyItems(companyItems.data);
       });
       this._sharedDataService.setSelectedCompany(selectedCompany);
       this._router.navigate(['/admin/user/dashboard']);

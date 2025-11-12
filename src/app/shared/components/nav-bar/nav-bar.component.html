@@ -13,9 +13,9 @@
             (change)="onCompanyChange($event)">
             <option value="" selected="" disabled="">Seleccione una opción</option>
             @for(userRolCompany of userRolesCompany; track userRolCompany.rol_uuid) {
-                @if(userRolCompany.cmp){
-                    <option [value]="userRolCompany.cmp.cmp_uuid">
-                        {{userRolCompany.cmp.cmp_name}}
+                @if(userRolCompany){
+                    <option [value]="userRolCompany.cmp_uuid">
+                        {{userRolCompany.cmp_name}}
                     </option>
                 }
             }
