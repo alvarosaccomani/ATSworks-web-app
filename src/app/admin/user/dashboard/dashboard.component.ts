@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { SessionService } from '../../../core/services/session.service';
+import { SharedDataService } from '../../../core/services/shared-data.service';
+import { MenuService } from '../../../core/services/menu.service';
 import { DashboardsService } from '../../../core/services/dashboards.service';
 
 @Component({
@@ -14,6 +17,8 @@ import { DashboardsService } from '../../../core/services/dashboards.service';
 })
 export class DashboardComponent {
 
+  private cmp_uuid!: string;
+  private company!: any;
   public menuItems: any;
   public headerConfig: any = {
     title: "DASHBOARD",
@@ -22,85 +27,50 @@ export class DashboardComponent {
   }
 
   constructor(
+    private _sessionService: SessionService,
+    private _sharedDataService: SharedDataService,
+    private _menuService: MenuService,
     private _dashboardsService: DashboardsService
   ) { }
 
   ngOnInit(): void {
-    
-    let cmp_uuid;
-    if(localStorage.getItem('company')) {
-      cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
-    }
+    this.company = this._sessionService.getCompany();
+    this.loadDashboard();
 
-    this._dashboardsService.getDashboards(cmp_uuid).subscribe(
-      (response: any) => {
-        if(response.success) {
-          const dashboard = response.data;
-          this.setDashboard(dashboard);
-        } else {
-          //this.status = 'error'
-        }
-      },
-      error => {
-        var errorMessage = <any>error;
-        console.log(errorMessage);
+    this._sharedDataService.selectedCompany$.subscribe((company) => {
+      this.loadDashboard();
+    });
 
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
-      }
-    )
   }
 
-  private setDashboard(dashboard: any): void {
-    this.menuItems = [
-      {
-        name: 'Clientes',
-        title: 'Clientes',
-        icon: 'fas fa-users fa-fw',
-        url: '/admin/user/customers',
-        description: `${dashboard["customersCount"]} Registrados`,
-        allowedRoles: ['admin', 'editor']
-      },
-      {
-        name: 'Items',
-        title: 'Items',
-        icon: 'fas fa-pallet fa-fw',
-        url: '/admin/application/items',
-        description: `${dashboard["itemsCount"]} Registrados`,
-        allowedRoles: ['admin', 'editor']
-      },
-      {
-        name: 'Modelo Items',
-        title: 'Modelo Items',
-        icon: 'fas fa-file-invoice-dollar fa-fw',
-        url: '/admin/user/models-items',
-        description: `${dashboard["modelsItemsCount"]} Registrados`,
-        allowedRoles: ['sysadmin']
-      },
-      {
-        name: 'Trabajos',
-        title: 'Trabajos',
-        icon: 'fas fa-file-invoice-dollar fa-fw',
-        url: '/admin/user/works',
-        description: `${dashboard["worksCount"]} Registrados`,
-        allowedRoles: ['sysadmin']
-      },
-      {
-        name: 'Usuarios',
-        title: 'Usuarios',
-        icon: 'fas fa-user-secret fa-fw',
-        url: '/admin/application/users',
-        description: `${dashboard["usersCount"]} Registrados`,
-        allowedRoles: ['admin']
-      },
-      {
-        name: 'Empresa',
-        title: 'Empresa',
-        icon: 'fas fa-store-alt fa-fw',
-        url: '/admin/user/company-profile/' + dashboard["cmp_uuid"],
-        description: `${dashboard["companiesCount"]} Registradas`
-      }
-    ];
+  private loadDashboard(): void {
+    if(this.company) {
+      this.cmp_uuid = this.company.cmp_uuid;
+      this._dashboardsService.getDashboards(this.cmp_uuid).subscribe(
+        (response: any) => {
+          if(response.success) {
+            const dashboard = response.data;
+            this._menuService.updateDashboardItems(dashboard, this.cmp_uuid).subscribe({
+              next: (filteredItems: any[]) => {
+                this.menuItems = filteredItems; // ← Esto ahora recibe los items filtrados
+              },
+              error: (error) => {
+                console.error('Error filtering dashboard items:', error);
+              }
+            });
+          } else {
+            //this.status = 'error'
+          }
+        },
+        error => {
+          var errorMessage = <any>error;
+          console.log(errorMessage);
+  
+          if(errorMessage != null) {
+            //this.status = 'error'
+          }
+        }
+      )
+    }
   }
 }
