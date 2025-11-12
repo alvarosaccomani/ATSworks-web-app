@@ -15,6 +15,7 @@ import { UserInterface } from '../../../core/interfaces/user';
 import { CompanyResults } from '../../../core/interfaces/company';
 import { RolResults } from '../../../core/interfaces/rol';
 import { UserRolCompanyResults } from '../../../core/interfaces/user-rol-company';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { UsersService } from '../../../core/services/users.service';
 import { ValidationService } from '../../../core/services/validation.service';
@@ -69,6 +70,7 @@ export class UserComponent {
 
   constructor(
     private _route: ActivatedRoute,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _usersService: UsersService,
     private _validationService: ValidationService,
@@ -81,13 +83,13 @@ export class UserComponent {
   }
 
   ngOnInit(): void {
-    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     if(this.cmp_uuid) {
       this.selectedCompany = this.cmp_uuid;
       this.onChangeCompany(this.cmp_uuid);
     }
-    this.sysadmin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "sysadmin") != null);
-    this.admin = (JSON.parse(localStorage.getItem('company')!).roles.find((e: any) => e.rol_name === "admin") != null);
+    this.sysadmin = (this._sessionService.getCompany().roles.find((e: any) => e.rol_name === "sysadmin") != null);
+    this.admin = (this._sessionService.getCompany().roles.find((e: any) => e.rol_name === "admin") != null);
 
     this._route.params.subscribe( (params) => {
       if(params['usr_uuid'] && params['usr_uuid'] != 'new') {
