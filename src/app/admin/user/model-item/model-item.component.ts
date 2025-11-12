@@ -8,6 +8,7 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
 import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-item';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { DetailModelItemsService } from '../../../core/services/detail-model-items.service';
@@ -88,6 +89,7 @@ export class ModelItemComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _modelsItemsService: ModelItemsService,
     private _detailModelItemsService: DetailModelItemsService,
@@ -98,8 +100,8 @@ export class ModelItemComponent {
   }
 
   ngOnInit(): void {
-    this.modelItem.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
-    this.companyItems = JSON.parse(localStorage.getItem('companyItems')!);
+    this.modelItem.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.companyItems = this._sessionService.getCompanyItems();
 
     this._route.params.subscribe( (params) => {
       if(params['itm_uuid'] && params['cmpitm_uuid'] && params['mitm_uuid'] && params['mitm_uuid'] != 'new') {
