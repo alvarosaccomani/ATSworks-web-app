@@ -6,6 +6,7 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomersService } from '../../../core/services/customers.service';
 import { CustomerInterface, CustomerResults } from '../../../core/interfaces/customer';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -50,19 +51,20 @@ export class CustomersComponent implements OnInit {
   ]
 
   constructor(
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _customersService: CustomersService,
     private _sharedDataService: SharedDataService
   ) { }
   
   ngOnInit(): void {
-    this.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
     this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", 1, 20);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customers$ = this._customersService.getCustomers(company.cmp.cmp_uuid, "null", this.page, this.perPage);
+        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, "null", this.page, this.perPage);
       }
     });
   }
