@@ -13,6 +13,7 @@ import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { AddressInterface } from '../../../core/interfaces/address/address.interface';
 import { UserRolCompanyInterface } from '../../../core/interfaces/user-rol-company';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { CustomersService } from '../../../core/services/customers.service';
@@ -81,6 +82,7 @@ export class WorkComponent {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
+    private _sessionService: SessionService,
     private _messageService: MessageService,
     private _modelsItemsService: ModelItemsService,
     private _customersService: CustomersService,
@@ -94,8 +96,8 @@ export class WorkComponent {
   }
 
   ngOnInit(): void {
-    this.work.cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
-    this.work.wrk_user_uuid = JSON.parse(localStorage.getItem('identity')!).usr_uuid;
+    this.work.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.work.wrk_user_uuid = this._sessionService.getIdentity().usr_uuid;
     this.getModelItems(this.work.cmp_uuid!);
     this.getCustomers(this.work.cmp_uuid!);
     this.getUsersOperatorWork(this.work.cmp_uuid!);
