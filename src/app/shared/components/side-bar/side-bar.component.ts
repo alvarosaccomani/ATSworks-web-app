@@ -2,9 +2,11 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { UserInterface } from '../../../core/interfaces/user';
+import { SessionService } from '../../../core/services/session.service';
+import { MenuService } from '../../../core/services/menu.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
   selector: 'app-side-bar',
@@ -20,6 +22,8 @@ export class SideBarComponent {
   @Input() identity!: UserInterface;
 
   constructor(
+    private _sessionService: SessionService,
+    private _menuService: MenuService,
     private _sharedDataService: SharedDataService
   ) { }
 
@@ -28,175 +32,55 @@ export class SideBarComponent {
   public filteredNavigation: any[] = [];
 
   ngOnInit(): void {
-
     let cmp_uuid;
-    if(localStorage.getItem('company')) {
-      cmp_uuid = JSON.parse(localStorage.getItem('company')!).cmp_uuid;
+    
+    // Cargar compañía desde localStorage si existe
+    if (this._sessionService.getCompany()) {
+      let company = this._sessionService.getCompany();
+      cmp_uuid = company.cmp_uuid;
+      this.setCompany(company);
     }
 
-    this.menuItems = [
-      {
-        name: 'Dashboard',
-        icon: 'fab fa-dashcube fa-fw',
-        hasSubmenu: false,
-        url: 'dashboard',
-        allowedRoles: ['admin', 'editor']
-      },
-      {
-        name: 'Clientes',
-        icon: 'fas fa-users fa-fw',
-        url: null,
-        hasSubmenu: true,
-        isOpen: false,
-        submenu: [
-          { 
-            name: 'Agregar Cliente',
-            icon: 'fas fa-plus fa-fw',
-            url: '/admin/user/customer/new',
-            allowedRoles: ['admin']
-          },
-          { 
-            name: 'Lista de clientes',
-            icon: 'fas fa-clipboard-list fa-fw',
-            url: 'customers',
-            allowedRoles: ['admin', 'viewer']
-          },
-          {
-            name: 'Buscar cliente',
-            icon: 'fas fa-search fa-fw',
-            url: null,
-            allowedRoles: ['admin', 'editor']
-          }
-        ]
-      },
-      {
-        name: 'Items',
-        icon: 'fas fa-pallet fa-fw',
-        url: null,
-        hasSubmenu: true,
-        isOpen: false,
-        allowedRoles: ['sysadmin'],
-        submenu: [
-          { 
-            name: 'Agregar item',
-            icon: 'fas fa-plus fa-fw',
-            url: null,
-            allowedRoles: ['sysadmin']
-          },
-          { 
-            name: 'Lista de items',
-            icon: 'fas fa-clipboard-list fa-fw',
-            url: 'items',
-            allowedRoles: ['sysadmin']
-          },
-          {
-            name: 'Buscar item',
-            icon: 'fas fa-search fa-fw',
-            url: null,
-            allowedRoles: ['sysadmin']
-          }
-        ]
-      },
-      {
-        name: 'Modelo Items',
-        icon: 'fas fa-pallet fa-fw',
-        url: null,
-        hasSubmenu: true,
-        isOpen: false,
-        allowedRoles: ['admin'],
-        submenu: [
-          { 
-            name: 'Agregar modelo item',
-            icon: 'fas fa-plus fa-fw',
-            url: ['/admin/user/model-item/new', '', ''],
-            allowedRoles: ['admin']
-          },
-          { 
-            name: 'Lista de modelo items',
-            icon: 'fas fa-clipboard-list fa-fw',
-            url: 'models-items',
-            allowedRoles: ['admin']
-          },
-          {
-            name: 'Buscar modelo item',
-            icon: 'fas fa-search fa-fw',
-            url: null,
-            allowedRoles: ['admin']
-          }
-        ]
-      },
-      {
-        name: 'Trabajos',
-        icon: 'fas fa-file-invoice-dollar fa-fw',
-        url: null,
-        hasSubmenu: true,
-        isOpen: false,
-        submenu: [
-          { 
-            name: 'Nuevo trabajo',
-            icon: 'fas fa-plus fa-fw',
-            url: 'work/new'
-          },
-          { 
-            name: 'Lista de trabajos',
-            icon: 'fas fa-clipboard-list fa-fw',
-            url: 'works'
-          },
-          {
-            name: 'Buscar trabajos',
-            icon: 'fas fa-search fa-fw',
-            url: null
-          }
-        ]
-      },
-      {
-        name: 'Usuarios',
-        icon: 'fas fa-user-secret fa-fw',
-        url: null,
-        hasSubmenu: true,
-        isOpen: false,
-        submenu: [
-          { 
-            name: 'Nuevo usuario',
-            icon: 'fas fa-plus fa-fw',
-            url: '/admin/application/user/new',
-            allowedRoles: ['admin', 'editor']
-          },
-          { 
-            name: 'Lista de usuarios',
-            icon: 'fas fa-clipboard-list fa-fw',
-            url: '/admin/application/users',
-            allowedRoles: ['sysadmin']
-          },
-          {
-            name: 'Buscar usuarios',
-            icon: 'fas fa-search fa-fw',
-            url: null,
-            allowedRoles: ['sysadmin']
-          }
-        ]
-      },
-      {
-        name: 'Empresa',
-        icon: 'fas fa-store-alt fa-fw',
-        url: '/admin/user/company-profile/' + cmp_uuid,
-        hasSubmenu: false,
-        allowedRoles: ['admin']
-      }
-    ];
-
-    this._sharedDataService.selectedCompany$.subscribe((company) => {
-      if(company) {
-        this.selectedCompany = company.cmp;
-        if (this.selectedCompany && this.selectedCompany.roles) {
-          // Extraer los nombres de los roles seleccionados
-          const allowedRoles = this.selectedCompany.roles.map((role: any) => role.rol_name);
-  
-          // Filtrar la navegación basada en los roles permitidos
-          this.filteredNavigation = this.filterNavigationByRoles(this.menuItems, allowedRoles);
-        }
+    // Obtener items del menú
+    this._menuService.getSidebarItems().subscribe((items: any) => {
+      this.menuItems = items;
+      // Aplicar filtro de roles si ya hay una compañía seleccionada
+      if (this.selectedCompany) {
+        this.applyRoleFilter();
       }
     });
+
+    // Suscribirse a cambios en la compañía seleccionada
+    this._sharedDataService.selectedCompany$.subscribe((company) => {
+      this.setCompany(company);
+    });
+  }
+
+  private setCompany(company: any): void {
+    if (company) {
+      this.selectedCompany = company;
+      
+      // Guardar en localStorage
+      this._sessionService.setCompany(JSON.stringify(company));
+      
+      // Aplicar filtro de roles si los items del menú ya están cargados
+      if (this.menuItems) {
+        this.applyRoleFilter();
+      }
+    }
+  }
+
+  private applyRoleFilter(): void {
+    if (this.selectedCompany && this.selectedCompany.roles) {
+      // Extraer los nombres de los roles usando el algoritmo proporcionado
+      const allowedRoles = this.selectedCompany.roles.map((role: any) => role.rol_name);
+      
+      // Filtrar la navegación basada en los roles permitidos
+      this.filteredNavigation = this.filterNavigationByRoles(this.menuItems, allowedRoles);
+    } else {
+      // Si no hay roles definidos, mostrar toda la navegación
+      this.filteredNavigation = [...this.menuItems];
+    }
   }
 
   public closeNavBar(): void {
@@ -218,20 +102,26 @@ export class SideBarComponent {
   public filterNavigationByRoles(navigation: any[], allowedRoles: string[]): any[] {
     return navigation
       .map((item) => {
+        // Crear una copia del item para no modificar el original
         const newItem = { ...item };
 
+        // Si el item tiene roles permitidos definidos, verificar acceso
         if (newItem.allowedRoles) {
           const isAllowed = newItem.allowedRoles.some((role: string) =>
             allowedRoles.includes(role)
           );
 
+          // Si no tiene permisos, excluir el item
           if (!isAllowed) {
             return null;
           }
         }
 
+        // Si el item tiene submenú, filtrar recursivamente
         if (newItem.submenu) {
           newItem.submenu = this.filterNavigationByRoles(newItem.submenu, allowedRoles);
+          
+          // Si después de filtrar el submenú queda vacío, eliminarlo
           if (newItem.submenu.length === 0) {
             delete newItem.submenu;
           }
@@ -239,6 +129,6 @@ export class SideBarComponent {
 
         return newItem;
       })
-      .filter((item) => item !== null);
+      .filter((item) => item !== null); // Eliminar items nulos
   }
 }
