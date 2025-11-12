@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SessionService } from '../../../core/services/session.service';
 import { UsersService } from '../../../core/services/users.service';
 import { AuthenticationInterface } from '../../../core/interfaces/authentication.interface';
 
@@ -26,6 +27,7 @@ export class LoginComponent {
 
   constructor(
     private _router: Router,
+    private _sessionService: SessionService,
     private _usersService: UsersService
   ) {
     this.user = {
@@ -71,7 +73,7 @@ export class LoginComponent {
             this.status = 'error';
           } else {
             //persist user data
-            localStorage.setItem('identity', JSON.stringify(this.identity));
+            this._sessionService.setIdentity(JSON.stringify(this.identity));
             //get token
             this.getToken();
           }
@@ -98,7 +100,7 @@ export class LoginComponent {
             this.status = 'error';
         } else {
             //persist user token
-            localStorage.setItem('token', this.token);
+            this._sessionService.setToken(this.token);
             this.status = 'success';
             this._router.navigate(['/admin/user/no-company']);
         }
