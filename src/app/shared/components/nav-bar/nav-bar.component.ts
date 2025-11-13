@@ -90,7 +90,7 @@ export class NavBarComponent implements OnInit {
             this.userRolesCompany[0].roles.map((item: any) => item.rol_name),
             this.selectedCompany
           );
-          if(this._route.getCurrentRoute() === '/admin/user/dashboard') {
+          if(this._route.getCurrentRoute() === '/admin/user/dashboard' || this._route.getCurrentRoute() === '/admin/user/no-company') {
             this._router.navigate(['/admin/user/dashboard']);
           }
         }
