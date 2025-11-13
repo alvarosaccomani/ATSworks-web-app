@@ -38,7 +38,7 @@ export class MenuService {
       name: 'Dashboard',
       icon: 'fab fa-dashcube fa-fw',
       hasSubmenu: false,
-      url: 'dashboard',
+      url: '/admin/user/dashboard',
       allowedRoles: ['sysadmin', 'admin', 'editor']
     },
     {
@@ -93,7 +93,7 @@ export class MenuService {
           id: '32',
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: 'items',
+          url: '/admin/application/items',
           allowedRoles: ['sysadmin']
         },
         {
@@ -150,14 +150,14 @@ export class MenuService {
           id: '51',
           name: 'Nuevo trabajo',
           icon: 'fas fa-plus fa-fw',
-          url: 'work/new',
+          url: '/admin/user/work/new',
           allowedRoles: ['admin']
         },
         { 
           id: '52',
           name: 'Lista de trabajos',
           icon: 'fas fa-clipboard-list fa-fw',
-          url: 'works',
+          url: '/admin/user/works',
           allowedRoles: ['admin', 'viewer', 'editor']
         },
         {
@@ -205,7 +205,7 @@ export class MenuService {
       id: '7',
       name: 'Empresa',
       icon: 'fas fa-store-alt fa-fw',
-      url: '/admin/user/company-profile/' + this.currentCompany,
+      url: null, // URL se establecerá dinámicamente
       hasSubmenu: false,
       allowedRoles: ['sysadmin', 'admin']
     }
@@ -282,6 +282,27 @@ export class MenuService {
     this.currentCompany = company;
     this.updateSidebarItems();
   }
+  
+  // Método para obtener los items del sidebar con URLs actualizadas
+  private getSidebarItemsWithUpdatedUrls(): MenuItem[] {
+    return this.sidebarItems.map(item => {
+      // Si es el item de Empresa, actualizar la URL
+      if (item.id === '7' && this.currentCompany) {
+        return {
+          ...item,
+          url: `/admin/user/company-profile/${this.currentCompany}`
+        };
+      }
+      return item;
+    });
+  }
+
+  // Actualizar items del sidebar con URLs correctas
+  private updateSidebarItems(): void {
+    const itemsWithUpdatedUrls = this.getSidebarItemsWithUpdatedUrls();
+    const filteredSidebar = this.filterItemsByRoleAndCompany(itemsWithUpdatedUrls);
+    this.filteredSidebarItems.next(filteredSidebar);
+  }
 
   // Método actualizado: ahora devuelve Observable
   public updateDashboardItems(dashboardData: any, cmp_uuid: string): Observable<DashboardItem[]> {
@@ -289,6 +310,9 @@ export class MenuService {
       map(userRoles => {
         this.currentUserRoles = userRoles;
         this.currentCompany = cmp_uuid;
+        
+        // Actualizar sidebar con la nueva compañía
+        this.updateSidebarItems();
         
         const dashboardItems = this.buildDashboardItems(dashboardData, cmp_uuid);
         const filteredItems = this.filterDashboardItemsByRoles(dashboardItems, userRoles);
@@ -378,12 +402,6 @@ export class MenuService {
     return item.allowedRoles.some(role => 
       role === '*' || this.currentUserRoles.includes(role)
     );
-  }
-
-  // Actualizar items del sidebar
-  private updateSidebarItems(): void {
-    const filteredSidebar = this.filterItemsByRoleAndCompany(this.sidebarItems);
-    this.filteredSidebarItems.next(filteredSidebar);
   }
 
   // Filtrar items por rol y empresa (para sidebar)
