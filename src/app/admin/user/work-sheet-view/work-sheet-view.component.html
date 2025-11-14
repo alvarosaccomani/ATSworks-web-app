@@ -14,7 +14,7 @@
                     </tr>
                     <tr>
                         <td class="table-detail-key">Fecha Trabajo</td>
-                        <td class="table-detail-value">{{work.wrk_workdate}}</td>
+                        <td class="table-detail-value">{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
                     </tr>
                     <tr>
                         <td class="table-detail-key">Cliente</td>
@@ -30,11 +30,11 @@
                     </tr>
                     <tr>
                         <td class="table-detail-key">Fecha Inicio</td>
-                        <td class="table-detail-value">{{work.wrk_workdateinit}}</td>
+                        <td class="table-detail-value">{{work.wrk_workdateinit | date: 'dd/MM/yyyy'}}</td>
                     </tr>
                     <tr>
                         <td class="table-detail-key">Fecha Fin</td>
-                        <td class="table-detail-value">{{work.wrk_workdatefinish}}</td>
+                        <td class="table-detail-value">{{work.wrk_workdatefinish | date: 'dd/MM/yyyy'}}</td>
                     </tr>
                     <tr>
                         <td class="table-detail-key">Usurio Programacion</td>

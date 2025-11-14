@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { WorkInterface } from '../../../core/interfaces/work';
@@ -9,6 +10,7 @@ import { WorksAttachmentsService } from '../../../core/services/works-attachment
 @Component({
   selector: 'app-work-sheet-view',
   imports: [
+    DatePipe,
     HeaderComponent
   ],
   templateUrl: './work-sheet-view.component.html',
