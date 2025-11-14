@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
@@ -15,6 +15,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
   selector: 'app-works',
   imports: [
     AsyncPipe,
+    DatePipe,
     RouterLink,
     HeaderComponent,
     PageNavTabsComponent,

@@ -27,7 +27,7 @@
                         <tr class="text-center" >
                             <td>{{$index + 1}}</td>
                             <td>{{work.adr?.cus?.cus_fullname}}</td>
-                            <td>{{work.wrk_workdate}}</td>
+                            <td>{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{work.mitm?.mitm_name}}</td>
                             <td>{{work.wrks?.wrks_name}}</td>
                             <td>{{work.wrk_description}}</td>
