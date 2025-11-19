@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { UserInterface, UserResults } from '../../../core/interfaces/user';
+import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { UsersService } from '../../../core/services/users.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -23,6 +24,9 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 })
 export class UsersComponent implements OnInit {
 
+  public sysadmin!: boolean;
+  public admin!: boolean;
+  
   //Pagination
   public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
   public perPage: number = 10; //Number of items displayed per page
@@ -48,11 +52,15 @@ export class UsersComponent implements OnInit {
   ]
   
     constructor(
+      private _sessionService: SessionService,
       private _messageService: MessageService,
       private _usersService: UsersService
     ) { }
     
     ngOnInit(): void {
+      this.sysadmin = (this._sessionService.getCompany().roles.find((e: any) => e.rol_name === "sysadmin") != null);
+      this.admin = (this._sessionService.getCompany().roles.find((e: any) => e.rol_name === "admin") != null);
+
       this.users$ = this._usersService.getUsers("null", this.page, this.perPage);
     }
 

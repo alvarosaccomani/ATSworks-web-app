@@ -21,28 +21,55 @@
                 </thead>
                 <tbody>                
                     @for(user of users.data; track user.usr_uuid) {
-                        <tr class="text-center" >
-                            <td>{{$index + 1}}</td>
-                            <th>{{user.usr_name}}</th>
-                            <th>{{user.usr_surname}}</th>
-                            <th>{{user.usr_nick}}</th>
-                            <th>{{user.usr_email}}</th>
-                            <td>
-                                <a [routerLink]="['/admin/application/user', user.usr_uuid]" class="btn btn-success">
-                                    <i class="fas fa-sync-alt"></i>	
-                                </a>
-                            </td>
-                            <td>
-                                <form action="">
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-warning"
-                                        (click)="deleteUser(user)">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                        @if(sysadmin) {
+                            <tr class="text-center" >
+                                <td>{{$index + 1}}</td>
+                                <th>{{user.usr_name}}</th>
+                                <th>{{user.usr_surname}}</th>
+                                <th>{{user.usr_nick}}</th>
+                                <th>{{user.usr_email}}</th>
+                                <td>
+                                    <a [routerLink]="['/admin/application/user', user.usr_uuid]" class="btn btn-success">
+                                        <i class="fas fa-sync-alt"></i>	
+                                    </a>
+                                </td>
+                                <td>
+                                    <form action="">
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-warning"
+                                            (click)="deleteUser(user)">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        } @else {
+                            @if(!user.usr_sysadmin) {
+                                <tr class="text-center" >
+                                    <td>{{$index + 1}}</td>
+                                    <th>{{user.usr_name}}</th>
+                                    <th>{{user.usr_surname}}</th>
+                                    <th>{{user.usr_nick}}</th>
+                                    <th>{{user.usr_email}}</th>
+                                    <td>
+                                        <a [routerLink]="['/admin/application/user', user.usr_uuid]" class="btn btn-success">
+                                            <i class="fas fa-sync-alt"></i>	
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <form action="">
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-warning"
+                                                (click)="deleteUser(user)">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     }
                 </tbody>
             </table>
