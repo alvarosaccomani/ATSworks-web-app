@@ -14,6 +14,7 @@ export interface UserInterface {
   usr_confirmationtoken: string | null,
   usr_resetpasswordtoken: string | null,
   usr_resetpasswordexpires: Date | null,
+  usr_sysadmin: boolean | null,
   usr_createdat: Date | null,
   usr_updatedat: Date | null
 }
