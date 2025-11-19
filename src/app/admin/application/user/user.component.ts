@@ -129,6 +129,7 @@ export class UserComponent {
       usr_confirmationtoken: null,
       usr_resetpasswordtoken: null,
       usr_resetpasswordexpires: null,
+      usr_sysadmin: null,
       usr_createdat: null,
       usr_updatedat: null
     }
