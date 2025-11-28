@@ -1,9 +1,25 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { PermissionResults } from '../interfaces/permission/permission-results.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermissionsService {
 
-  constructor() { }
+  constructor(
+      private _http: HttpClient
+    ) { }
+  
+    public getPermissions(filter?: string, page?: number, perPage?: number): Observable<PermissionResults> {
+      let headers = new HttpHeaders().set('content-type','application/json');
+  
+      if(page && perPage) {
+        filter = `${filter}/${page}/${perPage}`;
+      }
+  
+      return this._http.get<PermissionResults>(environment.apiUrl + 'permissions/' + filter, {headers:headers})
+    }
 }
