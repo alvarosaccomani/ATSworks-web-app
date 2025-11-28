@@ -23,6 +23,12 @@ export class RolPermissionsService {
     return this._http.get<RolPermissionResults>(environment.apiUrl + 'rol-permissions/' + filter, {headers:headers})
   }
 
+  public getRolPermissionById(rol_uuid: string, per_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(environment.apiUrl + 'rol-permission/' + rol_uuid + '/' + per_uuid, {headers:headers});
+  }
+
   public deleteRolPermission(rol_uuid: string, per_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
