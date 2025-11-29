@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { PermissionsComponent } from './permissions/permissions.component';
 import { ApplicationLayoutComponent } from './application-layout/application-layout.component';
 import { RolPermissionsComponent } from './rol-permissions/rol-permissions.component';
 import { RolPermissionComponent } from './rol-permission/rol-permission.component';
@@ -13,6 +14,7 @@ export const APPLICATION_ROUTES: Routes = [
         path: '',
         component: ApplicationLayoutComponent,
         children: [
+            { path: 'permissions', component: PermissionsComponent},
             { path: 'rol-permissions', component: RolPermissionsComponent},
             { path: 'rol-permission/:rol_uuid/:per_uuid', component: RolPermissionComponent},
             { path: 'users', component: UsersComponent},
