@@ -1,2 +1,2 @@
-export type { ItemInterface } from "./item.interface";
-export type { ItemResults } from "./item-results.interface";
+export type { PermissionInterface } from "./permission.interface";
+export type { PermissionResults } from "./permission-results.interface";
