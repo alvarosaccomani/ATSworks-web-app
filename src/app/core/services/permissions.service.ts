@@ -22,4 +22,10 @@ export class PermissionsService {
   
       return this._http.get<PermissionResults>(environment.apiUrl + 'permissions/' + filter, {headers:headers})
     }
+
+  public deletePermission(per_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.delete(environment.apiUrl + 'permission/' + per_uuid, {headers:headers});
+  }
 }
