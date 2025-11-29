@@ -35,6 +35,49 @@ export class MenuService {
   private sidebarItems: MenuItem[] = [
     {
       id: '1',
+      name: 'Configuración',
+      icon: 'fas fa-cog fa-fw',
+      url: null,
+      hasSubmenu: true,
+      isOpen: false,
+      allowedRoles: ['sysadmin'],
+      submenu: [
+        { 
+          id: '11',
+          name: 'Permisos de roles',
+          icon: 'fas fa-key fa-fw',
+          url: null,
+          hasSubmenu: true,
+          isOpen: false,
+          submenu: [
+            { 
+              id: '11',
+              name: 'Agregar permiso de rol',
+              icon: 'fas fa-plus fa-fw',
+              url: ['/admin/application/rol-permission/new', ''],
+              allowedRoles: ['sysadmin']
+            },
+            { 
+              id: '12',
+              name: 'Lista de permisos de roles',
+              icon: 'fas fa-clipboard-list fa-fw',
+              url: '/admin/application/rol-permissions',
+              allowedRoles: ['sysadmin']
+            },
+            {
+              id: '13',
+              name: 'Buscar permiso de rol',
+              icon: 'fas fa-search fa-fw',
+              url: null,
+              allowedRoles: ['sysadmin']
+            }
+          ],
+          allowedRoles: ['sysadmin']
+        }
+      ]
+    },
+    {
+      id: '2',
       name: 'Dashboard',
       icon: 'fab fa-dashcube fa-fw',
       hasSubmenu: false,
@@ -42,7 +85,7 @@ export class MenuService {
       allowedRoles: ['sysadmin', 'admin', 'editor']
     },
     {
-      id: '2',
+      id: '3',
       name: 'Clientes',
       icon: 'fas fa-users fa-fw',
       url: null,
@@ -51,21 +94,21 @@ export class MenuService {
       allowedRoles: ['admin', 'viewer', 'editor'],
       submenu: [
         { 
-          id: '21',
+          id: '31',
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/customer/new',
           allowedRoles: ['admin']
         },
         { 
-          id: '22',
+          id: '32',
           name: 'Lista de clientes',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'customers',
           allowedRoles: ['admin', 'viewer']
         },
         {
-          id: '23',
+          id: '33',
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -74,7 +117,7 @@ export class MenuService {
       ]
     },
     {
-      id: '3',
+      id: '4',
       name: 'Items',
       icon: 'fas fa-pallet fa-fw',
       url: null,
@@ -83,21 +126,21 @@ export class MenuService {
       allowedRoles: ['sysadmin'],
       submenu: [
         { 
-          id: '31',
+          id: '41',
           name: 'Agregar item',
           icon: 'fas fa-plus fa-fw',
           url: null,
           allowedRoles: ['sysadmin']
         },
         { 
-          id: '32',
+          id: '42',
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/items',
           allowedRoles: ['sysadmin']
         },
         {
-          id: '33',
+          id: '43',
           name: 'Buscar item',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -106,7 +149,7 @@ export class MenuService {
       ]
     },
     {
-      id: '4',
+      id: '5',
       name: 'Modelo Items',
       icon: 'fas fa-pallet fa-fw',
       url: null,
@@ -115,21 +158,21 @@ export class MenuService {
       allowedRoles: ['admin'],
       submenu: [
         { 
-          id: '41',
+          id: '51',
           name: 'Agregar modelo item',
           icon: 'fas fa-plus fa-fw',
           url: ['/admin/user/model-item/new', '', ''],
           allowedRoles: ['admin']
         },
         { 
-          id: '42',
+          id: '52',
           name: 'Lista de modelo items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'models-items',
           allowedRoles: ['admin']
         },
         {
-          id: '43',
+          id: '53',
           name: 'Buscar modelo item',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -138,7 +181,7 @@ export class MenuService {
       ]
     },
     {
-      id: '5',
+      id: '6',
       name: 'Trabajos',
       icon: 'fas fa-file-invoice-dollar fa-fw',
       url: null,
@@ -147,21 +190,21 @@ export class MenuService {
       allowedRoles: ['admin', 'viewer', 'editor'],
       submenu: [
         { 
-          id: '51',
+          id: '61',
           name: 'Nuevo trabajo',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/work/new',
           allowedRoles: ['admin']
         },
         { 
-          id: '52',
+          id: '62',
           name: 'Lista de trabajos',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/user/works',
           allowedRoles: ['admin', 'viewer', 'editor']
         },
         {
-          id: '53',
+          id: '63',
           name: 'Buscar trabajos',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -170,7 +213,7 @@ export class MenuService {
       ]
     },
     {
-      id: '6',
+      id: '7',
       name: 'Usuarios',
       icon: 'fas fa-user-secret fa-fw',
       url: null,
@@ -179,21 +222,21 @@ export class MenuService {
       allowedRoles: ['sysadmin', 'admin'],
       submenu: [
         { 
-          id: '61',
+          id: '71',
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/application/user/new',
           allowedRoles: ['sysadmin', 'admin']
         },
         { 
-          id: '62',
+          id: '72',
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/users',
           allowedRoles: ['sysadmin']
         },
         {
-          id: '63',
+          id: '73',
           name: 'Buscar usuarios',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -202,7 +245,7 @@ export class MenuService {
       ]
     },
     {
-      id: '7',
+      id: '8',
       name: 'Empresa',
       icon: 'fas fa-store-alt fa-fw',
       url: null, // URL se establecerá dinámicamente
