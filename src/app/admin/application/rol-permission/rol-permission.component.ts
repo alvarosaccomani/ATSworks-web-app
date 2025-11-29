@@ -37,7 +37,7 @@ export class RolPermissionComponent {
       title: "AGREGAR PERMISO DE ROL"
     },
     {
-       url: ['/admin/user/rolPermissions'],
+       url: ['/admin/user/rol-permissions'],
        icon: "fas fa-clipboard-list fa-fw",
        title: "LISTA DE PERMISOS DE ROLES"
     }
