@@ -43,7 +43,7 @@ export class PermissionsComponent {
         title: "AGREGAR PERMISO"
       },
       {
-         url: ['/admin/user/permissions'],
+         url: ['/admin/application/permissions'],
          icon: "fas fa-clipboard-list fa-fw",
          title: "LISTA DE PERMISOS"
       }
