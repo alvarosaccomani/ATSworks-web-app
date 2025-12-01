@@ -36,7 +36,7 @@ export class PermissionComponent {
       title: "AGREGAR PERMISO"
     },
     {
-        url: ['/admin/user/permissions'],
+        url: ['/admin/application/permissions'],
         icon: "fas fa-clipboard-list fa-fw",
         title: "LISTA DE PERMISOS"
     }
@@ -247,7 +247,7 @@ export class PermissionComponent {
             "Informacion", 
             "El Permiso fue agregado correctamente.",
             () => {
-              this._router.navigate(['/admin/application/items']);
+              this._router.navigate(['/admin/application/permissions']);
             }
           );
         } else {
