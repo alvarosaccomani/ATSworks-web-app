@@ -133,6 +133,7 @@ export class NavBarComponent implements OnInit {
       grouped.get(cmpUuid).roles.push({
         rol_uuid: item.rol.rol_uuid,
         rol_name: item.rol.rol_name,
+        rolpers: item.rolpers.map((e: any) => e.per.per_slug)
       });
     });
 
