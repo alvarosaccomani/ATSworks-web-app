@@ -10,6 +10,7 @@ export interface MenuItem {
   isOpen?: boolean;
   url?: string | string[] | null;
   allowedRoles: string[];
+  appPermission?: string | null;
   companies?: string[];
   submenu?: MenuItem[];
   visible?: boolean;
@@ -41,35 +42,76 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['sysadmin'],
+      appPermission: 'menu.configuracion',
       submenu: [
         { 
           id: '11',
+          name: 'Permisos',
+          icon: 'fas fa-key fa-fw',
+          url: null,
+          hasSubmenu: true,
+          isOpen: false,
+          appPermission: 'menu.configuracion.permisos',
+          submenu: [
+            { 
+              id: '111',
+              name: 'Agregar permiso',
+              icon: 'fas fa-plus fa-fw',
+              url: ['/admin/application/permission/new', ''],
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos.agregar_permiso'
+            },
+            { 
+              id: '112',
+              name: 'Lista de permisos',
+              icon: 'fas fa-clipboard-list fa-fw',
+              url: '/admin/application/permissions',
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos.lista_permiso'
+            },
+            {
+              id: '113',
+              name: 'Buscar permiso',
+              icon: 'fas fa-search fa-fw',
+              url: null,
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos.buscar_permiso'
+            }
+          ],
+          allowedRoles: ['sysadmin']
+        },
+        { 
+          id: '12',
           name: 'Permisos de roles',
           icon: 'fas fa-key fa-fw',
           url: null,
           hasSubmenu: true,
           isOpen: false,
+          appPermission: 'menu.configuracion.permisos_de_roles',
           submenu: [
             { 
-              id: '11',
+              id: '121',
               name: 'Agregar permiso de rol',
               icon: 'fas fa-plus fa-fw',
               url: ['/admin/application/rol-permission/new', ''],
-              allowedRoles: ['sysadmin']
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos_de_roles.agregar_permiso_de_rol'
             },
             { 
-              id: '12',
+              id: '122',
               name: 'Lista de permisos de roles',
               icon: 'fas fa-clipboard-list fa-fw',
               url: '/admin/application/rol-permissions',
-              allowedRoles: ['sysadmin']
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos_de_roles.lista_de_permisos_de_rol'
             },
             {
-              id: '13',
+              id: '123',
               name: 'Buscar permiso de rol',
               icon: 'fas fa-search fa-fw',
               url: null,
-              allowedRoles: ['sysadmin']
+              allowedRoles: ['sysadmin'],
+              appPermission: 'menu.configuracion.permisos_de_roles.buscar_permisos_de_rol'
             }
           ],
           allowedRoles: ['sysadmin']
@@ -82,7 +124,8 @@ export class MenuService {
       icon: 'fab fa-dashcube fa-fw',
       hasSubmenu: false,
       url: '/admin/user/dashboard',
-      allowedRoles: ['sysadmin', 'admin', 'editor']
+      allowedRoles: ['sysadmin', 'admin', 'editor'],
+      appPermission: 'menu.dashboard'
     },
     {
       id: '3',
@@ -92,27 +135,31 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['admin', 'viewer', 'editor'],
+      appPermission: 'menu.clientes',
       submenu: [
         { 
           id: '31',
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/customer/new',
-          allowedRoles: ['admin']
+          allowedRoles: ['admin'],
+          appPermission: 'menu.clientes.agregar_cliente'
         },
         { 
           id: '32',
           name: 'Lista de clientes',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'customers',
-          allowedRoles: ['admin', 'viewer']
+          allowedRoles: ['admin', 'viewer'],
+          appPermission: 'menu.clientes.listar_clientes'
         },
         {
           id: '33',
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
           url: null,
-          allowedRoles: ['admin', 'editor']
+          allowedRoles: ['admin', 'editor'],
+          appPermission: 'menu.clientes.buscar_cliente'
         }
       ]
     },
@@ -124,27 +171,31 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['sysadmin'],
+      appPermission: 'menu.items',
       submenu: [
         { 
           id: '41',
           name: 'Agregar item',
           icon: 'fas fa-plus fa-fw',
           url: null,
-          allowedRoles: ['sysadmin']
+          allowedRoles: ['sysadmin'],
+          appPermission: 'menu.items.agregar_item'
         },
         { 
           id: '42',
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/items',
-          allowedRoles: ['sysadmin']
+          allowedRoles: ['sysadmin'],
+          appPermission: 'menu.items.lista_items'
         },
         {
           id: '43',
           name: 'Buscar item',
           icon: 'fas fa-search fa-fw',
           url: null,
-          allowedRoles: ['sysadmin']
+          allowedRoles: ['sysadmin'],
+          appPermission: 'menu.items.buscar_item'
         }
       ]
     },
@@ -156,27 +207,31 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['admin'],
+      appPermission: 'menu.modelo_items',
       submenu: [
         { 
           id: '51',
           name: 'Agregar modelo item',
           icon: 'fas fa-plus fa-fw',
           url: ['/admin/user/model-item/new', '', ''],
-          allowedRoles: ['admin']
+          allowedRoles: ['admin'],
+          appPermission: 'menu.modelo_items.agregar_modelo_item'
         },
         { 
           id: '52',
           name: 'Lista de modelo items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'models-items',
-          allowedRoles: ['admin']
+          allowedRoles: ['admin'],
+          appPermission: 'menu.modelo_items.listar_modelo_items'
         },
         {
           id: '53',
           name: 'Buscar modelo item',
           icon: 'fas fa-search fa-fw',
           url: null,
-          allowedRoles: ['admin']
+          allowedRoles: ['admin'],
+          appPermission: 'menu.modelo_items.buscar_modelo_item'
         }
       ]
     },
@@ -188,27 +243,31 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['admin', 'viewer', 'editor'],
+      appPermission: 'menu.trabajos',
       submenu: [
         { 
           id: '61',
           name: 'Nuevo trabajo',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/work/new',
-          allowedRoles: ['admin']
+          allowedRoles: ['admin'],
+          appPermission: 'menu.trabajos.nuevo_trabajo'
         },
         { 
           id: '62',
           name: 'Lista de trabajos',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/user/works',
-          allowedRoles: ['admin', 'viewer', 'editor']
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.listar_trabajos'
         },
         {
           id: '63',
           name: 'Buscar trabajos',
           icon: 'fas fa-search fa-fw',
           url: null,
-          allowedRoles: ['admin', 'viewer', 'editor']
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.buscar_trabajo'
         }
       ]
     },
@@ -220,27 +279,31 @@ export class MenuService {
       hasSubmenu: true,
       isOpen: false,
       allowedRoles: ['sysadmin', 'admin'],
+      appPermission: 'menu.usuarios',
       submenu: [
         { 
           id: '71',
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/application/user/new',
-          allowedRoles: ['sysadmin', 'admin']
+          allowedRoles: ['sysadmin', 'admin'],
+          appPermission: 'menu.usuarios.nuevo_usuario'
         },
         { 
           id: '72',
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/users',
-          allowedRoles: ['sysadmin']
+          allowedRoles: ['sysadmin'],
+          appPermission: 'menu.usuarios.lista_usuarios'
         },
         {
           id: '73',
           name: 'Buscar usuarios',
           icon: 'fas fa-search fa-fw',
           url: null,
-          allowedRoles: ['sysadmin']
+          allowedRoles: ['sysadmin'],
+          appPermission: 'menu.usuarios.buscar_usuarios'
         }
       ]
     },
@@ -250,7 +313,8 @@ export class MenuService {
       icon: 'fas fa-store-alt fa-fw',
       url: null, // URL se establecerá dinámicamente
       hasSubmenu: false,
-      allowedRoles: ['sysadmin', 'admin']
+      allowedRoles: ['sysadmin', 'admin'],
+      appPermission: 'menu.empresa'
     }
   ];
 
