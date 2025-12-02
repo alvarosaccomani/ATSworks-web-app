@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { HasPermissionDirective } from '../../directives/has-permission.directive';
 import { UserInterface } from '../../../core/interfaces/user';
 import { SessionService } from '../../../core/services/session.service';
 import { MenuService } from '../../../core/services/menu.service';
@@ -12,6 +13,7 @@ declare var $: any;
   selector: 'app-side-bar',
   imports: [
     CommonModule,
+    HasPermissionDirective,
     RouterLink
   ],
   templateUrl: './side-bar.component.html',
