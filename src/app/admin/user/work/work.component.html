@@ -215,23 +215,23 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label 
-                                for="wrk_operator_uuid" 
+                                for="wrk_operator_uuid1" 
                                 class="bmd-label-floating">
-                                Usuario
+                                Usuario 1
                             </label>
                             <select 
                                 class="form-control" 
-                                name="wrk_operator_uuid"
-                                [(ngModel)]="work.wrk_operator_uuid"
-                                (change)="onWorkOperatorChange($event)">
+                                name="wrk_operator_uuid1"
+                                [(ngModel)]="work.wrk_operator_uuid1"
+                                (change)="onWorkOperator1Change($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
                                 @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
                                     @if(userOperatorWork){
                                         <option [value]="userOperatorWork.usr?.usr_uuid">
-                                            @if(!userOperatorWork.usr?.usr_surname || !userOperatorWork.usr?.usr_name) {
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
                                                 {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
                                             } @else {
                                                 {{userOperatorWork.usr?.usr_nick}}
@@ -242,21 +242,89 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label 
-                                for="wrk_description" 
+                                for="wrk_operator_uuid2" 
                                 class="bmd-label-floating">
-                                Descripcion
+                                Usuario 2
                             </label>
-                            <input 
-                                type="text" 
+                            <select 
                                 class="form-control" 
-                                id="wrk_description"
-                                name="wrk_description" 
-                                [(ngModel)]="work.wrk_description">
+                                name="wrk_operator_uuid2"
+                                [(ngModel)]="work.wrk_operator_uuid2"
+                                (change)="onWorkOperator2Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid3" 
+                                class="bmd-label-floating">
+                                Usuario 3
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid3"
+                                [(ngModel)]="work.wrk_operator_uuid3"
+                                (change)="onWorkOperator3Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid4" 
+                                class="bmd-label-floating">
+                                Usuario 4
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid4"
+                                [(ngModel)]="work.wrk_operator_uuid4"
+                                (change)="onWorkOperator4Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>                    
                     <!-- <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label 
@@ -272,6 +340,23 @@
                                 [(ngModel)]="work.wrk_active">
                         </div>
                     </div> -->
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_description" 
+                                class="bmd-label-floating">
+                                Descripcion
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="wrk_description"
+                                name="wrk_description" 
+                                [(ngModel)]="work.wrk_description">
+                        </div>
+                    </div>
                 </div>
             </div>
         </fieldset>

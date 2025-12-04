@@ -135,8 +135,14 @@ export class WorkComponent {
       wrks: null,
       wrk_user_uuid: null,
       wrk_user: null,
-      wrk_operator_uuid: null,
-      wrk_operator: null,
+      wrk_operator_uuid1: null,
+      wrk_operator1: null,
+      wrk_operator_uuid2: null,
+      wrk_operator2: null,
+      wrk_operator_uuid3: null,
+      wrk_operator3: null,
+      wrk_operator_uuid4: null,
+      wrk_operator4: null,
       itm_uuid: null,
       cmpitm_uuid: null,
       mitm_uuid: null,
@@ -331,13 +337,43 @@ export class WorkComponent {
     }
   }
 
-  public onWorkOperatorChange(event: Event): void {
+  public onWorkOperator1Change(event: Event): void {
     const selectedValue = (event.target as HTMLSelectElement).value;
     const selectedOperator = this.usersOperatorWork.find(
       (operator: UserRolCompanyInterface) => operator.usr_uuid === selectedValue
     );
     if (selectedOperator) {
-      this.work.wrk_operator_uuid = selectedOperator.usr_uuid;
+      this.work.wrk_operator_uuid1 = selectedOperator.usr_uuid;
+    }
+  }
+
+  public onWorkOperator2Change(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedOperator = this.usersOperatorWork.find(
+      (operator: UserRolCompanyInterface) => operator.usr_uuid === selectedValue
+    );
+    if (selectedOperator) {
+      this.work.wrk_operator_uuid2 = selectedOperator.usr_uuid;
+    }
+  }
+
+  public onWorkOperator3Change(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedOperator = this.usersOperatorWork.find(
+      (operator: UserRolCompanyInterface) => operator.usr_uuid === selectedValue
+    );
+    if (selectedOperator) {
+      this.work.wrk_operator_uuid3 = selectedOperator.usr_uuid;
+    }
+  }
+
+  public onWorkOperator4Change(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedOperator = this.usersOperatorWork.find(
+      (operator: UserRolCompanyInterface) => operator.usr_uuid === selectedValue
+    );
+    if (selectedOperator) {
+      this.work.wrk_operator_uuid4 = selectedOperator.usr_uuid;
     }
   }
 
@@ -366,10 +402,10 @@ export class WorkComponent {
       return false;
     }
 
-    if(!this.work.wrk_operator_uuid) {
+    if(!this.work.wrk_operator_uuid1) {
       this._messageService.error(
         "Error", 
-        "Debe seleccionar un usuario."
+        "Debe seleccionar el usuario 1."
       );
       return false;
     }
