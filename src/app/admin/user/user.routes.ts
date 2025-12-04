@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { NoCompanyComponent } from './no-company/no-company.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { RoutesComponent } from './routes/routes.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
 import { AddressComponent } from './address/address.component';
@@ -21,6 +22,7 @@ export const USER_ROUTES: Routes = [
         children: [
             { path: 'no-company', component: NoCompanyComponent},
             { path: 'dashboard', component: DashboardComponent },
+            { path: 'routes', component: RoutesComponent },
             { path: 'customers', component: CustomersComponent },
             { path: 'customer/:cus_uuid', component: CustomerComponent },
             { path: 'address/:cus_uuid/:adr_uuid', component: AddressComponent },
