@@ -416,6 +416,14 @@ export class WorkComponent {
       return false;
     }
 
+    if(this.work.wrk_workdate && new Date(this.work.wrk_workdate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0)) {
+      this._messageService.error(
+        "Error", 
+        "La fecha no puede ser inferior a la fecha de hoy."
+      );
+      return false;
+    }
+
     if(!this.customer) {
       this._messageService.error(
         "Error", 
