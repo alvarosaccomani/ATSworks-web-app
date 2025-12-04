@@ -121,6 +121,36 @@ export class WorkComponent {
     });
   }
 
+  // GETTER: Transforma el objeto Date a String "YYYY-MM-DD" para que el input lo lea
+  get workDateProxy(): string {
+    if (!this.work.wrk_workdate) return '';
+    
+    // Convertimos la fecha a formato local YYYY-MM-DD
+    const date = new Date(this.work.wrk_workdate);
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    
+    return `${year}-${month}-${day}`;
+  }
+
+  // SETTER: Recibe el String del input y lo convierte a objeto Date para tu interfaz
+  set workDateProxy(value: string) {
+    if (value) {
+      // Creamos la fecha añadiendo la hora para asegurar que sea la fecha local correcta
+      // Truco: agregar 'T00:00:00' fuerza la interpretación local en la mayoría de navegadores
+      // o usar split para construirla manualmente es lo más seguro.
+      const parts = value.split('-');
+      const year = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // Meses en JS son 0-11
+      const day = parseInt(parts[2], 10);
+      
+      this.work.wrk_workdate = new Date(year, month, day);
+    } else {
+      this.work.wrk_workdate = null;
+    }
+  }
+
   public workInit(): void {
     this.work = {
       cmp_uuid: null,
