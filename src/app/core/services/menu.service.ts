@@ -129,6 +129,42 @@ export class MenuService {
     },
     {
       id: '3',
+      name: 'Recorridos',
+      icon: 'fas fa-route fa-fw',
+      url: null,
+      hasSubmenu: true,
+      isOpen: false,
+      allowedRoles: ['admin', 'viewer', 'editor'],
+      appPermission: 'menu.recorridos',
+      submenu: [
+        { 
+          id: '31',
+          name: 'Agregar Recorrido',
+          icon: 'fas fa-plus fa-fw',
+          url: '/admin/user/route/new',
+          allowedRoles: ['admin'],
+          appPermission: 'menu.recorridos.agregar_recorrido'
+        },
+        { 
+          id: '32',
+          name: 'Lista de recorridos',
+          icon: 'fas fa-clipboard-list fa-fw',
+          url: 'routes',
+          allowedRoles: ['admin', 'viewer'],
+          appPermission: 'menu.recorridos.listar_recorridos'
+        },
+        {
+          id: '33',
+          name: 'Buscar recorrido',
+          icon: 'fas fa-search fa-fw',
+          url: null,
+          allowedRoles: ['admin', 'editor'],
+          appPermission: 'menu.recorridos.buscar_recorrido'
+        }
+      ]
+    },
+    {
+      id: '4',
       name: 'Clientes',
       icon: 'fas fa-users fa-fw',
       url: null,
@@ -138,7 +174,7 @@ export class MenuService {
       appPermission: 'menu.clientes',
       submenu: [
         { 
-          id: '31',
+          id: '41',
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/customer/new',
@@ -146,7 +182,7 @@ export class MenuService {
           appPermission: 'menu.clientes.agregar_cliente'
         },
         { 
-          id: '32',
+          id: '42',
           name: 'Lista de clientes',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'customers',
@@ -154,7 +190,7 @@ export class MenuService {
           appPermission: 'menu.clientes.listar_clientes'
         },
         {
-          id: '33',
+          id: '43',
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -164,7 +200,7 @@ export class MenuService {
       ]
     },
     {
-      id: '4',
+      id: '5',
       name: 'Items',
       icon: 'fas fa-pallet fa-fw',
       url: null,
@@ -174,7 +210,7 @@ export class MenuService {
       appPermission: 'menu.items',
       submenu: [
         { 
-          id: '41',
+          id: '51',
           name: 'Agregar item',
           icon: 'fas fa-plus fa-fw',
           url: null,
@@ -182,7 +218,7 @@ export class MenuService {
           appPermission: 'menu.items.agregar_item'
         },
         { 
-          id: '42',
+          id: '52',
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/items',
@@ -190,7 +226,7 @@ export class MenuService {
           appPermission: 'menu.items.lista_items'
         },
         {
-          id: '43',
+          id: '53',
           name: 'Buscar item',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -200,7 +236,7 @@ export class MenuService {
       ]
     },
     {
-      id: '5',
+      id: '6',
       name: 'Modelo Items',
       icon: 'fas fa-pallet fa-fw',
       url: null,
@@ -210,7 +246,7 @@ export class MenuService {
       appPermission: 'menu.modelo_items',
       submenu: [
         { 
-          id: '51',
+          id: '61',
           name: 'Agregar modelo item',
           icon: 'fas fa-plus fa-fw',
           url: ['/admin/user/model-item/new', '', ''],
@@ -218,7 +254,7 @@ export class MenuService {
           appPermission: 'menu.modelo_items.agregar_modelo_item'
         },
         { 
-          id: '52',
+          id: '62',
           name: 'Lista de modelo items',
           icon: 'fas fa-clipboard-list fa-fw',
           url: 'models-items',
@@ -226,7 +262,7 @@ export class MenuService {
           appPermission: 'menu.modelo_items.listar_modelo_items'
         },
         {
-          id: '53',
+          id: '63',
           name: 'Buscar modelo item',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -236,7 +272,7 @@ export class MenuService {
       ]
     },
     {
-      id: '6',
+      id: '7',
       name: 'Trabajos',
       icon: 'fas fa-file-invoice-dollar fa-fw',
       url: null,
@@ -246,7 +282,7 @@ export class MenuService {
       appPermission: 'menu.trabajos',
       submenu: [
         { 
-          id: '61',
+          id: '71',
           name: 'Nuevo trabajo',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/user/work/new',
@@ -254,7 +290,7 @@ export class MenuService {
           appPermission: 'menu.trabajos.nuevo_trabajo'
         },
         { 
-          id: '62',
+          id: '72',
           name: 'Lista de trabajos',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/user/works',
@@ -262,7 +298,7 @@ export class MenuService {
           appPermission: 'menu.trabajos.listar_trabajos'
         },
         {
-          id: '63',
+          id: '73',
           name: 'Buscar trabajos',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -272,7 +308,7 @@ export class MenuService {
       ]
     },
     {
-      id: '7',
+      id: '8',
       name: 'Usuarios',
       icon: 'fas fa-user-secret fa-fw',
       url: null,
@@ -282,7 +318,7 @@ export class MenuService {
       appPermission: 'menu.usuarios',
       submenu: [
         { 
-          id: '71',
+          id: '81',
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
           url: '/admin/application/user/new',
@@ -290,7 +326,7 @@ export class MenuService {
           appPermission: 'menu.usuarios.nuevo_usuario'
         },
         { 
-          id: '72',
+          id: '82',
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
           url: '/admin/application/users',
@@ -298,7 +334,7 @@ export class MenuService {
           appPermission: 'menu.usuarios.lista_usuarios'
         },
         {
-          id: '73',
+          id: '83',
           name: 'Buscar usuarios',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -308,7 +344,7 @@ export class MenuService {
       ]
     },
     {
-      id: '8',
+      id: '9',
       name: 'Empresa',
       icon: 'fas fa-store-alt fa-fw',
       url: null, // URL se establecerá dinámicamente
