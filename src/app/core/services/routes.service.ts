@@ -23,6 +23,26 @@ export class RoutesService {
     return this._http.get<RouteResults>(environment.apiUrl + 'routes/' + cmp_uuid + '/' + filter, {headers:headers})
   }
 
+  public getRouteById(cmp_uuid: string, rou_uuid?: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.get(environment.apiUrl + 'route/' + cmp_uuid + '/' + rou_uuid, {headers:headers});
+  }
+
+  public saveRoute(route: any): Observable<any> {
+    let params = JSON.stringify(route);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.post(environment.apiUrl + 'route', params, {headers:headers});
+  }
+
+  public updateRoute(route: any): Observable<any> {
+    let params = JSON.stringify(route);
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    return this._http.put(environment.apiUrl + 'route/' + route.cmp_uuid + '/' + route.rou_uuid, params, {headers:headers});
+  }
+
   public deleteRoute(cmp_uuid: string, rol_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
