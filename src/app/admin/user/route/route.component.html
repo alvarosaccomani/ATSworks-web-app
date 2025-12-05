@@ -1,1 +1,155 @@
-<p>route works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content here-->
+<div class="container-fluid">
+    <form 
+        name="formRoute"
+        #formRoute="ngForm"
+        class="form-neon"
+        autocomplete="off">
+        <fieldset>
+            <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
+            <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_uuid" 
+                                class="bmd-label-floating">
+                                cmp_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="cmp_uuid" 
+                                id="cmp_uuid" 
+                                name="cmp_uuid" 
+                                [(ngModel)]="route.cmp_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="rou_uuid" 
+                                class="bmd-label-floating">
+                                rou_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="rou_uuid" 
+                                name="rou_uuid"
+                                [(ngModel)]="route.rou_uuid">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-5">
+                        <div class="form-group">
+                            <label 
+                                for="rou_name"
+                                class="bmd-label-floating"
+                                >
+                                Nombre
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control"
+                                id="rou_name"
+                                name="rou_name"
+                                [(ngModel)]="route.rou_name">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <div class="form-group">
+                            <label 
+                                for="rou_order" 
+                                class="bmd-label-floating">
+                                Orden
+                            </label>
+                            <input 
+                                type="text"
+                                class="form-control"
+                                id="rou_order"
+                                name="rou_order"
+                                [(ngModel)]="route.rou_order">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label
+                                for="rou_description"
+                                class="bmd-label-floating">
+                                Descripcion
+                            </label>
+                            <input
+                                type="text" 
+                                class="form-control" 
+                                id="rou_description" 
+                                name="rou_description" 
+                                [(ngModel)]="route.rou_description">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <!-- <div class="form-group">
+                            <label 
+                                for="cus_dateofbirth" 
+                                class="bmd-label-floating">
+                                Fecha de Cumpleaños
+                            </label>
+                            <input 
+                                type="date"
+                                class="form-control"
+                                id="cus_dateofbirth"
+                                name="cus_dateofbirth"
+                                [(ngModel)]="route.cus_dateofbirth">
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <br><br><br>
+        <p class="text-center" style="margin-top: 40px;">
+            @if(route.rou_uuid === "new") {
+                <button 
+                    type="reset" 
+                    class="btn btn-raised btn-secondary btn-sm"
+                    (click)="routeInit()"
+                    >
+                    <i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR
+                </button>
+                &nbsp; &nbsp;
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-info btn-sm"
+                    (click)="onSaveRoute(formRoute)"
+                    [disabled]="isLoading"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="far fa-save"></i> &nbsp; GUARDAR
+                    }
+                </button>
+            } @else {
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    (click)="onSaveRoute(formRoute)"
+                    [disabled]="isLoading"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                    }
+                </button>
+            }
+        </p>
+    </form>
+</div>
