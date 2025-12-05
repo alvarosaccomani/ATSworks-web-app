@@ -111,6 +111,29 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label
+                                for="rou_uuid"
+                                class="bmd-label-floating">
+                                Recorrido
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="rou_uuid"
+                                [(ngModel)]="customer.rou_uuid"
+                                (change)="onRouteChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(route of routes; track route.rou_uuid) {
+                                    @if(route){
+                                        <option [value]="route.rou_uuid">
+                                            {{route.rou_name}}
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label
                                 for="pmt_uuid"
                                 class="bmd-label-floating">
                                 Forma de Cobro

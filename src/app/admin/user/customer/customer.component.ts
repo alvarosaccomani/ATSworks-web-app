@@ -4,11 +4,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
+import { RouteInterface } from '../../../core/interfaces/route';
 import { PaymentMethodInterface } from '../../../core/interfaces/payment-method';
 import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
+import { RoutesService } from '../../../core/services/routes.service';
 import { PaymentMethodsService } from '../../../core/services/payment-methods.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { AddressInterface } from '../../../core/interfaces/address';
@@ -27,6 +29,7 @@ import { AddressInterface } from '../../../core/interfaces/address';
 export class CustomerComponent {
 
   public customer!: CustomerInterface;
+  public routes: RouteInterface[] = [];
   public paymentMethods: PaymentMethodInterface[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
@@ -50,6 +53,7 @@ export class CustomerComponent {
     private _messageService: MessageService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
+    private _routesService: RoutesService,
     private _paymentMethodsService: PaymentMethodsService,
     private _sharedDataService: SharedDataService
   ) {
@@ -59,6 +63,7 @@ export class CustomerComponent {
 
   ngOnInit(): void {
     this.customer.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.getRoutes(this.customer.cmp_uuid!);
     this.getPaymentMethods(this.customer.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
@@ -96,6 +101,7 @@ export class CustomerComponent {
       cus_email: null,
       cus_phone: null,
       cus_dateofbirth: null,
+      rou_uuid: null,
       pmt_uuid: null,
       usr_uuid: null,
       cus_createdat: null,
@@ -144,6 +150,27 @@ export class CustomerComponent {
       }
     )
   }
+
+  private getRoutes(cmp_uuid: string) {
+    this._routesService.getRoutes(cmp_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.routes = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
   
   private getPaymentMethods(cmp_uuid: string) {
     this._paymentMethodsService.getPaymentMethods(cmp_uuid).subscribe(
@@ -168,6 +195,16 @@ export class CustomerComponent {
 
   public addAddress(): void {
     this._router.navigate(['/admin/user/address', 'new', '']);
+  }
+
+  public onRouteChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedRoute = this.routes.find(
+      (selectedRoute: RouteInterface) => selectedRoute.rou_uuid === selectedValue
+    );
+    if (selectedRoute) {
+      //this.setModelItem(selectedPaymentMethod);
+    }
   }
 
   public onPaymentMethodChange(event: Event): void {
