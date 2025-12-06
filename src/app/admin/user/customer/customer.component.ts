@@ -255,7 +255,12 @@ export class CustomerComponent {
 
   private async updateCustomer(formCustomer: NgForm): Promise<void> {
     this.isLoading = true;
-    this._customersService.updateCustomer(formCustomer.form.value).subscribe(
+
+    //Valido fechas
+    let customer = formCustomer.form.value
+    customer.cus_dateofbirth = (customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
+  
+    this._customersService.updateCustomer(customer).subscribe(
       response => {
         if(response.success) {
           this.isLoading = false;
@@ -285,35 +290,40 @@ export class CustomerComponent {
 
   private async insertCustomer(formCustomer: NgForm): Promise<void> {
     this.isLoading = true;
-      this._customersService.saveCustomer(formCustomer.form.value).subscribe(
-        response => {
-          if(response.success) {
-            this.isLoading = false;
-            const customer = response.customer;
-            this._messageService.success(
-              "Informacion", 
-              "El Cliente fue agregado correctamente.",
-              () => {
-                this._router.navigate(['/admin/user/customers']);
-              }
-            );
-          } else {
-            this.isLoading = false;
-            //this.status = 'error'
-          }
-        },
-        error =>{
-            this.isLoading = false;
-            let errorMessage = <any>error;
-            console.log(errorMessage);
-            if(errorMessage != null) {
-              this._messageService.error(
-                "Error", 
-                errorMessage.error.error
-              );
+
+    //Valido fechas
+    let customer = formCustomer.form.value
+    customer.cus_dateofbirth = (customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
+
+    this._customersService.saveCustomer(customer).subscribe(
+      response => {
+        if(response.success) {
+          this.isLoading = false;
+          const customer = response.customer;
+          this._messageService.success(
+            "Informacion", 
+            "El Cliente fue agregado correctamente.",
+            () => {
+              this._router.navigate(['/admin/user/customers']);
             }
+          );
+        } else {
+          this.isLoading = false;
+          //this.status = 'error'
         }
-      )
+      },
+      error =>{
+          this.isLoading = false;
+          let errorMessage = <any>error;
+          console.log(errorMessage);
+          if(errorMessage != null) {
+            this._messageService.error(
+              "Error", 
+              errorMessage.error.error
+            );
+          }
+      }
+    )
   }
 
   public onSaveCustomer(formCustomer: NgForm): void {
