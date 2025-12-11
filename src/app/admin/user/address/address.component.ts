@@ -77,6 +77,7 @@ export class AddressComponent {
       adr_city: null,
       adr_province: null,
       adr_postalcode: null,
+      adr_dimensions: null,
       adr_createdat: null,
       adr_updatedat: null
     }

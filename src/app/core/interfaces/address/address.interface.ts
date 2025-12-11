@@ -9,6 +9,7 @@ export interface AddressInterface {
     adr_city: string | null,
     adr_province: string | null,
     adr_postalcode: string | null,
+    adr_dimensions: string | null,
     adr_createdat: Date | null,
     adr_updatedat: Date | null
 }
