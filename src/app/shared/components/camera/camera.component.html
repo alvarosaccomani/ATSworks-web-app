@@ -39,7 +39,7 @@
                 class="btn btn-raised btn-success btn-sm"
                 (click)="savePhoto()"
                 >
-                Guardar Foto
+                {{ existingImage ? 'Continuar' : 'Guardar Foto' }}
             </button>
         </div>
     }

@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, AfterViewInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-camera',
@@ -7,6 +7,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild, AfterViewInit, 
   styleUrl: './camera.component.scss'
 })
 export class CameraComponent implements AfterViewInit, OnDestroy {
+  @Input() existingImage: string | null = null;
 
   @ViewChild('video', { static: false }) videoElement!: ElementRef;
   @ViewChild('canvas', { static: false }) canvasElement!: ElementRef;
@@ -19,7 +20,30 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
   private mediaStream: MediaStream | null = null; // Almacena el stream de la cámara
 
   ngAfterViewInit() {
-    this.startCamera();
+    // Si ya tenemos existingImage, mostrarla
+    if (this.existingImage) {
+      this.capturedImage = this.existingImage;
+      this.isCameraActive = false;
+      this.isLoading = false;
+    } else {
+      this.startCamera();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['existingImage'] && changes['existingImage'].currentValue !== changes['existingImage'].previousValue) {
+      const newImage = changes['existingImage'].currentValue;
+      if (newImage) {
+        this.capturedImage = newImage;
+        this.isCameraActive = false;
+        this.isLoading = false;
+      } else {
+        // Si se borra la imagen existente, volver a la cámara
+        this.capturedImage = null;
+        this.isCameraActive = true;
+        this.startCamera();
+      }
+    }
   }
 
   public async startCamera() {
@@ -52,7 +76,11 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
     } catch (error) {
       console.error('Error al acceder a la cámara:', error);
       this.isLoading = false; // Ocultar el mensaje de carga en caso de error
-      alert('No se pudo acceder a la cámara. Verifica los permisos.');
+      
+      // Solo alertar si no hay imagen existente ni capturada
+      if (!this.existingImage && !this.capturedImage) {
+        alert('No se pudo acceder a la cámara. Verifica los permisos.');
+      }
     }
   }
 
