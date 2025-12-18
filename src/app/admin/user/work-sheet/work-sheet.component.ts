@@ -26,6 +26,8 @@ import { WorksAttachmentsService } from '../../../core/services/works-attachment
 })
 export class WorkSheetComponent {
   public work: WorkInterface;
+  public initImage: string = "";
+  public finishImage: string = "";
   public status: string = "";
   public isLoading: boolean = false;
   public workDetailsDetail: any;
@@ -138,6 +140,12 @@ export class WorkSheetComponent {
             this.workDetailsDetail = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_detail');
             this.workDetailsObservations = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_observations');
           }
+          if(this.work.workAttachments) {
+            this.initImage = (this.work.workAttachments[0].wrka_filepath ? this.work.workAttachments[0].wrka_filepath : "");
+            if(this.work.workAttachments.length > 1) {
+              this.finishImage = (this.work.workAttachments[1].wrka_filepath ? this.work.workAttachments[1].wrka_filepath : "");
+            }
+          }
         } else {
           //this.status = 'error'
         }
@@ -166,17 +174,32 @@ export class WorkSheetComponent {
   public onPhotoSaved(image: string) {
     switch(this.step.name) {
         case 'initial_photo': {
+          if(image === this.initImage) {
+            this.continue();
+            return;
+          }
           this.insertInitialPhoto(image);
           break;
         }
         case 'final_photo':
+          if(image === this.finishImage) {
+            this.continue();
+            return;
+          }
           this.insertFinalPhoto(image);
           break;
       }
   }
 
+  public parseValidDate(input: string | number | Date): Date | null {
+    const date = new Date(input);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
   public insertInitialPhoto(image: string) {
     this.work.wrk_workdateinit = new Date();
+    this.work.wrk_workdatefinish = this.parseValidDate(this.work.wrk_workdatefinish!);
+
     this._worksService.updateWork(this.work).subscribe(
       (response: any) => {
         if(response.success) {
