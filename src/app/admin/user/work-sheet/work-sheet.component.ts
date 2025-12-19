@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { MultiStepComponent } from '../../../shared/components/multi-step/multi-step.component';
@@ -41,6 +41,7 @@ export class WorkSheetComponent {
   public step: any;
 
   constructor(
+    private _router: Router,
     private _route: ActivatedRoute,
     private _sessionService: SessionService,
     private _messageService: MessageService,
@@ -253,6 +254,8 @@ export class WorkSheetComponent {
   }
 
   public insertFinalPhoto(image: string) {
+    this.work.wrk_workdatefinish = new Date();
+
     this._worksService.updateWork(this.work).subscribe(
       (response: any) => {
         if(response.success) {
@@ -288,7 +291,16 @@ export class WorkSheetComponent {
       (response: any) => {
         if(response.success) {
           console.info(response.data);
-          this.work.workAttachments = response.data;
+          if(!this.work.workAttachments) {
+            this.work.workAttachments = [];
+          }
+          this.work.workAttachments.push(response.data);
+          if(this.work.workAttachments) {
+            this.initImage = (this.work.workAttachments[0].wrka_filepath ? this.work.workAttachments[0].wrka_filepath : "");
+            if(this.work.workAttachments.length > 1) {
+              this.finishImage = (this.work.workAttachments[1].wrka_filepath ? this.work.workAttachments[1].wrka_filepath : "");
+            }
+          }
           this.continue();
         } else {
           //this.status = 'error'
@@ -376,7 +388,10 @@ export class WorkSheetComponent {
           this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
           this._messageService.success(
             "Informacion", 
-            "El trabajo fue cerrado de manera correcta"
+            "El trabajo fue cerrado de manera correcta",
+            () => {
+              this._router.navigate(['/admin/user/works']);
+            }
           );
         } else {
           //this.status = 'error'
