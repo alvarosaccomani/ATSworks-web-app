@@ -131,32 +131,30 @@ export class WorkSheetViewComponent {
 
   private async shareMultipleToWhatsApp(text: string, base64Images: string[]) {
     try {
-      // 1. Convertimos todas las imágenes Base64 a una lista de archivos
       const filePromises = base64Images.map(async (base64, index) => {
         const response = await fetch(base64);
         const blob = await response.blob();
-        // Creamos un nombre único para cada imagen
-        return new File([blob], `imagen_${index + 1}.jpg`, { type: 'image/jpeg' });
+        return new File([blob], `reporte_${index + 1}.jpg`, { type: 'image/jpeg' });
       });
 
       const files = await Promise.all(filePromises);
 
-      // 2. Verificamos si el navegador soporta compartir esta lista de archivos
-      if (navigator.canShare && navigator.canShare({ files: files })) {
-        await navigator.share({
-          title: 'Resumen de Trabajo',
-          text: text,
-          files: files // Enviamos el array completo
-        });
+      // IMPORTANTE: Validar si se puede compartir el conjunto completo (archivos + texto)
+      const shareData: ShareData = {
+        files: files,
+        title: text, // Algunos SO usan el título como caption
+        text: text    // Otros usan el text
+      };
+
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
       } else {
-        // Fallback si el navegador no permite archivos (como en la mayoría de PCs)
-        alert('Tu navegador no soporta compartir múltiples imágenes. Se enviará solo el texto.');
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        throw new Error('El navegador no permite compartir archivos y texto juntos.');
       }
     } catch (error) {
-      console.error('Error al procesar o compartir las imágenes:', error);
-      alert('Hubo un error al preparar las imágenes para compartir.');
+      console.error('Error:', error);
+      // Si falla, intentamos enviar solo el texto por el link clásico como último recurso
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     }
   }
 
