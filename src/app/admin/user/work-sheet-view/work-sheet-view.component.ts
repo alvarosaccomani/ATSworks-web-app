@@ -19,6 +19,7 @@ import { WorksAttachmentsService } from '../../../core/services/works-attachment
 export class WorkSheetViewComponent {
 
   public work: WorkInterface;
+  public isLoading: boolean = false;
   public headerConfig: any = {
     title: "RESUMEN DE TRABAJO",
     description: "Resumen de Trabajo.",
@@ -91,6 +92,72 @@ export class WorkSheetViewComponent {
         }
       }
     )
+  }
+
+  private getKey(key: string): string {
+    return this.work.workDetails?.filter(e => e.wrkd_key === key)[0].wrkd_value || "";
+  }
+
+  public async sendWhatsApp() {
+    if(this.work.workAttachments?.length) {
+      this.isLoading = true;
+      const text = `
+        HOLA, BUENAS TARDES.
+        A continuación enviamos el resultado de la visita semanal.
+        El dia ${this.work.wrk_workdate} se realizó el mantenimiento de su piscina.
+        HORARIO DE VISITA: ${this.work.wrk_workdateinit}
+        Estado general: ${this.getKey('estado_pileta')}
+        Nivel de agua: ${this.getKey('nivel_agua')}
+        Hojas: ${this.getKey('cantidad_hojas')}
+        Presencia de verdín: ${this.getKey('presencia_verdin')}
+        Limpieza de Skymer: ${this.getKey('limpieza_skimmer')}
+        Medicion de cloro en agua: ${this.getKey('medicion_agua')}
+        Filtrado de hojas y otros: ${this.getKey('filtrado_otros')}
+        Aspirado de fondo: ${this.getKey('aspirado_fondo')}
+        Observaciones:
+        ${this.getKey('observaciones')}
+        Cualquier duda o consulta, quedo a su disposición.
+        Faustino, administrativo Tilikum Mantenimientos.
+        Saludos
+      `;
+      let images: string[] = [];
+      this.work.workAttachments.forEach(e => {
+        images.push(e.wrka_filepath!);
+      })
+      await this.shareMultipleToWhatsApp(text, images);
+      this.isLoading = false;
+    }
+  }
+
+  private async shareMultipleToWhatsApp(text: string, base64Images: string[]) {
+    try {
+      // 1. Convertimos todas las imágenes Base64 a una lista de archivos
+      const filePromises = base64Images.map(async (base64, index) => {
+        const response = await fetch(base64);
+        const blob = await response.blob();
+        // Creamos un nombre único para cada imagen
+        return new File([blob], `imagen_${index + 1}.jpg`, { type: 'image/jpeg' });
+      });
+
+      const files = await Promise.all(filePromises);
+
+      // 2. Verificamos si el navegador soporta compartir esta lista de archivos
+      if (navigator.canShare && navigator.canShare({ files: files })) {
+        await navigator.share({
+          title: 'Resumen de Trabajo',
+          text: text,
+          files: files // Enviamos el array completo
+        });
+      } else {
+        // Fallback si el navegador no permite archivos (como en la mayoría de PCs)
+        alert('Tu navegador no soporta compartir múltiples imágenes. Se enviará solo el texto.');
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+      }
+    } catch (error) {
+      console.error('Error al procesar o compartir las imágenes:', error);
+      alert('Hubo un error al preparar las imágenes para compartir.');
+    }
   }
 
 }

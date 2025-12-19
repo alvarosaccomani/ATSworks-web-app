@@ -112,5 +112,21 @@
                 </table>
             </div>
         }
+
+        <p class="text-center" style="margin-top: 40px;">
+            <button 
+                type="submit" 
+                class="btn btn-raised btn-info btn-sm"
+                [disabled]="isLoading"
+                (click)="sendWhatsApp()"
+                >
+                @if(isLoading) {
+                    <span class="spinner spinner-sm me-2"></span>
+                    <span>Procesando...</span>
+                } @else {
+                    <i class="fab fa-whatsapp"></i> &nbsp; ENVIAR POR WHATSAPP
+                }
+            </button>
+        </p>
     }
 </div>
