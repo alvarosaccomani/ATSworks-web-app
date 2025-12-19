@@ -44,6 +44,7 @@
                                                 id="wrkd_value" 
                                                 maxlength="35"
                                                 name="wrkd_value"
+                                                [class.is-invalid-field]="!workDetailsDetail.wrkd_value"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputText($event, workDetailsDetail!)">
                                         </td>
@@ -68,6 +69,7 @@
                                                 id="wrkd_value" 
                                                 maxlength="35"
                                                 name="wrkd_value"
+                                                [class.is-invalid-field]="workDetailsDetail.wrkd_value === '' || workDetailsDetail.wrkd_value === null || workDetailsDetail.wrkd_value === undefined"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailsDetail!)">
                                     }
@@ -79,6 +81,7 @@
                                                 id="wrkd_value" 
                                                 maxlength="35"
                                                 name="wrkd_value"
+                                                [class.is-invalid-field]="workDetailsDetail.wrkd_value === '' || workDetailsDetail.wrkd_value === null || workDetailsDetail.wrkd_value === undefined"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailsDetail!)">
                                     }
@@ -109,6 +112,7 @@
                                             <select 
                                                 class="form-control" 
                                                 name="wrkd_value" 
+                                                [class.is-invalid-field]="!workDetailsDetail.wrkd_value"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (change)="onValueChangeList($event, workDetailsDetail!)">
                                                 @for(arrayValue of findDetailModelItemArrayValues(workDetailsDetail.wrkd_key!); track arrayValue.id) {
