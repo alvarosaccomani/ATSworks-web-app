@@ -136,7 +136,21 @@
             </div>
             <p class="text-center" style="margin-top: 40px;">
                 <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
+                @if(isFormComplete) {
+                    &nbsp; &nbsp;
+                    <button 
+                        class="btn btn-raised btn-success btn-sm"
+                        (click)="continue()"
+                    >
+                        CONTINUAR
+                    </button>
+                }
             </p>
+            @if (!isFormComplete) {                
+                <div class="text-muted fst-italic text-center">
+                    <small>* Por favor complete todos los campos para continuar.</small>
+                </div>
+            }
         }
         @case('final_photo') {
             <app-camera 

@@ -130,6 +130,27 @@ export class WorkSheetComponent {
     });
   }
 
+  get isFormComplete(): boolean {
+    // Verificamos que el arreglo no esté vacío primero
+    if (!this.workDetailsDetail || this.workDetailsDetail.length === 0) {
+      return false;
+    }
+
+    // .every() devuelve true solo si TODOS los elementos cumplen la condición
+    return this.workDetailsDetail.every((item: any) => {
+      // Si es booleano, siempre tiene valor (true/false), 
+      // pero si es string, number o date, validamos que no esté vacío.
+      if (item.dtp?.dtp_cod === 'boolean') {
+        return item.wrkd_value !== null && item.wrkd_value !== undefined;
+      }
+      
+      // Para el resto, verificamos que tenga contenido real
+      return item.wrkd_value !== null && 
+            item.wrkd_value !== undefined && 
+            item.wrkd_value.toString().trim() !== '';
+    });
+  }
+
   private getWorkById(cmp_uuid: string, wrk_uuid: string): void {
     this._worksService.getWorkById(cmp_uuid, wrk_uuid).subscribe(
       (response: any) => {
