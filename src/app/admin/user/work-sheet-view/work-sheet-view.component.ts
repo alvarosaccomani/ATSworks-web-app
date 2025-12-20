@@ -136,26 +136,7 @@ export class WorkSheetViewComponent {
   public async sendWhatsApp() {
     if(this.work.workAttachments?.length) {
       this.isLoading = true;
-      const text = `
-        HOLA, BUENAS TARDES.
-        A continuación enviamos el resultado de la visita semanal.
-        El día **${this.formatDateToDayMonth(this.work.wrk_workdate?.toString()!)}** se realizó el mantenimiento de su piscina.
-        HORARIO DE VISITA: **${this.getHoraMinutos(this.work.wrk_workdateinit?.toString()!)}**
-        Estado general: **${this.getKey('estado_pileta') ? this.getKey('estado_pileta').toUpperCase() : 'SIN CARGAR'}**
-        Nivel de agua: **${this.getKey('nivel_agua') ? this.getKey('nivel_agua').toUpperCase() : 'SIN CARGAR'}**
-        Hojas: **${this.getKey('cantidad_hojas') ? this.getKey('cantidad_hojas').toUpperCase() :  'SIN CARGAR'}**
-        Presencia de verdín: **${this.getKey('cantidad_hojas') ? this.getKey('presencia_verdin').toUpperCase() :  'SIN CARGAR'}**
-        Limpieza de Skymer: **${this.getKey('limpieza_skimmer') === 'true' ? 'SI' : 'NO'}**
-        Medicion de cloro en agua: **${this.getKey('medicion_agua') ? this.getKey('medicion_agua').toUpperCase() : 'SIN CARGAR'}**
-        Filtrado de hojas y otros: **${this.getKey('filtrado_otros') === 'true' ? 'SI' : 'NO'}**
-        Aspirado de fondo: **${this.getKey('aspirado_fondo') === 'true' ? 'SI' : 'NO'}**
-        Observaciones:
-        **${this.getKey('observaciones').toUpperCase()}**
-        Cualquier duda o consulta, quedo a su disposición.
-        Faustino, administrativo Tilikum Mantenimientos.
-        Saludos
-      `;
-      debugger;
+      const text = `HOLA, BUENAS TARDES.\nA continuación enviamos el resultado de la visita semanal.\nEl día *${this.formatDateToDayMonth(this.work.wrk_workdate?.toString()!)}* se realizó el mantenimiento de su piscina.\nHORARIO DE VISITA: *${this.getHoraMinutos(this.work.wrk_workdateinit?.toString()!)}*\nEstado general: *${this.getKey('estado_pileta') ? this.getKey('estado_pileta').toUpperCase() : 'SIN CARGAR'}*\nNivel de agua: *${this.getKey('nivel_agua') ? this.getKey('nivel_agua').toUpperCase() : 'SIN CARGAR'}*\nHojas: *${this.getKey('cantidad_hojas') ? this.getKey('cantidad_hojas').toUpperCase() :  'SIN CARGAR'}*\nPresencia de verdín: *${this.getKey('cantidad_hojas') ? this.getKey('presencia_verdin').toUpperCase() :  'SIN CARGAR'}*\nLimpieza de Skymer: *${this.getKey('limpieza_skimmer') === 'true' ? 'SI' : 'NO'}*\nMedicion de cloro en agua: *${this.getKey('medicion_agua') ? this.getKey('medicion_agua').toUpperCase() : 'SIN CARGAR'}*\nFiltrado de hojas y otros: *${this.getKey('filtrado_otros') === 'true' ? 'SI' : 'NO'}*\nAspirado de fondo: *${this.getKey('aspirado_fondo') === 'true' ? 'SI' : 'NO'}*\nObservaciones:\n*${this.getKey('observaciones').toUpperCase()}*\nCualquier duda o consulta, quedo a su disposición.\nFaustino, administrativo Tilikum Mantenimientos.\nSaludos`;
       let images: string[] = [];
       this.work.workAttachments.forEach(e => {
         images.push(e.wrka_filepath!);
