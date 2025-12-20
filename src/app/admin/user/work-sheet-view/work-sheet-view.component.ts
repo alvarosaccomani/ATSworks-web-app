@@ -94,6 +94,41 @@ export class WorkSheetViewComponent {
     )
   }
 
+  private formatDateToDayMonth(dateString: string): string {
+    // Parsear la fecha
+    const date = new Date(dateString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+        throw new Error('Fecha inválida');
+    }
+
+    // Nombres de los meses en español (puedes ajustar según necesidad)
+    const months = [
+        'ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO',
+        'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'
+    ];
+
+    const day = date.getDate(); // Día del mes (1–31)
+    const month = months[date.getMonth()]; // Mes en español y mayúsculas
+
+    return `${day} de ${month}`;
+  }
+
+  private getHoraMinutos(fechaString: string): string {
+    const fecha = new Date(fechaString);
+    
+    // Verificar si la fecha es válida
+    if (isNaN(fecha.getTime())) {
+        throw new Error('Fecha inválida');
+    }
+
+    const horas = String(fecha.getHours()).padStart(2, '0');
+    const minutos = String(fecha.getMinutes()).padStart(2, '0');
+
+    return `${horas}:${minutos}`;
+  }
+
   private getKey(key: string): string {
     return this.work.workDetails?.filter(e => e.wrkd_key === key)[0].wrkd_value || "";
   }
@@ -104,27 +139,28 @@ export class WorkSheetViewComponent {
       const text = `
         HOLA, BUENAS TARDES.
         A continuación enviamos el resultado de la visita semanal.
-        El dia ${this.work.wrk_workdate} se realizó el mantenimiento de su piscina.
-        HORARIO DE VISITA: ${this.work.wrk_workdateinit}
-        Estado general: ${this.getKey('estado_pileta')}
-        Nivel de agua: ${this.getKey('nivel_agua')}
-        Hojas: ${this.getKey('cantidad_hojas')}
-        Presencia de verdín: ${this.getKey('presencia_verdin')}
-        Limpieza de Skymer: ${this.getKey('limpieza_skimmer')}
-        Medicion de cloro en agua: ${this.getKey('medicion_agua')}
-        Filtrado de hojas y otros: ${this.getKey('filtrado_otros')}
-        Aspirado de fondo: ${this.getKey('aspirado_fondo')}
+        El día **${this.formatDateToDayMonth(this.work.wrk_workdate?.toString()!)}** se realizó el mantenimiento de su piscina.
+        HORARIO DE VISITA: **${this.getHoraMinutos(this.work.wrk_workdateinit?.toString()!)}**
+        Estado general: **${this.getKey('estado_pileta') ? this.getKey('estado_pileta').toUpperCase() : 'SIN CARGAR'}**
+        Nivel de agua: **${this.getKey('nivel_agua') ? this.getKey('nivel_agua').toUpperCase() : 'SIN CARGAR'}**
+        Hojas: **${this.getKey('cantidad_hojas') ? this.getKey('cantidad_hojas').toUpperCase() :  'SIN CARGAR'}**
+        Presencia de verdín: **${this.getKey('cantidad_hojas') ? this.getKey('presencia_verdin').toUpperCase() :  'SIN CARGAR'}**
+        Limpieza de Skymer: **${this.getKey('limpieza_skimmer') === 'true' ? 'SI' : 'NO'}**
+        Medicion de cloro en agua: **${this.getKey('medicion_agua') ? this.getKey('medicion_agua').toUpperCase() : 'SIN CARGAR'}**
+        Filtrado de hojas y otros: **${this.getKey('filtrado_otros') === 'true' ? 'SI' : 'NO'}**
+        Aspirado de fondo: **${this.getKey('aspirado_fondo') === 'true' ? 'SI' : 'NO'}**
         Observaciones:
-        ${this.getKey('observaciones')}
+        **${this.getKey('observaciones').toUpperCase()}**
         Cualquier duda o consulta, quedo a su disposición.
         Faustino, administrativo Tilikum Mantenimientos.
         Saludos
       `;
+      debugger;
       let images: string[] = [];
       this.work.workAttachments.forEach(e => {
         images.push(e.wrka_filepath!);
       })
-      await this.shareMultipleToWhatsApp(text, images);
+      await this.shareMultipleToWhatsApp(text.trim(), images);
       this.isLoading = false;
     }
   }
