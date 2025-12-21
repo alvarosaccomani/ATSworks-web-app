@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CustomerResults  } from '../interfaces/customer';
@@ -13,14 +13,32 @@ export class CustomersService {
     private _http: HttpClient
   ) { }
 
-  public getCustomers(cmp_uuid: string, filter?: string, page?: number, perPage?: number): Observable<CustomerResults> {
-    let headers = new HttpHeaders().set('content-type','application/json');
+  public getCustomers(cmp_uuid: string, cus_fullname?: string, cus_email?: string, page?: number, perPage?: number, cus_order?: string): Observable<CustomerResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
 
-    if(page && perPage) {
-      filter = `${filter}/${page}/${perPage}`;
+    let params = new HttpParams();
+
+    if (cus_fullname) {
+      params = params.set('cus_fullname', cus_fullname);
     }
 
-    return this._http.get<CustomerResults>(environment.apiUrl + 'customers/' + cmp_uuid + '/' + filter, {headers:headers})
+    if (cus_email) {
+      params = params.set('cus_email', cus_email);
+    }
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if(cus_order) {
+      params = params.set('cus_order', cus_order);
+    }
+
+    return this._http.get<CustomerResults>(`${environment.apiUrl}customers/${cmp_uuid}`, { headers, params });
   }
 
   public getCustomerById(cmp_uuid: string, cus_uuid?: string): Observable<any> {
