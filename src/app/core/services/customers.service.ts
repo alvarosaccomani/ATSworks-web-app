@@ -13,7 +13,7 @@ export class CustomersService {
     private _http: HttpClient
   ) { }
 
-  public getCustomers(cmp_uuid: string, cus_fullname?: string, cus_email?: string, page?: number, perPage?: number, cus_order?: string): Observable<CustomerResults> {
+  public getCustomers(cmp_uuid: string, cus_fullname?: string, cus_email?: string, page?: number, perPage?: number, field_order?: string, cus_order?: string): Observable<CustomerResults> {
     const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
@@ -32,6 +32,10 @@ export class CustomersService {
 
     if (perPage) {
       params = params.set('perPage', perPage.toString());
+    }
+
+    if(field_order) {
+      params = params.set('field_order', field_order);
     }
 
     if(cus_order) {
