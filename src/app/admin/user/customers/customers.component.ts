@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomersService } from '../../../core/services/customers.service';
@@ -14,8 +16,10 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 @Component({
   selector: 'app-customers',
   imports: [
+    FormsModule,
     AsyncPipe,
     RouterLink,
+    NzSelectModule,
     HeaderComponent,
     PageNavTabsComponent,
     PaginationComponent
@@ -29,6 +33,11 @@ export class CustomersComponent implements OnInit {
   public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
   public perPage: number = 10; //Number of items displayed per page
   public numElements!: number; //Total existing items
+  
+  // Variables para filtros
+  public searchNombreApellido: string = "";
+  public searchEmail: string = "";
+  public sortValue: string = "ASC";
 
   private cmp_uuid!: string;
   public customers$!: Observable<CustomerResults>;
@@ -60,13 +69,22 @@ export class CustomersComponent implements OnInit {
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", 1, 20);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, 1, 20, this.sortValue);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, "null", this.page, this.perPage);
+        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
       }
     });
+  }
+
+  public filter(): void {
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
+  }
+
+  public clearSearch(): void {
+    this.searchNombreApellido = '';
+    this.searchEmail = '';
   }
 
   public deleteCustomer(customer: CustomerInterface) {
@@ -86,7 +104,7 @@ export class CustomersComponent implements OnInit {
             .subscribe(
               response => {
                 console.info(response);
-                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, "null", this.page, this.perPage);
+                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
               },
               error => {
                 console.log(<any>error);
@@ -99,6 +117,6 @@ export class CustomersComponent implements OnInit {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, "null", page, this.perPage);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, page, this.perPage, this.sortValue);
   }
 }
