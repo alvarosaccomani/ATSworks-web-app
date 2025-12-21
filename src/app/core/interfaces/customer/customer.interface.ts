@@ -1,4 +1,5 @@
 import { AddressInterface } from "../address";
+import { RouteInterface } from "../route";
 
 export interface CustomerInterface {
     cmp_uuid: string | null,
@@ -8,6 +9,7 @@ export interface CustomerInterface {
     cus_phone: string | null,
     cus_dateofbirth: Date | null,
     rou_uuid: string | null,
+    rou: RouteInterface | null,
     pmt_uuid: string | null,
     usr_uuid: string | null,
     cus_createdat: Date | null,

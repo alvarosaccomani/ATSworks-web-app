@@ -102,6 +102,7 @@ export class CustomerComponent {
       cus_phone: null,
       cus_dateofbirth: null,
       rou_uuid: null,
+      rou: null,
       pmt_uuid: null,
       usr_uuid: null,
       cus_createdat: null,
