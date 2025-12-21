@@ -11,7 +11,7 @@
         <div class="container-fluid">
             <div class="row align-items-end"> 
 
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-9">
                     <div class="row">
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -42,6 +42,16 @@
                     </div>
                 </div>
 
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputFieldSort" class="bmd-label-floating">Campo:</label>
+                        <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="cus_fullname" nzLabel="Nombre"></nz-option>
+                            <nz-option nzValue="cus_email" nzLabel="Email"></nz-option>
+                            <nz-option nzValue="rou_order" nzLabel="Recorrido"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
                 <div class="col-12 col-md-1">
                     <div class="form-group">
                         <label for="inputSort" class="bmd-label-floating">Ordenar:</label>
@@ -88,6 +98,7 @@
                         <th>NOMBRE</th>
                         <th>EMAIL</th>
                         <th>TELEFONO</th>
+                        <th>RECORRIDO</th>
                         <th>ACTUALIZAR</th>
                         <th>ELIMINAR</th>
                     </tr>
@@ -99,6 +110,7 @@
                             <td>{{customer.cus_fullname}}</td>
                             <td>{{customer.cus_email}}</td>
                             <td>{{customer.cus_phone}}</td>
+                            <td>{{customer.rou?.rou_name}}</td>
                             <td>
                                 <a [routerLink]="['/admin/user/customer', customer.cus_uuid]" class="btn btn-success">
                                     <i class="fas fa-sync-alt"></i>	

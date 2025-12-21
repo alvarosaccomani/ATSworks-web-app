@@ -37,6 +37,7 @@ export class CustomersComponent implements OnInit {
   // Variables para filtros
   public searchNombreApellido: string = "";
   public searchEmail: string = "";
+  public fieldSortValue: string = "rou_order";
   public sortValue: string = "ASC";
 
   private cmp_uuid!: string;
@@ -69,17 +70,17 @@ export class CustomersComponent implements OnInit {
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, 1, 20, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, 1, 20, this.fieldSortValue, this.sortValue);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
+        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
       }
     });
   }
 
   public filter(): void {
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
   }
 
   public clearSearch(): void {
@@ -104,7 +105,7 @@ export class CustomersComponent implements OnInit {
             .subscribe(
               response => {
                 console.info(response);
-                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.sortValue);
+                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
                 console.log(<any>error);
@@ -117,6 +118,6 @@ export class CustomersComponent implements OnInit {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, page, this.perPage, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, page, this.perPage, this.fieldSortValue, this.sortValue);
   }
 }
