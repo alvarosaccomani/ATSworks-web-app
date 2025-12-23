@@ -12,8 +12,10 @@ import { CustomersService } from '../../../core/services/customers.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { RoutesService } from '../../../core/services/routes.service';
 import { PaymentMethodsService } from '../../../core/services/payment-methods.service';
+import { SubscriptionPlansService } from '../../../core/services/subscription-plans.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { AddressInterface } from '../../../core/interfaces/address';
+import { SubscriptionPlanInterface } from '../../../core/interfaces/subscription-plan';
 
 @Component({
   selector: 'app-customer',
@@ -31,6 +33,7 @@ export class CustomerComponent {
   public customer!: CustomerInterface;
   public routes: RouteInterface[] = [];
   public paymentMethods: PaymentMethodInterface[] = [];
+  public subscriptionsPlans: SubscriptionPlanInterface[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -55,6 +58,7 @@ export class CustomerComponent {
     private _addressesService: AddressesService,
     private _routesService: RoutesService,
     private _paymentMethodsService: PaymentMethodsService,
+    private _subscriptionPlansService: SubscriptionPlansService,
     private _sharedDataService: SharedDataService
   ) {
     this.isLoading = false;
@@ -65,6 +69,7 @@ export class CustomerComponent {
     this.customer.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this.getRoutes(this.customer.cmp_uuid!);
     this.getPaymentMethods(this.customer.cmp_uuid!);
+    this.getSubscriptionsPlans(this.customer.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
       if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
@@ -105,6 +110,9 @@ export class CustomerComponent {
       rou: null,
       pmt_uuid: null,
       usr_uuid: null,
+      cus_subscriptionplanbycustomer: false,
+      subp_uuid: null,
+      subp: null,
       cus_createdat: null,
       cus_updatedat: null
     }
@@ -194,6 +202,27 @@ export class CustomerComponent {
     )
   }
 
+  private getSubscriptionsPlans(cmp_uuid: string) {
+    this._subscriptionPlansService.getSubscriptionsPlans(cmp_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.subscriptionsPlans = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
   public addAddress(): void {
     this._router.navigate(['/admin/user/address', 'new', '']);
   }
@@ -215,6 +244,16 @@ export class CustomerComponent {
     );
     if (selectedPaymentMethod) {
       //this.setModelItem(selectedPaymentMethod);
+    }
+  }
+
+  public onSubscriptionPlanChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedSubscriptionPlan = this.subscriptionsPlans.find(
+      (selectedSubscriptionPlan: SubscriptionPlanInterface) => selectedSubscriptionPlan.subp_uuid === selectedValue
+    );
+    if (selectedSubscriptionPlan) {
+      //this.setModelItem(selectedSubscriptionPlan);
     }
   }
 
@@ -249,7 +288,23 @@ export class CustomerComponent {
         "El telefono no puede superar los 20 caracteres."
       );
       return false;
-    } 
+    }
+
+    if(this.customer.cus_subscriptionplanbycustomer && !this.customer.subp_uuid) {
+      this._messageService.error(
+        "Error", 
+        "Selecciono plan por cliente y no selecciono un plan."
+      );
+      return false;
+    }
+
+    if(!this.customer.cus_subscriptionplanbycustomer && this.customer.subp_uuid) {
+      this._messageService.error(
+        "Error", 
+        "Selecciono un plan y no habilito plan por cliente."
+      );
+      return false;
+    }
 
     return true;
   }

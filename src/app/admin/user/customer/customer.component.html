@@ -170,6 +170,46 @@
                                 [(ngModel)]="customer.usr_uuid">
                         </div>
                     </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label 
+                                for="cus_subscriptionplanbycustomer" 
+                                class="bmd-label-floating">
+                                Plan por cliente
+                            </label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="cus_subscriptionplanbycustomer" 
+                                name="cus_subscriptionplanbycustomer" 
+                                [(ngModel)]="customer.cus_subscriptionplanbycustomer">
+                        </div>
+                    </div>
+                    @if(customer.cus_subscriptionplanbycustomer) {
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label
+                                    for="subp_uuid"
+                                    class="bmd-label-floating">
+                                    Plan de Suscripción
+                                </label>
+                                <select 
+                                    class="form-control" 
+                                    name="subp_uuid"
+                                    [(ngModel)]="customer.subp_uuid"
+                                    (change)="onSubscriptionPlanChange($event)">
+                                    <option value="" selected="" disabled="">Seleccione una opción</option>
+                                    @for(subscriptionPlan of subscriptionsPlans; track subscriptionPlan.subp_uuid) {
+                                        @if(subscriptionPlan){
+                                            <option [value]="subscriptionPlan.subp_uuid">
+                                                {{subscriptionPlan.subp_name}}
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </fieldset>
