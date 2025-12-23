@@ -47,6 +47,7 @@ export class AddressComponent {
 
     this._route.params.subscribe( (params) => {
       this.address.cus_uuid = params['cus_uuid'];
+      debugger;
       this.cus_subscriptionplanbycustomer = (params['cus_subscriptionplanbycustomer'] === "true" ? true : false);
       if(params['adr_uuid'] && params['adr_uuid'] != 'new') {
         this.headerConfig = {
@@ -88,7 +89,8 @@ export class AddressComponent {
       subp_uuid: null,
       subp: null,
       adr_createdat: null,
-      adr_updatedat: null
+      adr_updatedat: null,
+      adr_active: true
     }
   }
 
@@ -177,7 +179,7 @@ export class AddressComponent {
       return false;
     }
 
-    if(this.cus_subscriptionplanbycustomer && !this.address.subp_uuid) {
+    if(!this.cus_subscriptionplanbycustomer && !this.address.subp_uuid) {
       this._messageService.error(
         "Error", 
         "Debe seleccionar un plan de subscripcion."

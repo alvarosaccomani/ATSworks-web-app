@@ -13,6 +13,7 @@ export interface AddressInterface {
     adr_dimensions: string | null,
     subp_uuid: string | null,
     subp: SubscriptionPlanInterface | null,
+    adr_active: boolean | null
     adr_createdat: Date | null,
     adr_updatedat: Date | null
 }
