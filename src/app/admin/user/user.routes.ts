@@ -27,7 +27,7 @@ export const USER_ROUTES: Routes = [
             { path: 'route/:rou_uuid', component: RouteComponent },
             { path: 'customers', component: CustomersComponent },
             { path: 'customer/:cus_uuid', component: CustomerComponent },
-            { path: 'address/:cus_uuid/:adr_uuid', component: AddressComponent },
+            { path: 'address/:cus_uuid/:adr_uuid/:cus_subscriptionplanbycustomer', component: AddressComponent },
             { path: 'models-items', component: ModelsItemsComponent },
             { path: 'model-item/:itm_uuid/:cmpitm_uuid/:mitm_uuid', component: ModelItemComponent },
             { path: 'works', component: WorksComponent },
