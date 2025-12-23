@@ -34,6 +34,7 @@ export class CustomerComponent {
   public routes: RouteInterface[] = [];
   public paymentMethods: PaymentMethodInterface[] = [];
   public subscriptionsPlans: SubscriptionPlanInterface[] = [];
+  public cus_subscriptionplanbycustomer: boolean = true;
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -118,6 +119,16 @@ export class CustomerComponent {
     }
   }
 
+  private verifySubscriptionPlan(addresses: any): void {
+    if(addresses && addresses.length) {
+      this.cus_subscriptionplanbycustomer = !addresses.every((item: any) => 
+        item.subp_uuid && item.subp_uuid.trim() !== ''
+      );
+    } else {
+      this.cus_subscriptionplanbycustomer = true;
+    }
+  }
+
   private getAdresses(cmp_uuid: string, cus_uuid: string) {
     this._addressesService.getAddresses(cmp_uuid, cus_uuid).subscribe(
       (response: any) => {
@@ -127,6 +138,7 @@ export class CustomerComponent {
         } else {
           //this.status = 'error'
         }
+        this.verifySubscriptionPlan(this.customer.addresses);
       },
       (error: any) => {
         let errorMessage = <any>error;
@@ -224,7 +236,7 @@ export class CustomerComponent {
   }
 
   public addAddress(): void {
-    this._router.navigate(['/admin/user/address', 'new', '']);
+    this._router.navigate(['/admin/user/address', this.customer.cus_uuid, 'new', this.customer.cus_subscriptionplanbycustomer]);
   }
 
   public onRouteChange(event: Event): void {

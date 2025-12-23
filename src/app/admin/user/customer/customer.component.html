@@ -170,21 +170,23 @@
                                 [(ngModel)]="customer.usr_uuid">
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
-                        <div class="form-group">
-                            <label 
-                                for="cus_subscriptionplanbycustomer" 
-                                class="bmd-label-floating">
-                                Plan por cliente
-                            </label>
-                            <input 
-                                type="checkbox" 
-                                class="form-control" 
-                                id="cus_subscriptionplanbycustomer" 
-                                name="cus_subscriptionplanbycustomer" 
-                                [(ngModel)]="customer.cus_subscriptionplanbycustomer">
+                    @if(cus_subscriptionplanbycustomer) {
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label 
+                                    for="cus_subscriptionplanbycustomer" 
+                                    class="bmd-label-floating">
+                                    Plan por cliente
+                                </label>
+                                <input 
+                                    type="checkbox" 
+                                    class="form-control" 
+                                    id="cus_subscriptionplanbycustomer" 
+                                    name="cus_subscriptionplanbycustomer" 
+                                    [(ngModel)]="customer.cus_subscriptionplanbycustomer">
+                            </div>
                         </div>
-                    </div>
+                    }
                     @if(customer.cus_subscriptionplanbycustomer) {
                         <div class="col-12 col-md-4">
                             <div class="form-group">
@@ -240,7 +242,7 @@
                             </div>
                         </div>
                         <div class="card-address-right">
-                            <a [routerLink]="['/admin/user/address', address.cus_uuid, address.adr_uuid]" class="btn btn-success">
+                            <a [routerLink]="['/admin/user/address', address.cus_uuid, address.adr_uuid, customer.cus_subscriptionplanbycustomer]" class="btn btn-success">
                                 <i class="fas fa-sync-alt"></i>	
                             </a>
                             <form action="" class="card-address-right-form">
