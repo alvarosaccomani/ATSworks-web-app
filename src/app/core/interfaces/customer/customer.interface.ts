@@ -1,5 +1,6 @@
 import { AddressInterface } from "../address";
 import { RouteInterface } from "../route";
+import { SubscriptionPlanInterface } from "../subscription-plan";
 
 export interface CustomerInterface {
     cmp_uuid: string | null,
@@ -12,6 +13,9 @@ export interface CustomerInterface {
     rou: RouteInterface | null,
     pmt_uuid: string | null,
     usr_uuid: string | null,
+    cus_subscriptionplanbycustomer: boolean | null,
+    subp_uuid: string | null,
+    subp?: SubscriptionPlanInterface | null,
     cus_createdat: Date | null,
     cus_updatedat: Date | null,
     addresses?: AddressInterface[]
