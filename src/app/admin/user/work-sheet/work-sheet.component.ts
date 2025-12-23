@@ -26,6 +26,7 @@ import { WorksAttachmentsService } from '../../../core/services/works-attachment
 })
 export class WorkSheetComponent {
   public work: WorkInterface;
+  public wrkd_worker: string = "";
   public initImage: string = "";
   public finishImage: string = "";
   public status: string = "";
@@ -123,6 +124,7 @@ export class WorkSheetComponent {
     this.step = this.itemsStep[0];
 
     this.work.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.wrkd_worker = `${this._sessionService.getIdentity().usr_name} ${this._sessionService.getIdentity().usr_surname}`;
     this._route.params.subscribe( (params) => {
       if(params['wrk_uuid'] != 'new') {
         this.work.wrk_uuid = params['wrk_uuid'];
@@ -355,6 +357,7 @@ export class WorkSheetComponent {
 
   public updateWorkDetail(workDetail: WorkDetailInterface) {
     this.isLoading = true;
+    workDetail.wrkd_worker = this.wrkd_worker;
     this._worksDetailsService.updateWorkDetail(workDetail).subscribe(
       response => {
         if(response.success) {
