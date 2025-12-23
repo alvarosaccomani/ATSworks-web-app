@@ -3,9 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { AddressInterface } from '../../../core/interfaces/address';
+import { SubscriptionPlanInterface } from '../../../core/interfaces/subscription-plan';
 import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { AddressesService } from '../../../core/services/addresses.service';
+import { SubscriptionPlansService } from '../../../core/services/subscription-plans.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 
 @Component({
@@ -20,6 +22,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 export class AddressComponent {
 
   public address!: AddressInterface;
+  public subscriptionsPlans: SubscriptionPlanInterface[] = [];
+  public cus_subscriptionplanbycustomer: boolean = false;
   public isLoading: boolean = false;
   public headerConfig: any = {};
 
@@ -29,6 +33,7 @@ export class AddressComponent {
     private _sessionService: SessionService,
     private _messageService: MessageService,
     private _addressesService: AddressesService,
+    private _subscriptionPlansService: SubscriptionPlansService,
     private _sharedDataService: SharedDataService
   )
   {
@@ -38,15 +43,17 @@ export class AddressComponent {
 
   ngOnInit(): void {
     this.address.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.getSubscriptionsPlans(this.address.cmp_uuid!);
 
     this._route.params.subscribe( (params) => {
+      this.address.cus_uuid = params['cus_uuid'];
+      this.cus_subscriptionplanbycustomer = (params['cus_subscriptionplanbycustomer'] === "true" ? true : false);
       if(params['adr_uuid'] && params['adr_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR DIRECCION",
           description: "Ficha para actualizar una Direccion.",
           icon: "fas fa-sync-alt fa-fw"
-        }
-        this.address.cus_uuid = params['cus_uuid'];
+        }        
         this.address.adr_uuid = params['adr_uuid'];
         this.getAddressById(this.address.cmp_uuid!, params['cus_uuid'], params['adr_uuid']);
       } else {
@@ -78,6 +85,8 @@ export class AddressComponent {
       adr_province: null,
       adr_postalcode: null,
       adr_dimensions: null,
+      subp_uuid: null,
+      subp: null,
       adr_createdat: null,
       adr_updatedat: null
     }
@@ -102,6 +111,37 @@ export class AddressComponent {
         }
       }
     )
+  }
+
+  private getSubscriptionsPlans(cmp_uuid: string) {
+    this._subscriptionPlansService.getSubscriptionsPlans(cmp_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.subscriptionsPlans = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
+  public onSubscriptionPlanChange(event: Event): void {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    const selectedSubscriptionPlan = this.subscriptionsPlans.find(
+      (selectedSubscriptionPlan: SubscriptionPlanInterface) => selectedSubscriptionPlan.subp_uuid === selectedValue
+    );
+    if (selectedSubscriptionPlan) {
+      //this.setModelItem(selectedSubscriptionPlan);
+    }
   }
 
   private validate(): boolean {
@@ -133,6 +173,14 @@ export class AddressComponent {
       this._messageService.error(
         "Error", 
         "El codigo postal no puede superar los 20 caracteres."
+      );
+      return false;
+    }
+
+    if(this.cus_subscriptionplanbycustomer && !this.address.subp_uuid) {
+      this._messageService.error(
+        "Error", 
+        "Debe seleccionar un plan de subscripcion."
       );
       return false;
     }
@@ -179,7 +227,7 @@ export class AddressComponent {
         response => {
           if(response.success) {
             this.isLoading = false;
-            const address = response.address;
+            const address = response.data;
             this._messageService.success(
               "Informacion", 
               "La direccion fue agregada correctamente.",

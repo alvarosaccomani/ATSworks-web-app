@@ -138,12 +138,37 @@
                                 [(ngModel)]="address.adr_dimensions">
                         </div>
                     </div>
+                    @if(!cus_subscriptionplanbycustomer) {
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label
+                                    for="subp_uuid"
+                                    class="bmd-label-floating">
+                                    Plan de Suscripción
+                                </label>
+                                <select 
+                                    class="form-control" 
+                                    name="subp_uuid"
+                                    [(ngModel)]="address.subp_uuid"
+                                    (change)="onSubscriptionPlanChange($event)">
+                                    <option value="" selected="" disabled="">Seleccione una opción</option>
+                                    @for(subscriptionPlan of subscriptionsPlans; track subscriptionPlan.subp_uuid) {
+                                        @if(subscriptionPlan){
+                                            <option [value]="subscriptionPlan.subp_uuid">
+                                                {{subscriptionPlan.subp_name}}
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </fieldset>
         <br><br><br>
         <p class="text-center" style="margin-top: 40px;">
-            @if(address.cus_uuid === "new") {
+            @if(address.adr_uuid === "new") {
                 <button 
                     type="reset" 
                     class="btn btn-raised btn-secondary btn-sm"
