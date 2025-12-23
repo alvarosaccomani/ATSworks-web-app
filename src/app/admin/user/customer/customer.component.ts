@@ -115,7 +115,8 @@ export class CustomerComponent {
       subp_uuid: null,
       subp: null,
       cus_createdat: null,
-      cus_updatedat: null
+      cus_updatedat: null,
+      cus_active: true
     }
   }
 

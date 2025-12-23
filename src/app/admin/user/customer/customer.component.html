@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     @if(cus_subscriptionplanbycustomer) {
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-2">
                             <div class="form-group">
                                 <label 
                                     for="cus_subscriptionplanbycustomer" 
@@ -212,6 +212,21 @@
                             </div>
                         </div>
                     }
+                    <div class="col-12 col-md-2">
+                        <div class="form-group">
+                            <label 
+                                for="cus_active" 
+                                class="bmd-label-floating">
+                                Activo
+                            </label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="cus_active" 
+                                name="cus_active" 
+                                [(ngModel)]="customer.cus_active">
+                        </div>
+                    </div>
                 </div>
             </div>
         </fieldset>
