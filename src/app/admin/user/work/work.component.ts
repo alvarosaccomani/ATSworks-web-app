@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
@@ -26,6 +27,7 @@ import { WorksDetailsService } from '../../../core/services/works-details.servic
   selector: 'app-work',
   imports: [
     FormsModule,
+    NzRadioModule,
     HeaderComponent,
     DynamicTableComponent,
     PageNavTabsComponent
@@ -41,6 +43,8 @@ export class WorkComponent {
   public customers: CustomerInterface[] = [];
   public customer!: CustomerInterface;
   public addresses: AddressInterface[] = [];
+  private address_uuid: string = '444431b9-2108-4671-93b8-e1e062a211d0';
+  public typeWork: string = 'fixed_client';
   public usersOperatorWork: UserRolCompanyInterface[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
@@ -173,6 +177,9 @@ export class WorkComponent {
       wrk_operator3: null,
       wrk_operator_uuid4: null,
       wrk_operator4: null,
+      wrk_eventualclient: null,
+      wrk_eventualaddress: null,
+      wrk_eventualphone: null,
       itm_uuid: null,
       cmpitm_uuid: null,
       mitm_uuid: null,
@@ -190,6 +197,9 @@ export class WorkComponent {
           this.work = response.data;
           this.customer = this.work.adr?.cus!;
           this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!)
+          if(this.work.adr_uuid === this.address_uuid) {
+            this.typeWork = 'eventual_client';
+          }
         } else {
           //this.status = 'error'
         }
@@ -331,6 +341,16 @@ export class WorkComponent {
     )
   }
 
+  public onTypeWorkChange(value: string): void {
+    // Aquí puedes ejecutar tu lógica personalizada
+    if(value === 'fixed_client') {
+      this.workInit();
+      this.removeCustomer();
+    } else {
+      this.work.adr_uuid = this.address_uuid;
+    }
+  }  
+
   public addCustomer(customer: CustomerInterface) {
     this.customer = customer;
     this.getAdresses(customer.cmp_uuid!, customer.cus_uuid!)
@@ -425,21 +445,48 @@ export class WorkComponent {
       return false;
     }
 
-    if(!this.customer) {
-      this._messageService.error(
-        "Error", 
-        "Debe seleccionar un cliente."
-      );
-      return false;
+    if(this.typeWork === 'fixed_client') {
+      if(!this.customer) {
+        this._messageService.error(
+          "Error", 
+          "Debe seleccionar un cliente."
+        );
+        return false;
+      }
+  
+      if(!this.work.adr_uuid) {
+        this._messageService.error(
+          "Error", 
+          "Debe seleccionar una direccion."
+        );
+        return false;
+      }
+    } else {
+      if(!this.work.wrk_eventualclient) {
+        this._messageService.error(
+          "Error", 
+          "Debe ingresar un cliente."
+        );
+        return false;
+      }
+  
+      if(!this.work.wrk_eventualaddress) {
+        this._messageService.error(
+          "Error", 
+          "Debe ingresar una direccion."
+        );
+        return false;
+      }
+  
+      if(!this.work.wrk_eventualphone) {
+        this._messageService.error(
+          "Error", 
+          "Debe ingresar un telefono."
+        );
+        return false;
+      }
     }
 
-    if(!this.work.adr_uuid) {
-      this._messageService.error(
-        "Error", 
-        "Debe seleccionar una direccion."
-      );
-      return false;
-    }
 
     if(!this.work.wrk_operator_uuid1) {
       this._messageService.error(
@@ -454,7 +501,7 @@ export class WorkComponent {
 
   private async updateWork(formWork: NgForm): Promise<void> {
     this.isLoading = true;
-    this._worksService.updateWork(formWork.form.value).subscribe(
+    this._worksService.updateWork(this.work).subscribe(
       response => {
         if(response.success) {
           this.isLoading = false;
@@ -478,7 +525,7 @@ export class WorkComponent {
 
   private async insertWork(formWork: NgForm): Promise<void> {
     this.isLoading = true;
-      this._worksService.saveWork(formWork.form.value).subscribe(
+      this._worksService.saveWork(this.work).subscribe(
         response => {
           this.isLoading = false;
           const modelItem = response.data;

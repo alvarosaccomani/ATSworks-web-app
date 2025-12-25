@@ -11,7 +11,13 @@
         class="form-neon" 
         autocomplete="off">
         <fieldset>
-            <legend><i class="far fa-address-card"></i> &nbsp; Información de trabajo</legend>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <legend style="width: 25%;"><i class="far fa-address-card"></i> &nbsp; Información de trabajo</legend>
+                <nz-radio-group [(ngModel)]="typeWork" nzButtonStyle="solid" [ngModelOptions]="{standalone: true}" (ngModelChange)="onTypeWorkChange($event)">
+                    <label nz-radio-button nzValue="fixed_client">Cliente Fijo</label>
+                    <label nz-radio-button nzValue="eventual_client">Cliente Enventual</label>
+                </nz-radio-group>
+            </div>
             <div class="container-fluid">
                 <div [hidden]="true" class="row">
                     <div class="col-12 col-md-3">
@@ -163,57 +169,107 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <span class="roboto-medium">CLIENTE:</span> 
-                            @if(customer) {
-                                {{customer.cus_fullname}}
-                            } @else {
-                                <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un cliente</span>
-                            }
-                            <form action="" style="display: inline-block !important;">                                
+                @if(typeWork === 'fixed_client') {
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <span class="roboto-medium">CLIENTE:</span> 
                                 @if(customer) {
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-danger"
-                                        (click)="removeCustomer()"
-                                        >
-                                        <i class="fas fa-user-times"></i>
-                                    </button>
+                                    {{customer.cus_fullname}}
                                 } @else {
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCliente">
-                                        <i class="fas fa-user-plus"></i> &nbsp; Agregar cliente
-                                    </button>
+                                    <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un cliente</span>
                                 }
-                            </form>
+                                <form action="" style="display: inline-block !important;">                                
+                                    @if(customer) {
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-danger"
+                                            (click)="removeCustomer()"
+                                            >
+                                            <i class="fas fa-user-times"></i>
+                                        </button>
+                                    } @else {
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCliente">
+                                            <i class="fas fa-user-plus"></i> &nbsp; Agregar cliente
+                                        </button>
+                                    }
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <label 
+                                    for="adr_uuid" 
+                                    class="bmd-label-floating">
+                                    Direccion
+                                </label>
+                                <select 
+                                    class="form-control" 
+                                    name="adr_uuid"
+                                    [disabled]="!customer && addresses && addresses.length"
+                                    [(ngModel)]="work.adr_uuid"
+                                    (change)="onAddressChange($event)">
+                                    <option value="" selected="" disabled="">Seleccione una opción</option>
+                                    @for(address of addresses; track address.adr_uuid) {
+                                        @if(address){
+                                            <option [value]="address.adr_uuid">
+                                                {{address.adr_address}}
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                            </div>                        
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label 
-                                for="adr_uuid" 
-                                class="bmd-label-floating">
-                                Direccion
-                            </label>
-                            <select 
-                                class="form-control" 
-                                name="adr_uuid"
-                                [disabled]="!customer && addresses.length"
-                                [(ngModel)]="work.adr_uuid"
-                                (change)="onAddressChange($event)">
-                                <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(address of addresses; track address.adr_uuid) {
-                                    @if(address){
-                                        <option [value]="address.adr_uuid">
-                                            {{address.adr_address}}
-                                        </option>
-                                    }
-                                }
-                            </select>
-                        </div>                        
+                } @else {
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label 
+                                    for="wrk_eventualclient" 
+                                    class="bmd-label-floating">
+                                    Cliente
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="wrk_eventualclient"
+                                    name="wrk_eventualclient" 
+                                    [(ngModel)]="work.wrk_eventualclient">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label 
+                                    for="adr_uuid" 
+                                    class="bmd-label-floating">
+                                    Direccion
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="wrk_eventualaddress"
+                                    name="wrk_eventualaddress" 
+                                    [(ngModel)]="work.wrk_eventualaddress">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label 
+                                    for="adr_uuid" 
+                                    class="bmd-label-floating">
+                                    Telefono
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="wrk_eventualphone"
+                                    name="wrk_eventualphone" 
+                                    [(ngModel)]="work.wrk_eventualphone">
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
