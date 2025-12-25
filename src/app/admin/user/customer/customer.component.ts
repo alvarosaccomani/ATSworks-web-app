@@ -327,7 +327,7 @@ export class CustomerComponent {
 
     //Valido fechas
     let customer = formCustomer.form.value
-    customer.cus_dateofbirth = (customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
+    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
   
     this._customersService.updateCustomer(customer).subscribe(
       response => {
@@ -362,7 +362,7 @@ export class CustomerComponent {
 
     //Valido fechas
     let customer = formCustomer.form.value
-    customer.cus_dateofbirth = (customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
+    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
 
     this._customersService.saveCustomer(customer).subscribe(
       response => {
