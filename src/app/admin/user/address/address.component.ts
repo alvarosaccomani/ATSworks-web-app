@@ -47,7 +47,6 @@ export class AddressComponent {
 
     this._route.params.subscribe( (params) => {
       this.address.cus_uuid = params['cus_uuid'];
-      debugger;
       this.cus_subscriptionplanbycustomer = (params['cus_subscriptionplanbycustomer'] === "true" ? true : false);
       if(params['adr_uuid'] && params['adr_uuid'] != 'new') {
         this.headerConfig = {
