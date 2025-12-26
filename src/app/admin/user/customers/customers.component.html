@@ -98,6 +98,7 @@
                         <th>NOMBRE</th>
                         <th>EMAIL</th>
                         <th>TELEFONO</th>
+                        <th>DIRECCIONES</th>
                         <th>RECORRIDO</th>
                         <th>ACTUALIZAR</th>
                         <th>ELIMINAR</th>
@@ -110,6 +111,13 @@
                             <td>{{customer.cus_fullname}}</td>
                             <td>{{customer.cus_email}}</td>
                             <td>{{customer.cus_phone}}</td>
+                            <td>
+                                @for(address of customer.cus_addresses?.split(' | ') || []; track $index) {
+                                    <div>
+                                        Direccion {{$index + 1}}: {{ address }}
+                                    </div>
+                                }
+                            </td>
                             <td>{{customer.rou?.rou_name}}</td>
                             <td>
                                 <a [routerLink]="['/admin/user/customer', customer.cus_uuid]" class="btn btn-success">

@@ -9,6 +9,7 @@ export interface CustomerInterface {
     cus_email: string | null,
     cus_phone: string | null,
     cus_dateofbirth: Date | null,
+    cus_addresses?: string,
     rou_uuid: string | null,
     rou: RouteInterface | null,
     pmt_uuid: string | null,
