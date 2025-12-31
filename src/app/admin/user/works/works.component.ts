@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { WorksService } from '../../../core/services/works.service';
@@ -14,9 +16,11 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 @Component({
   selector: 'app-works',
   imports: [
+    FormsModule,
     AsyncPipe,
     DatePipe,
     RouterLink,
+    NzSelectModule,
     HeaderComponent,
     PageNavTabsComponent,
     PaginationComponent
@@ -30,6 +34,13 @@ export class WorksComponent {
   public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
   public perPage: number = 10; //Number of items displayed per page
   public numElements!: number; //Total existing items
+
+  // Variables para filtros
+  public searchDateFrom: string = "";
+  public searchDateTo: string = "";
+  public searchCustomer: string = "";
+  public fieldSortValue: string = "wrk_workdate";
+  public sortValue: string = "ASC";
 
   private cmp_uuid!: string;
   public works$!: Observable<WorkResults>;
@@ -65,14 +76,42 @@ export class WorksComponent {
 
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+    this.initDate();
 
-    this.works$ = this._worksService.getWorks(this.cmp_uuid, "null", this.page, this.perPage);
+    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.works$ = this._worksService.getWorks(company.cmp_uuid, "null", this.page, this.perPage);
+        this.works$ = this._worksService.getWorks(company.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
       }
     });
+  }
+
+  // Formatea una fecha como 'YYYY-MM-DD'
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() es 0-indexado
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  private initDate(): void {
+    const hoy = new Date();
+    const haceUnMes = new Date();
+    haceUnMes.setMonth(haceUnMes.getMonth() - 1);
+
+    // Asigna las fechas formateadas
+    this.searchDateFrom = this.formatDate(haceUnMes);
+    this.searchDateTo = this.formatDate(hoy); // si tienes otra variable para "hasta"
+  }
+
+  public filter(): void {
+    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+  }
+
+  public clearSearch(): void {
+    this.initDate();
+    this.searchCustomer = "";
   }
 
   public deleteWork(work: WorkInterface) {
@@ -92,7 +131,7 @@ export class WorksComponent {
             .subscribe(
               response => {
                 console.info(response);
-                this.works$ = this._worksService.getWorks(work.cmp_uuid!, "null", this.page, this.perPage);
+                this.works$ = this._worksService.getWorks(work.cmp_uuid!, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
                 console.log(<any>error);
@@ -105,6 +144,6 @@ export class WorksComponent {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.works$ = this._worksService.getWorks(this.cmp_uuid, "null", page, this.perPage);
+    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, page, this.perPage, this.fieldSortValue, this.sortValue);
   }
 }
