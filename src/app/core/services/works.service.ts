@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { WorkResults } from '../interfaces/work';
@@ -13,14 +13,40 @@ export class WorksService {
     private _http: HttpClient
   ) { }
 
-  public getWorks(cmp_uuid: string, filter?: string, page?: number, perPage?: number): Observable<WorkResults> {
-    let headers = new HttpHeaders().set('content-type','application/json');
+  public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, page?: number, perPage?: number, field_order?: string, wrk_order?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type','application/json');
 
-    if(page && perPage) {
-      filter = `${filter}/${page}/${perPage}`;
+    let params = new HttpParams();
+
+    if (wrk_dateFrom) {
+      params = params.set('wrk_dateFrom', wrk_dateFrom);
     }
 
-    return this._http.get<WorkResults>(environment.apiUrl + 'works/' + cmp_uuid + '/' + filter, {headers:headers})
+    if (wrk_dateTo) {
+      params = params.set('wrk_dateTo', wrk_dateTo);
+    }
+
+    if (wrk_fullname) {
+      params = params.set('wrk_fullname', wrk_fullname);
+    }
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if(field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if(wrk_order) {
+      params = params.set('wrk_order', wrk_order);
+    }
+
+    return this._http.get<WorkResults>(`${environment.apiUrl}works/${cmp_uuid}`, { headers, params });
   }
 
   public getWorkById(cmp_uuid: string, wrk_uuid: string): Observable<any> {
