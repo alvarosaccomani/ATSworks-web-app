@@ -8,8 +8,18 @@
         #formAddress="ngForm"
         class="form-neon"
         autocomplete="off">
-        <fieldset>
-            <legend><i class="fas fa-user"></i> &nbsp; Información básica</legend>
+        <fieldset>            
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <legend style="width: 25%;"><i class="fas fa-user"></i> &nbsp; Información básica</legend>
+                @if(address.cus) {
+                    <div style="margin-bottom: .5rem;">
+                        Cliente:
+                        <strong>
+                            {{address.cus.cus_fullname}}
+                        </strong>
+                    </div>
+                }
+            </div>
             <div class="container-fluid">
                 <div [hidden]="true" class="row">
                     <div class="col-12 col-md-3">

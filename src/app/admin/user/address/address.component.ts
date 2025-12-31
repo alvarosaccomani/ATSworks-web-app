@@ -195,7 +195,7 @@ export class AddressComponent {
       response => {
         if(response.success) {
           this.isLoading = false;
-          const address = response.address;
+          const address = response.data;
           this._messageService.success(
             "Informacion", 
             "La direccion fue actualizada correctamente.",
