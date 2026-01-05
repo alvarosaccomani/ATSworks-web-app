@@ -1,1 +1,87 @@
-<p>pending-works works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<div class="container-fluid">
+    @if(works$ | async; as works) {
+        <div class="table-responsive">
+            <table class="table table-dark table-sm">
+                <thead>
+                    <tr class="text-center roboto-medium">
+                        <th>#</th>
+                        <th>CLIENTE</th>
+                        <th>FECHA DE TRABAJO</th>
+                        <th>RUBRO</th>
+                        <th>ESTADO</th>
+                        <th>DESCRIPCION</th>
+                        <th>PLANILLA</th>
+                        <th>ACTUALIZAR</th>
+                        <th>ELIMINAR</th>
+                    </tr>
+                </thead>
+                <tbody>                    
+                    @for(work of works.data; track work.wrk_uuid) {
+                        <tr class="text-center" >
+                            <td>{{$index + 1}}</td>
+                            @if(work.wrk_eventualclient) {
+                                <td>
+                                    <span class="works-eventual-client">
+                                        {{work.wrk_eventualclient}}
+                                    </span>
+                                </td>
+                            } @else {
+                                <td>
+                                    <span class="works-fixed-client">
+                                        {{work.adr?.cus?.cus_fullname}}
+                                    </span>
+                                </td>
+                            }
+                            <td>{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{work.mitm?.mitm_name}}</td>
+                            <td>{{work.wrks?.wrks_name}}</td>
+                            <td>{{work.wrk_description}}</td>
+                            <td>
+                                @if(work.wrks?.wrks_name === "Pendiente" || work.wrks?.wrks_name === "A Recuperar/Reprogramar") {
+                                    <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>	
+                                    </a>
+                                }
+                                @else
+                                {
+                                    <a [routerLink]="['/admin/user/work-sheet-view', work.wrk_uuid]" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>	
+                                    </a>
+                                }
+                            </td>
+                            <td>
+                                <a [routerLink]="['/admin/user/work', work.wrk_uuid]" class="btn btn-success">
+                                    <i class="fas fa-sync-alt"></i>	
+                                </a>
+                            </td>
+                            <td>
+                                <form action="">
+                                    <button 
+                                        type="button" 
+                                        class="btn btn-warning"
+                                        (click)="deleteWork(work)">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if(works.totalPages > 1) {
+            <app-pagination
+                (paginaEmitter)="goToPage($event)"
+                [page]="page"
+                [totalPages]="works.totalPages"
+                [numElements]="numElements"
+                >
+            </app-pagination>
+        }
+    }
+</div>
