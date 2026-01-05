@@ -60,7 +60,7 @@ export class WorkComponent {
        title: "LISTA DE TRABAJOS"
     },
     {
-       url: null,
+       url: ['/admin/user/pending-works'],
        icon: "fas fa-hand-holding-usd fa-fw",
        title: "TRABAJOS PENDIENTES"
     }
