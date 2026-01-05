@@ -177,9 +177,12 @@ export class WorkComponent {
       wrk_operator3: null,
       wrk_operator_uuid4: null,
       wrk_operator4: null,
-      wrk_eventualclient: null,
-      wrk_eventualaddress: null,
-      wrk_eventualphone: null,
+      wrk_customer: null,
+      wrk_address: null,
+      wrk_coordinates: null,
+      wrk_phone: null,
+      twrk_uuid: null,
+      wrk_route: null,
       itm_uuid: null,
       cmpitm_uuid: null,
       mitm_uuid: null,
@@ -462,7 +465,7 @@ export class WorkComponent {
         return false;
       }
     } else {
-      if(!this.work.wrk_eventualclient) {
+      if(!this.work.wrk_customer) {
         this._messageService.error(
           "Error", 
           "Debe ingresar un cliente."
@@ -470,7 +473,7 @@ export class WorkComponent {
         return false;
       }
   
-      if(!this.work.wrk_eventualaddress) {
+      if(!this.work.wrk_address) {
         this._messageService.error(
           "Error", 
           "Debe ingresar una direccion."
@@ -478,7 +481,7 @@ export class WorkComponent {
         return false;
       }
   
-      if(!this.work.wrk_eventualphone) {
+      if(!this.work.wrk_phone) {
         this._messageService.error(
           "Error", 
           "Debe ingresar un telefono."

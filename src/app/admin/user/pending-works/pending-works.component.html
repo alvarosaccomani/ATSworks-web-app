@@ -25,10 +25,10 @@
                     @for(work of works.data; track work.wrk_uuid) {
                         <tr class="text-center" >
                             <td>{{$index + 1}}</td>
-                            @if(work.wrk_eventualclient) {
+                            @if(work.wrk_customer) {
                                 <td>
                                     <span class="works-eventual-client">
-                                        {{work.wrk_eventualclient}}
+                                        {{work.wrk_customer}}
                                     </span>
                                 </td>
                                 <td>&nbsp;</td>
