@@ -4,6 +4,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { mergeMap, toArray, catchError, pluck } from 'rxjs/operators';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { DynamicTableComponent } from '../../../shared/components/dynamic-table/dynamic-table.component';
@@ -26,8 +28,10 @@ import { WorksDetailsService } from '../../../core/services/works-details.servic
 @Component({
   selector: 'app-work',
   imports: [
-    FormsModule,
+    FormsModule,    
     NzRadioModule,
+    NzIconModule,
+    NzSelectModule,
     HeaderComponent,
     DynamicTableComponent,
     PageNavTabsComponent
@@ -46,6 +50,7 @@ export class WorkComponent {
   private address_uuid: string = '444431b9-2108-4671-93b8-e1e062a211d0';
   public typeWork: string = 'fixed_client';
   public usersOperatorWork: UserRolCompanyInterface[] = [];
+  public isLoadingCustomers: boolean = false;
   public isLoading: boolean = false;
   public headerConfig: any = {};
   public dataTabs: any = [
@@ -287,6 +292,7 @@ export class WorkComponent {
       (response: any) => {
         if(response.success) {
           console.info(response.data);
+          this.isLoadingCustomers = false;
           this.customers = response.data;
         } else {
           //this.status = 'error'
@@ -355,8 +361,12 @@ export class WorkComponent {
   }  
 
   public addCustomer(customer: CustomerInterface) {
-    this.customer = customer;
-    this.getAdresses(customer.cmp_uuid!, customer.cus_uuid!)
+    if(customer) {
+      this.customer = customer;
+      this.getAdresses(customer.cmp_uuid!, customer.cus_uuid!)
+    } else {
+      this.removeCustomer();
+    }
   }
 
   public removeCustomer() {

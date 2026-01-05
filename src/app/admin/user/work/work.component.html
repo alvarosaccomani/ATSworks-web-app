@@ -171,30 +171,38 @@
                 </div>
                 @if(typeWork === 'fixed_client') {
                     <div class="row">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <div class="form-group">
-                                <span class="roboto-medium">CLIENTE:</span> 
-                                @if(customer) {
-                                    {{customer.cus_fullname}}
-                                } @else {
-                                    <span class="text-danger">&nbsp; <i class="fas fa-exclamation-triangle"></i> Seleccione un cliente</span>
-                                }
-                                <form action="" style="display: inline-block !important;">                                
-                                    @if(customer) {
-                                        <button 
-                                            type="button" 
-                                            class="btn btn-danger"
-                                            (click)="removeCustomer()"
-                                            >
-                                            <i class="fas fa-user-times"></i>
-                                        </button>
+                                <label 
+                                    for="adr_uuid" 
+                                    class="bmd-label-floating">
+                                    Cliente
+                                </label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="customer"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="addCustomer(customer)"
+                                    >
+                                    @if (!isLoadingCustomers) {
+                                        @for(customer of customers; track customer.cus_uuid) {
+                                            @if(customer){
+                                                <nz-option [nzValue]="customer" [nzLabel]="customer.cus_fullname"></nz-option>
+                                            }
+                                        }
                                     } @else {
-                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalCliente">
-                                            <i class="fas fa-user-plus"></i> &nbsp; Agregar cliente
-                                        </button>
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Clientes...
+                                        </nz-option>
                                     }
-                                </form>
+                                </nz-select>
                             </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -253,7 +261,7 @@
                                     [(ngModel)]="work.wrk_address">
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-2">
                             <div class="form-group">
                                 <label 
                                     for="adr_uuid" 
@@ -267,6 +275,9 @@
                                     name="wrk_phone" 
                                     [(ngModel)]="work.wrk_phone">
                             </div>
+                        </div>
+                        <div class="col-12 col-md-2">
+
                         </div>
                     </div>
                 }
@@ -476,88 +487,4 @@
             }
         </p>
     </form>
-</div>
-
-<!-- MODAL CLIENTE -->
-<div class="modal fade" id="ModalCliente" tabindex="-1" role="dialog" aria-labelledby="ModalCliente" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ModalCliente">Agregar cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="form-group">
-                        <label for="agregar_cliente" class="bmd-label-floating">DNI, Nombre, Apellido, Telefono</label>
-                        <input type="text" class="form-control" name="agregar_cliente" id="agregar_cliente">
-                    </div>
-                </div>
-                <br>
-                <div class="container-fluid">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-sm">
-                            <tbody>
-                                @for(customer of customers; track customer.cus_uuid) {
-                                    @if(customer){
-                                        <tr class="text-center">
-                                            <td>000000000000 - {{customer.cus_fullname}}</td>
-                                            <td>
-                                                <form action="">
-                                                    <button 
-                                                        type="button" 
-                                                        class="btn btn-primary"
-                                                        data-dismiss="modal"
-                                                        (click)="addCustomer(customer)">
-                                                        <i class="fas fa-user-plus"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                <!-- <tr class="text-center">
-                                    <td>000000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <form action="">
-                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <form action="">
-                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <form action="">
-                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>000000000000 - Nombre del cliente</td>
-                                    <td>
-                                        <form action="">
-                                            <button type="button" class="btn btn-primary"><i class="fas fa-user-plus"></i></button>
-                                        </form>
-                                    </td>
-                                </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
 </div>
