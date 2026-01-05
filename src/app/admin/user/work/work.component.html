@@ -202,7 +202,33 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-2">
-
+                            <div class="form-group">
+                                <label 
+                                    for="wrk_route" 
+                                    class="bmd-label-floating">
+                                    Recorrido
+                                </label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="routeName"
+                                    [ngModelOptions]="{standalone: true}"
+                                    >
+                                    @if (!isLoadingRoutes) {
+                                        @for(route of routes; track route.rou_uuid) {
+                                            @if(route){
+                                                <nz-option [nzValue]="route.rou_uuid" [nzLabel]="route.rou_name"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Recorridos...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="form-group">
@@ -246,6 +272,35 @@
                                     [(ngModel)]="work.wrk_customer">
                             </div>
                         </div>
+                        <div class="col-12 col-md-2">
+                            <div class="form-group">
+                                <label 
+                                    for="wrk_route" 
+                                    class="bmd-label-floating">
+                                    Recorrido
+                                </label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="routeName"
+                                    [ngModelOptions]="{standalone: true}"
+                                    >
+                                    @if (!isLoadingRoutes) {
+                                        @for(route of routes; track route.rou_uuid) {
+                                            @if(route){
+                                                <nz-option [nzValue]="route.rou_uuid" [nzLabel]="route.rou_name"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Recorridos...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
+                        </div>
                         <div class="col-12 col-md-4">
                             <div class="form-group">
                                 <label 
@@ -275,9 +330,6 @@
                                     name="wrk_phone" 
                                     [(ngModel)]="work.wrk_phone">
                             </div>
-                        </div>
-                        <div class="col-12 col-md-2">
-
                         </div>
                     </div>
                 }

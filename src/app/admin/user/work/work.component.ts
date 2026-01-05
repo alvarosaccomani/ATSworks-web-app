@@ -13,6 +13,7 @@ import { WorkInterface } from '../../../core/interfaces/work';
 import { WorkDetailInterface } from '../../../core/interfaces/work-detail'
 import { ModelItemInterface } from '../../../core/interfaces/model-item';
 import { DetailModelItemInterface } from '../../../core/interfaces/detail-model-item';
+import { RouteInterface } from '../../../core/interfaces/route';
 import { CustomerInterface } from '../../../core/interfaces/customer';
 import { AddressInterface } from '../../../core/interfaces/address/address.interface';
 import { UserRolCompanyInterface } from '../../../core/interfaces/user-rol-company';
@@ -20,6 +21,7 @@ import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ModelItemsService } from '../../../core/services/model-items.service';
 import { CustomersService } from '../../../core/services/customers.service';
+import { RoutesService } from '../../../core/services/routes.service';
 import { AddressesService } from '../../../core/services/addresses.service';
 import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { WorksService } from '../../../core/services/works.service';
@@ -44,12 +46,15 @@ export class WorkComponent {
   public work!: WorkInterface;
   public modelItems: ModelItemInterface[] = [];
   public modelItem!: ModelItemInterface;
+  public routes: RouteInterface[] = [];
+  public routeName: string | null = '';
   public customers: CustomerInterface[] = [];
   public customer!: CustomerInterface;
   public addresses: AddressInterface[] = [];
   private address_uuid: string = '444431b9-2108-4671-93b8-e1e062a211d0';
   public typeWork: string = 'fixed_client';
   public usersOperatorWork: UserRolCompanyInterface[] = [];
+  public isLoadingRoutes: boolean = false;
   public isLoadingCustomers: boolean = false;
   public isLoading: boolean = false;
   public headerConfig: any = {};
@@ -94,6 +99,7 @@ export class WorkComponent {
     private _sessionService: SessionService,
     private _messageService: MessageService,
     private _modelsItemsService: ModelItemsService,
+    private _routesService: RoutesService,
     private _customersService: CustomersService,
     private _addressesService: AddressesService,
     private _userRolesCompanyService: UserRolesCompanyService,
@@ -108,6 +114,7 @@ export class WorkComponent {
     this.work.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this.work.wrk_user_uuid = this._sessionService.getIdentity().usr_uuid;
     this.getModelItems(this.work.cmp_uuid!);
+    this.getRoutes(this.work.cmp_uuid!);
     this.getCustomers(this.work.cmp_uuid!);
     this.getUsersOperatorWork(this.work.cmp_uuid!);
 
@@ -186,7 +193,7 @@ export class WorkComponent {
       wrk_address: null,
       wrk_coordinates: null,
       wrk_phone: null,
-      twrk_uuid: null,
+      twrk_uuid: '96c9c123-721d-4cd8-8d2a-f66c111dc3c1',
       wrk_route: null,
       itm_uuid: null,
       cmpitm_uuid: null,
@@ -287,6 +294,28 @@ export class WorkComponent {
     )
   }
 
+  private getRoutes(cmp_uuid: string) {
+    this._routesService.getRoutes(cmp_uuid).subscribe(
+      (response: any) => {
+        if(response.success) {
+          console.info(response.data);
+          this.isLoadingRoutes = false;
+          this.routes = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if(errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
+  }
+
   private getCustomers(cmp_uuid: string) {
     this._customersService.getCustomers(cmp_uuid).subscribe(
       (response: any) => {
@@ -351,11 +380,13 @@ export class WorkComponent {
   }
 
   public onTypeWorkChange(value: string): void {
-    // Aquí puedes ejecutar tu lógica personalizada
+    this.getModelItems(this.work.cmp_uuid!);
     if(value === 'fixed_client') {
       this.workInit();
       this.removeCustomer();
     } else {
+      this.work.twrk_uuid = '96c9c123-721d-4cd8-8d2a-f66c111dc3c2';
+      this.work.wrk_route = null;
       this.work.adr_uuid = this.address_uuid;
     }
   }  
@@ -363,6 +394,9 @@ export class WorkComponent {
   public addCustomer(customer: CustomerInterface) {
     if(customer) {
       this.customer = customer;
+      this.work.wrk_customer = customer.cus_fullname;
+      this.work.wrk_phone = customer.cus_phone;
+      this.routeName = customer.rou_uuid;
       this.getAdresses(customer.cmp_uuid!, customer.cus_uuid!)
     } else {
       this.removeCustomer();
@@ -466,6 +500,14 @@ export class WorkComponent {
         );
         return false;
       }
+
+      if(!this.routeName) {
+        this._messageService.error(
+          "Error", 
+          "Debe seleccionar un recorrido."
+        );
+        return false;
+      }
   
       if(!this.work.adr_uuid) {
         this._messageService.error(
@@ -479,6 +521,14 @@ export class WorkComponent {
         this._messageService.error(
           "Error", 
           "Debe ingresar un cliente."
+        );
+        return false;
+      }
+
+      if(!this.routeName) {
+        this._messageService.error(
+          "Error", 
+          "Debe seleccionar un recorrido."
         );
         return false;
       }
@@ -560,11 +610,12 @@ export class WorkComponent {
 
   public onSaveWork(formWork: NgForm): void {
     if(this.validate()) {
-        if(this.work.wrk_uuid && this.work.wrk_uuid != 'new') {
-          this.updateWork(formWork);
-        } else {
-          this.insertWork(formWork);
-        }
+      this.work.wrk_route = this.routes.filter(e => e.rou_uuid === this.routeName)[0].rou_name;
+      if(this.work.wrk_uuid && this.work.wrk_uuid != 'new') {
+        this.updateWork(formWork);
+      } else {
+        this.insertWork(formWork);
+      }
     }
   }
   
