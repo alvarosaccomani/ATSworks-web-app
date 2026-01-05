@@ -11,6 +11,7 @@
                     <tr class="text-center roboto-medium">
                         <th>#</th>
                         <th>CLIENTE</th>
+                        <th>RECORRIDO</th>
                         <th>FECHA DE TRABAJO</th>
                         <th>RUBRO</th>
                         <th>ESTADO</th>
@@ -30,12 +31,14 @@
                                         {{work.wrk_eventualclient}}
                                     </span>
                                 </td>
+                                <td>&nbsp;</td>
                             } @else {
                                 <td>
                                     <span class="works-fixed-client">
                                         {{work.adr?.cus?.cus_fullname}}
                                     </span>
                                 </td>
+                                <td>{{work.adr?.cus?.rou?.rou_name}}</td>
                             }
                             <td>{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{work.mitm?.mitm_name}}</td>
