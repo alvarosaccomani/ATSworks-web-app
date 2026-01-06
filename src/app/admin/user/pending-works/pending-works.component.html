@@ -3,6 +3,87 @@
 
 <app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
 
+<!--CONTENT-->
+<div class="container-fluid">
+    <form 
+        class="form-neon"
+        autocomplete="off">
+        <div class="container-fluid">
+            <div class="row align-items-end">
+
+                <div class="col-12 col-md-9">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="inputFilter" class="bmd-label-floating">Recorrido:</label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="searchRoute"
+                                    [ngModelOptions]="{standalone: true}"
+                                    >
+                                    @if (!isLoadingRoutes) {
+                                        @for(route of routes; track route.rou_uuid) {
+                                            @if(route){
+                                                <nz-option [nzValue]="route.rou_name" [nzLabel]="route.rou_name"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Recorridos...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputFieldSort" class="bmd-label-floating">Campo:</label>
+                        <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="wrk_workdate" nzLabel="Fecha"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputSort" class="bmd-label-floating">Ordenar:</label>
+                        <nz-select [(ngModel)]="sortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="ASC" nzLabel="A-Z (Asc)"></nz-option>
+                            <nz-option nzValue="DESC" nzLabel="Z-A (Desc)"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputItems" class="bmd-label-floating">Items:</label>
+                        <nz-select [(ngModel)]="perPage" [ngModelOptions]="{standalone: true}" name="perPage" style="width: 100%;">
+                            <nz-option [nzValue]="10" nzLabel="10"></nz-option>
+                            <nz-option [nzValue]="25" nzLabel="25"></nz-option>
+                            <nz-option [nzValue]="50" nzLabel="50"></nz-option>
+                            <nz-option [nzValue]="100" nzLabel="100"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                
+            </div>           
+            <div class="col-12">
+                <p class="text-center" style="margin-top: 15px;">
+                    <button type="submit"  (click)="filter()" class="btn btn-raised btn-info" style="margin: 0 5px 0 0;">
+                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+                    </button>
+                    <button type="button" (click)="clearSearch()" class="btn btn-raised btn-danger" style="margin: 0;">
+                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR BÚSQUEDA
+                    </button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="container-fluid">
     @if(works$ | async; as works) {
         <div class="table-responsive">
