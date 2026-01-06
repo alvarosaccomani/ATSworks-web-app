@@ -75,13 +75,17 @@ export class WorksService {
     return this._http.delete(environment.apiUrl + 'work/' + cmp_uuid + '/' + wrk_uuid, {headers:headers});
   }
 
-  public getPendingWorks(cmp_uuid: string, wrks_uuid?: string, page?: number, perPage?: number, field_order?: string, wrk_order?: string): Observable<WorkResults> {
+  public getPendingWorks(cmp_uuid: string, wrks_uuid?: string, wrk_route?: string, page?: number, perPage?: number, field_order?: string, wrk_order?: string): Observable<WorkResults> {
     const headers = new HttpHeaders().set('content-type','application/json');
 
     let params = new HttpParams();
 
     if (wrks_uuid) {
       params = params.set('wrks_uuid', wrks_uuid);
+    }
+
+    if (wrk_route) {
+      params = params.set('wrk_route', wrk_route);
     }
 
     if (page) {
