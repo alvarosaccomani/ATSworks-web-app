@@ -5,6 +5,57 @@
 
 <!--CONTENT-->
 <div class="container-fluid">
+    <form 
+        class="form-neon"
+        autocomplete="off">
+        <div class="container-fluid">
+            <div class="row align-items-end">
+
+                <div class="col-12 col-md-9">
+                    <div class="row">
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="inputFilter" class="bmd-label-floating">Estado:</label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="searchWorkState"
+                                    [ngModelOptions]="{standalone: true}"
+                                    >
+                                    @if (!isLoadingWorkStates) {
+                                        @for(workState of workStates; track workState.wrks_uuid) {
+                                            @if(workState){
+                                                <nz-option [nzValue]="workState.wrks_uuid" [nzLabel]="workState.wrks_name"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Estados...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <p class="text-center" style="margin-top: 15px;">
+                    <button type="submit"  (click)="filter()" class="btn btn-raised btn-info" style="margin: 0 5px 0 0;">
+                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+                    </button>
+                    <button type="button" (click)="clearSearch()" class="btn btn-raised btn-danger" style="margin: 0;">
+                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR BÚSQUEDA
+                    </button>
+                </p>
+            </div>
+        </div>           
+    </form>
+</div>
+
+<div class="container-fluid">
     <div class="container-fluid">
         <nz-calendar>
             <ul *nzDateCell="let date" class="events">
