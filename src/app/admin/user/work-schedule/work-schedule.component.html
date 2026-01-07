@@ -1,1 +1,32 @@
-<p>work-schedule works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!--CONTENT-->
+<div class="container-fluid">
+    <div class="container-fluid">
+        <nz-calendar>
+            <ul *nzDateCell="let date" class="events">
+                @for (customer of getCustomersByDate(date); track customer) {
+                <li>
+                    <nz-badge nzStatus="processing" [nzText]="customer"></nz-badge>
+                </li>
+                }
+            </ul>
+
+            <ng-container *nzMonthCell="let month">
+                @if (getMonthData(month); as monthData) {
+                <div class="notes-month">
+                    <section>{{ monthData }}</section>
+                    @if(monthData === 1) {
+                        <span>Trabajo</span>
+                    } @else {
+                        <span>Trabajos</span>
+                    }
+                </div>
+                }
+            </ng-container>
+        </nz-calendar>
+    </div>
+</div>
