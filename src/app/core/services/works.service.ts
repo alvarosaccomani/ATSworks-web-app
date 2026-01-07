@@ -106,4 +106,36 @@ export class WorksService {
 
     return this._http.get<WorkResults>(`${environment.apiUrl}pending-works/${cmp_uuid}`, { headers, params });
   }
+
+  public getWorkScheduler(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrks_uuid?: string, wrk_route?: string, field_order?: string, wrk_order?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type','application/json');
+
+    let params = new HttpParams();
+
+    if (wrk_dateFrom) {
+      params = params.set('wrk_dateFrom', wrk_dateFrom);
+    }
+
+    if (wrk_dateTo) {
+      params = params.set('wrk_dateTo', wrk_dateTo);
+    }
+
+    if (wrks_uuid) {
+      params = params.set('wrks_uuid', wrks_uuid);
+    }
+
+    if (wrk_route) {
+      params = params.set('wrk_route', wrk_route);
+    }
+
+    if(field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if(wrk_order) {
+      params = params.set('wrk_order', wrk_order);
+    }
+
+    return this._http.get<WorkResults>(`${environment.apiUrl}works-scheduler/${cmp_uuid}`, { headers, params });
+  }
 }
