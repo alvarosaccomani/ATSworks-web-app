@@ -119,7 +119,7 @@
                     @for(work of works.data; track work.wrk_uuid) {
                         <tr class="text-center" >
                             <td>{{$index + 1}}</td>
-                            @if(work.wrk_customer) {
+                            @if(work.twrk_uuid === "96c9c123-721d-4cd8-8d2a-f66c111dc3c2") {
                                 <td>
                                     <span class="works-eventual-client">
                                         {{work.wrk_customer}}
