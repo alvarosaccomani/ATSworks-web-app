@@ -34,7 +34,7 @@ export class WorkScheduleComponent {
   public searchDateFrom: string = "";
   public searchDateTo: string = "";
   public searchWorkState: string = "bcaa7b3b-cdbf-4b02-8a91-78a67b5aa823";
-  public searchRoute: string = "Lunes";
+  public searchRoute: string = "";
   public fieldSortValue: string = "wrk_workdate";
   public sortValue: string = "ASC";
 
