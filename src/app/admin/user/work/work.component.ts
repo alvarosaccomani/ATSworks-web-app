@@ -73,6 +73,11 @@ export class WorkComponent {
        url: ['/admin/user/pending-works'],
        icon: "fas fa-hand-holding-usd fa-fw",
        title: "TRABAJOS PENDIENTES"
+    },
+    {
+       url: ['/admin/user/work-schedule'],
+       icon: "fas fa-calendar fa-fw",
+       title: "CALENDARIO DE TRABAJOS"
     }
   ]
 
