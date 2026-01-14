@@ -304,6 +304,14 @@ export class MenuService {
           url: null,
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.buscar_trabajo'
+        },
+        {
+          id: '74',
+          name: 'Calendario de trabajos',
+          icon: 'fas fa-calendar fa-fw',
+          url: '/admin/user/work-schedule',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.calendario_de_trabajos'
         }
       ]
     },
