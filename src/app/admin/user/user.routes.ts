@@ -14,6 +14,7 @@ import { WorksComponent } from './works/works.component';
 import { PendingWorksComponent } from './pending-works/pending-works.component';
 import { WorkComponent } from './work/work.component';
 import { WorkScheduleComponent } from './work-schedule/work-schedule.component';
+import { MassiveWorksComponent } from './massive-works/massive-works.component';
 import { WorkSheetComponent } from './work-sheet/work-sheet.component';
 import { WorkSheetViewComponent } from './work-sheet-view/work-sheet-view.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
@@ -36,6 +37,7 @@ export const USER_ROUTES: Routes = [
             { path: 'pending-works', component: PendingWorksComponent },
             { path: 'work/:wrk_uuid', component: WorkComponent },
             { path: 'work-schedule', component: WorkScheduleComponent },
+            { path: 'massive-works', component: MassiveWorksComponent },
             { path: 'work-sheet/:wrk_uuid', component: WorkSheetComponent },
             { path: 'work-sheet-view/:wrk_uuid', component: WorkSheetViewComponent },
             { path: 'company-profile/:cmp_uuid', component: CompanyProfileComponent }
