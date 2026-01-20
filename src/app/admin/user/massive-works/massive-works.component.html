@@ -1,1 +1,445 @@
-<p>massive-works works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content -->
+<div class="container-fluid">
+    <form 
+        name="formWork"
+        #formWork="ngForm" 
+        class="form-neon" 
+        autocomplete="off">
+        <fieldset>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <legend style="width: 25%;"><i class="far fa-address-card"></i> &nbsp; Información de trabajos</legend>
+            </div>
+            <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmp_uuid" 
+                                class="bmd-label-floating">
+                                cmp_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="cmp_uuid" 
+                                id="cmp_uuid" 
+                                name="cmp_uuid" 
+                                [(ngModel)]="work.cmp_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_uuid" 
+                                class="bmd-label-floating">
+                                wrk_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="wrk_uuid" 
+                                name="wrk_uuid"
+                                [(ngModel)]="work.wrk_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_user_uuid" 
+                                class="bmd-label-floating">
+                                wrk_user_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="wrk_user_uuid" 
+                                name="wrk_user_uuid"
+                                [(ngModel)]="work.wrk_user_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="itm_uuid" 
+                                class="bmd-label-floating">
+                                itm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="itm_uuid" 
+                                name="itm_uuid"
+                                [(ngModel)]="work.itm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="cmpitm_uuid" 
+                                class="bmd-label-floating">
+                                cmpitm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="cmpitm_uuid" 
+                                name="cmpitm_uuid"
+                                [(ngModel)]="work.cmpitm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="mitm_uuid" 
+                                class="bmd-label-floating">
+                                mitm_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="mitm_uuid" 
+                                name="mitm_uuid"
+                                [(ngModel)]="work.mitm_uuid">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label 
+                                for="wrks_uuid" 
+                                class="bmd-label-floating">
+                                wrks_uuid
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="wrks_uuid" 
+                                name="wrks_uuid"
+                                [(ngModel)]="work.wrks_uuid">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="mitm_uuid" 
+                                class="bmd-label-floating">
+                                Modelo Rubro
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="mitm_uuid"
+                                [(ngModel)]="work.mitm_uuid"
+                                (change)="onModelItemChange($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(modelItem of modelItems; track modelItem.mitm_uuid) {
+                                    @if(modelItem){
+                                        <option [value]="modelItem.mitm_uuid">
+                                            {{modelItem.mitm_name}}
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>                        
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <div class="form-group" style="display: flex; flex-direction: column;">
+                            <label 
+                                for="wrk_route" 
+                                class="bmd-label-floating">
+                                Recorrido
+                            </label>
+                            <nz-select
+                                nzPlaceHolder="Seleccione una opción"
+                                nzAllowClear
+                                nzShowSearch
+                                [(ngModel)]="routeName"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onRouteChange($event)"
+                                >
+                                @if (!isLoadingRoutes) {
+                                    @for(route of routes; track route.rou_uuid) {
+                                        @if(route){
+                                            <nz-option [nzValue]="route.rou_uuid" [nzLabel]="route.rou_name"></nz-option>
+                                        }
+                                    }
+                                } @else {
+                                    <nz-option nzDisabled nzCustomContent>
+                                    <nz-icon nzType="loading" class="loading-icon" />
+                                        Cargando Recorridos...
+                                    </nz-option>
+                                }
+                            </nz-select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_workdate"
+                                >
+                                Fecha
+                            </label>
+                            <input 
+                                type="date" 
+                                class="form-control" 
+                                name="wrk_workdate" 
+                                id="wrk_workdate"
+                                [(ngModel)]="workDateProxy"
+                                >
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid1" 
+                                class="bmd-label-floating">
+                                Usuario 1
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid1"
+                                [(ngModel)]="work.wrk_operator_uuid1"
+                                (change)="onWorkOperator1Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid2" 
+                                class="bmd-label-floating">
+                                Usuario 2
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid2"
+                                [(ngModel)]="work.wrk_operator_uuid2"
+                                (change)="onWorkOperator2Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid3" 
+                                class="bmd-label-floating">
+                                Usuario 3
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid3"
+                                [(ngModel)]="work.wrk_operator_uuid3"
+                                (change)="onWorkOperator3Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_operator_uuid4" 
+                                class="bmd-label-floating">
+                                Usuario 4
+                            </label>
+                            <select 
+                                class="form-control" 
+                                name="wrk_operator_uuid4"
+                                [(ngModel)]="work.wrk_operator_uuid4"
+                                (change)="onWorkOperator4Change($event)">
+                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                    @if(userOperatorWork){
+                                        <option [value]="userOperatorWork.usr?.usr_uuid">
+                                            @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
+                                                {{userOperatorWork.usr?.usr_surname}}, {{userOperatorWork.usr?.usr_name}}
+                                            } @else {
+                                                {{userOperatorWork.usr?.usr_nick}}
+                                            }
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="form-group">
+                            <label 
+                                for="wrk_description" 
+                                class="bmd-label-floating">
+                                Descripcion
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="wrk_description"
+                                name="wrk_description" 
+                                [(ngModel)]="work.wrk_description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend><i class="far fa-address-card"></i> &nbsp; Detalle clientes</legend>
+            <nz-transfer
+                #transferRef
+                [nzDataSource]="list"
+                [nzShowSearch]="true"
+                [nzShowSelectAll]="false"
+                [nzRenderList]="[renderList, renderList]"
+                [nzFilterOption]="filterOption"
+                (nzSelectChange)="select($event)"
+                (nzChange)="onTransferChange($event)"
+                >
+                <ng-template
+                    #renderList
+                    let-items
+                    let-direction="direction"
+                    let-stat="stat"
+                    let-disabled="disabled"
+                    let-onItemSelectAll="onItemSelectAll"
+                    let-onItemSelect="onItemSelect"
+                    >
+                    <nz-table #t [nzData]="$asTransferItems(items)" nzSize="small">
+                        <thead>
+                            <tr>
+                                <th
+                                    [nzDisabled]="disabled"
+                                    [nzChecked]="stat.checkAll"
+                                    [nzIndeterminate]="stat.checkHalf"
+                                    (nzCheckedChange)="onItemSelectAll($event)"
+                                ></th>
+                                <th>Cliente</th>
+                                @if (direction === 'left') {
+                                    <th>Ruta</th>
+                                }
+                                <th>Direccion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (data of t.data; track data) {
+                                <tr (click)="onItemSelect(data)">
+                                    <td
+                                    [nzChecked]="!!data.checked"
+                                    [nzDisabled]="disabled || data.disabled"
+                                    (nzCheckedChange)="onItemSelect(data)"
+                                    ></td>
+                                    <td>{{ data.title }}</td>
+                                    @if (direction === 'left') {
+                                    <td>
+                                        <nz-tag>{{ data['tag'] }}</nz-tag>
+                                    </td>
+                                    }
+                                    <td>{{ data['description'] }}</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </nz-table>
+                </ng-template>
+            </nz-transfer>
+        </fieldset>
+        <fieldset>
+            <legend><i class="far fa-address-card"></i> &nbsp; Detalle trabajo</legend>
+            @if(work.workDetails) {
+                <div class="container-fluid">
+                    <app-dynamic-table 
+                        [data]="work.workDetails" 
+                        [columns]="tableColumns"
+                        [canAddRow]="true"
+                        [canEditRow]="true"
+                        [canDeleteRow]="true"
+                        [scrollable]="true"
+                        [stickyHeader]="true"
+                        >
+                    </app-dynamic-table>
+                </div>
+            }
+        </fieldset>
+        <br><br><br>
+        <p class="text-center" style="margin-top: 40px;">
+            @if(isSavingBatch) {
+                <div style="margin: 16px 0; display: flex; flex-direction: column; gap: 8px;">
+                    <div>
+                        Guardando {{ currentAddressIndex }} de {{ totalAddresses }} 
+                        @if(currentCustomerName) {
+                            <span> – {{ currentCustomerName }}</span>
+                        }
+                    </div>
+                    <nz-progress
+                        [nzPercent]="progress"
+                        nzStatus="active"
+                        nzStrokeColor="#1890ff"
+                    ></nz-progress>
+                </div>
+            }
+
+            <button 
+                type="reset" 
+                class="btn btn-raised btn-secondary btn-sm"
+                (click)="workInit()"
+                >
+                <i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR
+            </button>
+            &nbsp; &nbsp;
+            <button 
+                type="submit" 
+                class="btn btn-raised btn-info btn-sm"
+                (click)="onSaveWork(formWork)"
+                [disabled]="isLoading || isSavingBatch"
+                >
+                @if(isLoading || isSavingBatch) {
+                    <span class="spinner spinner-sm me-2"></span>
+                    <span>Procesando...</span>
+                } @else {
+                    <i class="far fa-save"></i> &nbsp; GUARDAR
+                }
+            </button>
+        </p>
+    </form>
+</div>
