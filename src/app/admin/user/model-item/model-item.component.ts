@@ -193,7 +193,15 @@ export class ModelItemComponent {
 
   private async updateModelItem(formModelItem: NgForm): Promise<void> {
     this.isLoading = true;
-    this._modelsItemsService.updateModelItem(formModelItem.form.value).subscribe(
+    if (this.modelItem.detailModelItems?.length) {
+      this.modelItem.detailModelItems.forEach((e) => {
+        e.cmp_uuid = this.modelItem.cmp_uuid;
+        e.itm_uuid = this.modelItem.itm_uuid,
+        e.cmpitm_uuid = this.modelItem.cmpitm_uuid,
+        e.mitm_uuid = this.modelItem.mitm_uuid
+      });
+    };
+    this._modelsItemsService.updateModelItem(this.modelItem).subscribe(
       response => {
         if(response.success) {
           this.isLoading = false;
@@ -217,24 +225,40 @@ export class ModelItemComponent {
 
   private async insertModelIem(formModelItem: NgForm): Promise<void> {
     this.isLoading = true;
-      this._modelsItemsService.saveModelItem(formModelItem.form.value).subscribe(
-        response => {
+    if (this.modelItem.detailModelItems?.length) {
+      this.modelItem.detailModelItems.forEach((e) => {
+        e.cmp_uuid = this.modelItem.cmp_uuid;
+        e.itm_uuid = this.modelItem.itm_uuid,
+        e.cmpitm_uuid = this.modelItem.cmpitm_uuid,
+        e.mitm_uuid = this.modelItem.mitm_uuid
+      });
+    };
+
+    this._modelsItemsService.saveModelItem(this.modelItem).subscribe(
+      response => {
+        this.isLoading = false;
+        const modelItem = response.data;
+        this.isLoading = false;
+        this._messageService.success(
+          "Informacion", 
+          "El Modelo de rubro fue agregado correctamente.",
+          () => {
+            this._router.navigate(['/admin/user/models-items']);
+          }
+        );
+      },
+      error =>{
           this.isLoading = false;
-          const modelItem = response.data;
-          this.onSaveDetailModelItems(modelItem.cmp_uuid, modelItem.itm_uuid, modelItem.cmpitm_uuid, modelItem.mitm_uuid);
-        },
-        error =>{
-            this.isLoading = false;
-            let errorMessage = <any>error;
-            console.log(errorMessage);
-            if(errorMessage != null) {
-              this._messageService.error(
-                "Error", 
-                errorMessage.error.error
-              );
-            }
-        }
-      )
+          let errorMessage = <any>error;
+          console.log(errorMessage);
+          if(errorMessage != null) {
+            this._messageService.error(
+              "Error", 
+              errorMessage.error.error
+            );
+          }
+      }
+    )
   }
 
   public onSaveModelItem(formModelItem: NgForm): void {
