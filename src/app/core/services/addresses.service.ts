@@ -48,4 +48,18 @@ export class AddressesService {
 
     return this._http.delete(environment.apiUrl + 'address/' + cmp_uuid + '/' + cus_uuid+ '/' + adr_uuid, {headers:headers});
   }
+
+  public getAddressesWithClient(cmp_uuid: string, rou_uuid?: string | null, filter?: string, page?: number, perPage?: number): Observable<AddressResults> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+
+    if(rou_uuid) {
+      filter = `${rou_uuid}`;
+    }
+
+    if(page && perPage) {
+      filter = filter ? `/${filter}/${page}/${perPage}` : `${filter}/${page}/${perPage}`;
+    }
+
+    return this._http.get<AddressResults>(environment.apiUrl + 'addresses-with-client/' + cmp_uuid + (filter ? '/' + filter : ''), {headers:headers})
+  }
 }
