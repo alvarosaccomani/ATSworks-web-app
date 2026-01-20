@@ -312,6 +312,14 @@ export class MenuService {
           url: '/admin/user/work-schedule',
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.calendario_de_trabajos'
+        },
+        {
+          id: '75',
+          name: 'Trabajos masivos',
+          icon: 'fas fa-copy fa-fw',
+          url: '/admin/user/massive-works',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.trabajos_masivos'
         }
       ]
     },
