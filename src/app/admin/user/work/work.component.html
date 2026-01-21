@@ -182,14 +182,14 @@
                                     nzPlaceHolder="Seleccione una opción"
                                     nzAllowClear
                                     nzShowSearch
-                                    [(ngModel)]="customer"
+                                    [(ngModel)]="selectedCustomerUuid"
                                     [ngModelOptions]="{standalone: true}"
-                                    (ngModelChange)="addCustomer(customer)"
+                                    (ngModelChange)="onCustomerSelected($event)"
                                     >
                                     @if (!isLoadingCustomers) {
                                         @for(customer of customers; track customer.cus_uuid) {
                                             @if(customer){
-                                                <nz-option [nzValue]="customer" [nzLabel]="customer.cus_fullname"></nz-option>
+                                                <nz-option [nzValue]="customer.cus_uuid" [nzLabel]="customer.cus_fullname"></nz-option>
                                             }
                                         }
                                     } @else {
@@ -240,7 +240,7 @@
                                 <select 
                                     class="form-control" 
                                     name="adr_uuid"
-                                    [disabled]="!customer && addresses && addresses.length"
+                                    [disabled]="!customer || addresses.length === 0"
                                     [(ngModel)]="work.adr_uuid"
                                     (change)="onAddressChange($event)">
                                     <option value="" selected="" disabled="">Seleccione una opción</option>

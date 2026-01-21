@@ -49,7 +49,8 @@ export class WorkComponent {
   public routes: RouteInterface[] = [];
   public routeName: string | null = '';
   public customers: CustomerInterface[] = [];
-  public customer!: CustomerInterface;
+  public customer!: CustomerInterface | null;
+  public selectedCustomerUuid: string | null = null;
   public addresses: AddressInterface[] = [];
   private address_uuid: string = '444431b9-2108-4671-93b8-e1e062a211d0';
   public typeWork: string = 'fixed_client';
@@ -215,9 +216,14 @@ export class WorkComponent {
         if(response.success) {
           console.info(response.data);
           this.work = response.data;
-          this.customer = this.work.adr?.cus!;
-          this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!)
-          if(this.work.adr_uuid === this.address_uuid) {
+          const cus = this.work.adr?.cus;
+          this.selectedCustomerUuid = cus?.cus_uuid || null;
+          this.customer = cus || null;
+          if (cus) {
+            this.getAdresses(cus.cmp_uuid!, cus.cus_uuid!);
+          }
+
+          if (this.work.adr_uuid === this.address_uuid) {
             this.typeWork = 'eventual_client';
           }
         } else {
@@ -396,13 +402,17 @@ export class WorkComponent {
     }
   }  
 
-  public addCustomer(customer: CustomerInterface) {
-    if(customer) {
-      this.customer = customer;
-      this.work.wrk_customer = customer.cus_fullname;
-      this.work.wrk_phone = customer.cus_phone;
-      this.routeName = customer.rou_uuid;
-      this.getAdresses(customer.cmp_uuid!, customer.cus_uuid!)
+  public onCustomerSelected(cus_uuid: string | null) {
+    if(cus_uuid) {
+      this.customer = this.customers.find(c => c.cus_uuid === cus_uuid) || null;
+      if (this.customer) {
+        this.work.wrk_customer = this.customer.cus_fullname;
+        this.work.wrk_phone = this.customer.cus_phone;
+        this.routeName = this.customer.rou_uuid;
+        this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!);
+      } else {
+        this.customer = null;
+      }
     } else {
       this.removeCustomer();
     }
@@ -437,6 +447,7 @@ export class WorkComponent {
     );
     if (selectedAddress) {
       this.work.adr_uuid = selectedAddress.adr_uuid;
+      this.work.wrk_address = selectedAddress.adr_address;
     }
   }
 
