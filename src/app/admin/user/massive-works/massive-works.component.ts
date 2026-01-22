@@ -484,63 +484,55 @@ export class MassiveWorksComponent {
     if (this.routeName) {
       // Caso simple: una sola inserción
       this.work.wrk_route = this.routes.find(e => e.rou_uuid === this.routeName)?.rou_name || null;
-      await this.insertWork(formWork);
+    }
+
+    // Caso múltiple: varias direcciones
+    const selectedUuids = this.list
+      .filter(item => item.direction === 'right')
+      .map((item: any) => item.key);
+
+    const selectedAddresses = this.addresses.filter(adr =>
+      selectedUuids.includes(adr.adr_uuid)
+    );
+
+    if (selectedAddresses.length === 0) {
+      this._messageService.warning('Advertencia', 'No hay direcciones seleccionadas');
+      return;
+    }
+
+    // Inicializar progreso
+    this.isSavingBatch = true;
+    this.totalAddresses = selectedAddresses.length;
+    this.currentAddressIndex = 0;
+    this.progress = 0;
+
+    try {
+      for (const address of selectedAddresses) {
+        this.work.adr_uuid = address.adr_uuid;
+        this.work.wrk_address = address.adr_address;
+        this.work.wrk_customer = address.cus?.cus_fullname || null;
+        this.work.wrk_phone = address.cus?.cus_phone || null;
+        this.work.wrk_route = address.cus?.rou?.rou_name || null;
+
+        await this.insertWork(formWork); // ✅ espera cada inserción
+
+        // Actualizar progreso
+        this.currentAddressIndex++;
+        this.progress = Math.round((this.currentAddressIndex / this.totalAddresses) * 100);
+        this.currentCustomerName = address.cus?.cus_fullname || 'Cliente';
+      }
+
       this._messageService.success(
-              "¡Éxito!", 
-              "El Trabajo fue agregado correctamente.",
-              () => {
-                this._router.navigate(['/admin/user/works']);
-              }
-            );
-    } else {
-      // Caso múltiple: varias direcciones
-      const selectedUuids = this.list
-        .filter(item => item.direction === 'right')
-        .map((item: any) => item.key);
-
-      const selectedAddresses = this.addresses.filter(adr =>
-        selectedUuids.includes(adr.adr_uuid)
-      );
-
-      if (selectedAddresses.length === 0) {
-        this._messageService.warning('Advertencia', 'No hay direcciones seleccionadas');
-        return;
-      }
-
-      // Inicializar progreso
-      this.isSavingBatch = true;
-      this.totalAddresses = selectedAddresses.length;
-      this.currentAddressIndex = 0;
-      this.progress = 0;
-
-      try {
-        for (const address of selectedAddresses) {
-          this.work.adr_uuid = address.adr_uuid;
-          this.work.wrk_address = address.adr_address;
-          this.work.wrk_customer = address.cus?.cus_fullname || null;
-          this.work.wrk_phone = address.cus?.cus_phone || null;
-          this.work.wrk_route = address.cus?.rou?.rou_name || null;
-
-          await this.insertWork(formWork); // ✅ espera cada inserción
-
-          // Actualizar progreso
-          this.currentAddressIndex++;
-          this.progress = Math.round((this.currentAddressIndex / this.totalAddresses) * 100);
-          this.currentCustomerName = address.cus?.cus_fullname || 'Cliente';
-        }
-
-        this._messageService.success(
-              "¡Éxito!", 
-              `Se guardaron ${this.totalAddresses} trabajos`,
-              () => {
-                this._router.navigate(['/admin/user/works']);
-              }
-            );
-      } catch (error) {
-        this._messageService.error('Error', 'Falló la inserción de uno o más trabajos');
-      } finally {
-        this.isSavingBatch = false;
-      }
+            "¡Éxito!", 
+            `Se guardaron ${this.totalAddresses} trabajos`,
+            () => {
+              this._router.navigate(['/admin/user/works']);
+            }
+          );
+    } catch (error) {
+      this._messageService.error('Error', 'Falló la inserción de uno o más trabajos');
+    } finally {
+      this.isSavingBatch = false;
     }
   }
 }
