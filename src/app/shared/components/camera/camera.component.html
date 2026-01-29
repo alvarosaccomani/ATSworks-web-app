@@ -10,15 +10,30 @@
     <!-- El video siempre está presente en el DOM, pero se muestra/oculta con CSS -->
     <video #video autoplay playsinline [style.display]="isCameraActive && !isLoading ? 'block' : 'none'"></video>
 
-    <!-- Mostrar el botón de captura si la cámara está activa -->
+    <!-- Mostrar los botones si la cámara está activa -->
     @if(isCameraActive && !isLoading) {
-        <button
-            class="btn btn-raised btn-success btn-sm" 
-            (click)="capturePhoto()"
-            >
-            <i class="fas fa-camera"></i>
-            Capturar Foto
-        </button>
+        <div class="camera-controls">
+            <!-- Botón para cambiar de cámara (solo si hay más de una cámara disponible) -->
+            @if(availableCameras.length > 1 && !isSwitchingCamera) {
+                <button
+                    class="btn btn-raised btn-info btn-sm" 
+                    (click)="switchCamera()"
+                    [disabled]="isSwitchingCamera"
+                    >
+                    <i class="fas fa-sync"></i>
+                    Cambiar Cámara
+                </button>
+            }
+
+            <!-- Botón de captura -->
+            <button
+                class="btn btn-raised btn-success btn-sm" 
+                (click)="capturePhoto()"
+                >
+                <i class="fas fa-camera"></i>
+                Capturar Foto
+            </button>
+        </div>
     }
 
     <!-- Lienzo oculto para capturar la foto -->

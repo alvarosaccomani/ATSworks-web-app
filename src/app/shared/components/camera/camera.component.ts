@@ -6,7 +6,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, AfterVie
   templateUrl: './camera.component.html',
   styleUrl: './camera.component.scss'
 })
-export class CameraComponent implements AfterViewInit, OnDestroy {
+export class CameraComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() existingImage: string | null = null;
 
   @ViewChild('video', { static: false }) videoElement!: ElementRef;
@@ -18,6 +18,9 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
   public capturedImage: string | null = null; // URL de la imagen capturada
   public isLoading: boolean = true; // Estado de carga de la cámara
   private mediaStream: MediaStream | null = null; // Almacena el stream de la cámara
+  public availableCameras: { id: string, label: string }[] = [];
+  public currentCameraId: string = '';
+  public isSwitchingCamera: boolean = false;
 
   ngAfterViewInit() {
     // Si ya tenemos existingImage, mostrarla
@@ -46,7 +49,7 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  public async startCamera() {
+  public async startCamera(cameraId?: string) {
     try {
       // Mostrar el mensaje de carga
       this.isLoading = true;
@@ -56,8 +59,19 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
         this.stopCamera();
       }
 
+      // Obtener las cámaras disponibles primero
+      await this.getAvailableCameras();
+
+      // Configurar constraints para la cámara
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: cameraId ? undefined : { ideal: 'environment' }, // 'environment' para trasera, 'user' para frontal
+          deviceId: cameraId ? { exact: cameraId } : undefined
+        }
+      };
+
       // Solicitar acceso a la cámara
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       this.mediaStream = stream;
 
       // Verificar que el elemento video esté disponible
@@ -82,6 +96,47 @@ export class CameraComponent implements AfterViewInit, OnDestroy {
         alert('No se pudo acceder a la cámara. Verifica los permisos.');
       }
     }
+  }
+
+  private async getAvailableCameras(): Promise<void> {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      this.availableCameras = devices
+        .filter(device => device.kind === 'videoinput')
+        .map(device => ({
+          id: device.deviceId,
+          label: device.label || `Cámara ${this.availableCameras.length + 1}`
+        }));
+
+      // Si no hay cámaras seleccionadas, usar la primera disponible
+      if (!this.currentCameraId && this.availableCameras.length > 0) {
+        this.currentCameraId = this.availableCameras[0].id;
+      }
+    } catch (error) {
+      console.error('Error al obtener cámaras disponibles:', error);
+    }
+  }
+
+  public async switchCamera(): Promise<void> {
+    if (this.availableCameras.length <= 1) {
+      alert('No hay más cámaras disponibles para cambiar.');
+      return;
+    }
+
+    this.isSwitchingCamera = true;
+    
+    // Encontrar el siguiente índice de cámara
+    const currentIndex = this.availableCameras.findIndex(
+      cam => cam.id === this.currentCameraId
+    );
+    
+    const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+    const nextCamera = this.availableCameras[nextIndex];
+
+    this.currentCameraId = nextCamera.id;
+    await this.startCamera(this.currentCameraId);
+    
+    this.isSwitchingCamera = false;
   }
 
   public capturePhoto(): void {

@@ -2,6 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .loading-message {
@@ -10,29 +13,94 @@
   text-align: center;
   margin-top: 20px;
   color: #555;
+  padding: 20px;
 }
 
 .camera-wrapper-toolbar {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.camera-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
 img {
   width: 100%;
   max-width: 600px;
   border: 1px solid #ccc;
+  border-radius: 8px;
   margin-bottom: 10px;
+  display: block;
 }
 
 video {
   width: 100%;
   max-width: 600px;
   border: 1px solid #ccc;
+  border-radius: 8px;
   background-color: #000; /* Fondo negro mientras carga */
   margin-bottom: 10px;
+  display: block;
 }
 
 button {
   margin-right: 10px;
+  min-width: 120px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* Estilos específicos para botones con Font Awesome */
+button i {
+  margin-right: 5px;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 480px) {
+  .camera-wrapper {
+    padding: 0 10px;
+  }
+  
+  .camera-controls,
+  .camera-wrapper-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  
+  button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+  
+  button:last-child {
+    margin-bottom: 0;
+  }
 }
