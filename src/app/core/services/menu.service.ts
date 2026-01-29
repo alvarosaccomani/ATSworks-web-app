@@ -320,6 +320,14 @@ export class MenuService {
           url: '/admin/user/massive-works',
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.trabajos_masivos'
+        },
+        {
+          id: '75',
+          name: 'Mapa de trabajos',
+          icon: 'fas fa-copy fa-fw',
+          url: '/admin/user/map-works',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.mapa_trabajos'
         }
       ]
     },
