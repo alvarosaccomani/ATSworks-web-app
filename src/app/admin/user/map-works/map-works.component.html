@@ -1,1 +1,14 @@
-<p>map-works works!</p>
+<!-- map-view.component.html -->
+<div class="map-container">
+    <div class="sidebar">
+        <h3>Clientes por recorrido</h3>
+        <ul>
+            @for(cliente of clientes; track cliente.id) {
+                <li (click)="centrarEnCliente(cliente)">
+                {{ cliente.nombre }}
+                </li>
+            }
+        </ul>
+    </div>
+    <div #map id="map"></div>
+</div>
