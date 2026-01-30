@@ -8,9 +8,60 @@
 .sidebar {
   width: 300px;
   padding: 16px;
-  background: #fff;
+  background: #f9f9f9;
   border-right: 1px solid #ddd;
   overflow-y: auto;
+  font-family: sans-serif;
+}
+
+.search-box {
+  margin-bottom: 16px;
+}
+.search-box input {
+  width: 70%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.search-box button {
+  padding: 6px 10px;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+.resultados-busqueda,
+.guardar-cliente {
+  margin-bottom: 16px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.recorrido h4 {
+  margin: 12px 0 6px;
+  cursor: pointer;
+  color: #333;
+  user-select: none;
+}
+.recorrido h4.expandido {
+  color: #0074d9;
+  font-weight: bold;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding-left: 0;
+}
+.sidebar li {
+  padding: 6px 0;
+  cursor: pointer;
+  color: #555;
+}
+.sidebar li:hover,
+.sidebar li.seleccionado {
+  color: #0074d9;
+  font-weight: bold;
 }
 
 #map {
