@@ -47,6 +47,7 @@ export class MapWorksComponent implements OnInit, OnDestroy {
   public clienteTemporal: Cliente | null = null;
   public recorridoExpandidoId: string | null = null;
   public clienteSeleccionado: Cliente | null = null;
+  private marcadorTemporal: maplibregl.Marker | null = null;
 
   constructor(
     private _geocoderService: GeocoderService
@@ -71,6 +72,41 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     this.map.on('load', () => {
       this.renderClusteredMarkers();
     });
+
+    this.map.on('click', (e) => {
+      const { lng, lat } = e.lngLat;
+
+      // Opcional: mostrar marcador temporal
+      this.mostrarMarcadorTemporal([lng, lat]);
+
+      // Convertir coordenadas a dirección (geocodificación inversa)
+      this.obtenerDireccionDesdeCoordenadas(lat, lng).then(direccion => {
+        const nuevoCliente: Cliente = {
+          id: crypto.randomUUID(),
+          nombre: direccion || `Cliente en ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+          lat,
+          lng
+        };
+        this.clienteTemporal = nuevoCliente;
+      });
+    });
+  }
+
+  private mostrarMarcadorTemporal(lngLat: [number, number]): void {
+    if (this.marcadorTemporal) {
+      this.marcadorTemporal.remove();
+    }
+
+    const el = document.createElement('div');
+    el.style.width = '20px';
+    el.style.height = '20px';
+    el.style.background = 'red';
+    el.style.borderRadius = '50%';
+    el.style.border = '2px solid white';
+
+    this.marcadorTemporal = new maplibregl.Marker({ element: el })
+      .setLngLat(lngLat)
+      .addTo(this.map);
   }
 
   // === BÚSQUEDA Y GUARDADO ===
@@ -103,6 +139,19 @@ export class MapWorksComponent implements OnInit, OnDestroy {
       this.renderClusteredMarkers(); // Actualiza clusters
     }
     this.clienteTemporal = null;
+    if (this.marcadorTemporal) {
+      this.marcadorTemporal.remove();
+      this.marcadorTemporal = null;
+    }
+  }
+
+  private async obtenerDireccionDesdeCoordenadas(lat: number, lng: number): Promise<string | null> {
+    return new Promise((resolve) => {
+      this._geocoderService.reverseGeocode(lat, lng).subscribe({
+        next: (direccion) => resolve(direccion),
+        error: () => resolve(null)
+      });
+    });
   }
 
   // === CLUSTERING ===
