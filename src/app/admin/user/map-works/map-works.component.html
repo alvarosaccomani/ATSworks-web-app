@@ -2,6 +2,23 @@
 <div class="map-container">
   <!-- Sidebar izquierdo -->
   <div class="sidebar">
+    <!-- Selector de estilos -->
+    <div class="style-selector">
+      <label>Estilo del mapa:</label>
+      <div class="style-options">
+        @for (style of mapStyles; track style.value) {
+          <div
+            class="style-option"
+            [class.active]="selectedStyleUrl === style.value"
+            (click)="changeMapStyle(style.value)"
+          >
+            <img [src]="style.imageUrl" [alt]="style.name" />
+            <span>{{ style.name }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
     <!-- Búsqueda de dirección -->
     <div class="search-box">
       <input

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import maplibregl, { Map, Marker } from 'maplibre-gl';
+import maplibregl, { Map } from 'maplibre-gl';
 import { GeocoderService, GeocodingResult } from '../../../core/services/geocoder.service';
 
 interface Cliente {
@@ -16,6 +16,12 @@ interface Recorrido {
   clientes: Cliente[];
 }
 
+export interface MapStyleOption {
+  name: string;
+  value: string;
+  imageUrl: string;
+}
+
 @Component({
   selector: 'app-map-works',
   imports: [
@@ -27,7 +33,20 @@ interface Recorrido {
 export class MapWorksComponent implements OnInit, OnDestroy {
   @ViewChild('map', { static: true }) mapContainer!: ElementRef;
 
+  protected mapStyles: MapStyleOption[] = [
+    { name: "No Base", value: "https://demotiles.maplibre.org/style.json", imageUrl: "assets/imgs/tipos_mapas/no_base.png" },
+    { name: "Voyager", value: "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/voyager.png" },
+    { name: "Voyager no labels", value: "https://basemaps.cartocdn.com/gl/voyager-nolabels-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/voyager_nolabels.png" },
+    { name: "Positron", value: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/positron.png" },
+    { name: "Positron no labels", value: "https://basemaps.cartocdn.com/gl/positron-nolabels-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/positron_nolabels.png" },
+    { name: "Dark Matter", value: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/dark_matter.png" },
+    { name: "Dark Matter no labels", value: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/dark_matter_nolabels.png" }
+  ];
+
   public map!: Map;
+
+  // Estilo actual (usa el primero por defecto)
+  protected selectedStyleUrl = this.mapStyles[0].value;
 
   // Datos estructurados por recorrido
   public recorridos: Recorrido[] = [
@@ -64,7 +83,7 @@ export class MapWorksComponent implements OnInit, OnDestroy {
   public initializeMap(): void {
     this.map = new maplibregl.Map({
       container: this.mapContainer.nativeElement,
-      style: 'https://demotiles.maplibre.org/style.json',
+      style: this.selectedStyleUrl,
       center: [-58.3816, -34.6037],
       zoom: 11
     });
@@ -90,6 +109,12 @@ export class MapWorksComponent implements OnInit, OnDestroy {
         this.clienteTemporal = nuevoCliente;
       });
     });
+  }
+
+  // Método para cambiar el estilo
+  public changeMapStyle(styleUrl: string): void {
+    this.selectedStyleUrl = styleUrl;
+    this.map.setStyle(styleUrl); // ¡Esto cambia el estilo en vivo!
   }
 
   private mostrarMarcadorTemporal(lngLat: [number, number]): void {
