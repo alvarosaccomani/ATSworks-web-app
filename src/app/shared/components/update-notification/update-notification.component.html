@@ -1,7 +1,9 @@
 @if(updateAvailable) {
     <div class="update-banner">
-        <span>🎉 ¡Nueva versión disponible!</span>
-        <button class="button-reload" (click)="reload()">Actualizar ahora</button>
-        <button (click)="dismiss()">Más tarde</button>
+        <p class="message">🎉 ¡Nueva versión disponible!</p>
+        <div class="buttons-container">
+            <button class="button-reload" (click)="reload()">Actualizar ahora</button>
+            <button class="button-dismiss" (click)="dismiss()">Más tarde</button>
+        </div>
     </div>
 }
