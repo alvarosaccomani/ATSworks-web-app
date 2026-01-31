@@ -1,11 +1,15 @@
-const CACHE_NAME = 'ATSWorks-web-app-cache-v1';
+const CACHE_NAME = 'ATSWorks-web-app-cache-v1.0.0';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/main.js',
-  '/styles.css',
-  '/assets/logo.png'
+  '/index.html'
 ];
+
+// Escuchar el mensaje SKIP_WAITING para activar la nueva versión
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
 // Instalación: Almacena los recursos en caché
 self.addEventListener('install', (event) => {
@@ -16,7 +20,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activación: Limpia cachés antiguos
+// Activación: Limpia cachés antiguos y reclama los clientes
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -27,6 +31,9 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
+    }).then(() => {
+      // Reclamar todos los clientes abiertos para que usen el nuevo SW
+      return self.clients.claim();
     })
   );
 });
