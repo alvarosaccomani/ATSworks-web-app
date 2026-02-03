@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import maplibregl, { Map } from 'maplibre-gl';
-import { GeocoderService, GeocodingResult } from '../../../core/services/geocoder.service';
+import { FullAddress, GeocoderService, GeocodingResult } from '../../../core/services/geocoder.service';
 
 interface Cliente {
   id: string;
@@ -99,12 +99,12 @@ export class MapWorksComponent implements OnInit, OnDestroy {
       this.mostrarMarcadorTemporal([lng, lat]);
 
       // Convertir coordenadas a dirección (geocodificación inversa)
-      this.obtenerDireccionDesdeCoordenadas(lat, lng).then(direccion => {
+      this.obtenerDireccionDesdeCoordenadas(lat, lng).then(direccionCompleta => {
         const nuevoCliente: Cliente = {
           id: crypto.randomUUID(),
-          nombre: direccion || `Cliente en ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
-          lat,
-          lng
+          nombre: direccionCompleta.address|| `Cliente en ${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+          lat: direccionCompleta.lat,
+          lng: direccionCompleta.lng
         };
         this.clienteTemporal = nuevoCliente;
       });
@@ -170,11 +170,21 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async obtenerDireccionDesdeCoordenadas(lat: number, lng: number): Promise<string | null> {
+  private async obtenerDireccionDesdeCoordenadas(lat: number, lng: number): Promise<FullAddress> {
     return new Promise((resolve) => {
       this._geocoderService.reverseGeocode(lat, lng).subscribe({
-        next: (direccion) => resolve(direccion),
-        error: () => resolve(null)
+        next: (direccionCompleta) => resolve(direccionCompleta),
+        error: () => {
+          // En caso de error, devolvemos un FullAddress mínimo
+          resolve({
+            lat,
+            lng,
+            address: `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`,
+            provincia: undefined,
+            ciudad: undefined,
+            codigoPostal: undefined
+          });
+        }
       });
     });
   }
