@@ -86,6 +86,38 @@
                                 [(ngModel)]="address.adr_address">
                         </div>
                     </div>
+                    <div [hidden]="true" class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="adr_lat"
+                                class="bmd-label-floating"
+                                >
+                                Latitud
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control"
+                                id="adr_lat"
+                                name="adr_lat"
+                                [(ngModel)]="address.adr_lat">
+                        </div>
+                    </div>
+                    <div [hidden]="true" class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label 
+                                for="adr_lng"
+                                class="bmd-label-floating"
+                                >
+                                Longitud
+                            </label>
+                            <input 
+                                type="text" 
+                                class="form-control"
+                                id="adr_lng"
+                                name="adr_lng"
+                                [(ngModel)]="address.adr_lng">
+                        </div>
+                    </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label 
@@ -188,6 +220,22 @@
                                 [(ngModel)]="address.adr_active">
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <app-map-picker 
+                        [showSearch]="false"
+                        [showJsonOutput]="false"
+                        [initialLat]="address.adr_lat || 0"
+                        [initialLng]="address.adr_lng || 0"
+                        [initialAddressData]="{
+                            address: address.adr_address,
+                            ciudad: address.adr_city,
+                            provincia: address.adr_province,
+                            codigoPostal: address.adr_postalcode
+                        }"
+                        (locationSelected)="onDireccionSeleccionada($event)"
+                        >
+                    </app-map-picker>
                 </div>
             </div>
         </fieldset>

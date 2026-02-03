@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
+import { MapPickerComponent, SelectedLocation } from '../../../shared/components/map-picker/map-picker.component';
 import { AddressInterface } from '../../../core/interfaces/address';
 import { SubscriptionPlanInterface } from '../../../core/interfaces/subscription-plan';
 import { SessionService } from '../../../core/services/session.service';
@@ -15,6 +16,7 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
   imports: [
     FormsModule,
     HeaderComponent,
+    MapPickerComponent
   ],
   templateUrl: './address.component.html',
   styleUrl: './address.component.scss'
@@ -89,7 +91,9 @@ export class AddressComponent {
       subp: null,
       adr_createdat: null,
       adr_updatedat: null,
-      adr_active: true
+      adr_active: true,
+      adr_lat: null,
+      adr_lng: null
     }
   }
 
@@ -263,5 +267,14 @@ export class AddressComponent {
         this.insertAddress(formAddress);
       }
     }
+  }
+
+  public onDireccionSeleccionada(location: SelectedLocation): void {
+    this.address.adr_address = location.address;
+    this.address.adr_city = location.ciudad || null;
+    this.address.adr_province = location.provincia || null,
+    this.address.adr_postalcode = location.codigoPostal || null,
+    this.address.adr_lat = location.lat || null,
+    this.address.adr_lng = location.lng || null
   }
 }
