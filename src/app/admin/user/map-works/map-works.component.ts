@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import maplibregl, { Map } from 'maplibre-gl';
 import { FullAddress, GeocoderService, GeocodingResult } from '../../../core/services/geocoder.service';
 
@@ -25,13 +26,16 @@ export interface MapStyleOption {
 @Component({
   selector: 'app-map-works',
   imports: [
-    FormsModule
+    FormsModule,
+    NzSelectModule
   ],
   templateUrl: './map-works.component.html',
   styleUrl: './map-works.component.scss'
 })
 export class MapWorksComponent implements OnInit, OnDestroy {
   @ViewChild('map', { static: true }) mapContainer!: ElementRef;
+
+  public busquedaDireccion = false;
 
   protected mapStyles: MapStyleOption[] = [
     { name: "No Base", value: "https://demotiles.maplibre.org/style.json", imageUrl: "assets/imgs/tipos_mapas/no_base.png" },
@@ -114,7 +118,21 @@ export class MapWorksComponent implements OnInit, OnDestroy {
   // Método para cambiar el estilo
   public changeMapStyle(styleUrl: string): void {
     this.selectedStyleUrl = styleUrl;
-    this.map.setStyle(styleUrl); // ¡Esto cambia el estilo en vivo!
+  
+    // Guarda una copia de los datos antes de cambiar
+    const allClientes = this.recorridos.flatMap(r => r.clientes);
+
+    // Cambia el estilo
+    this.map.setStyle(styleUrl);
+
+    // Cuando el nuevo estilo esté listo, vuelve a agregar los datos
+    this.map.once('styledata', () => {
+      this.renderClusteredMarkers();
+    });
+  }
+
+  public getStyleByValue(value: string): MapStyleOption | undefined {
+    return this.mapStyles.find(style => style.value === value);
   }
 
   private mostrarMarcadorTemporal(lngLat: [number, number]): void {

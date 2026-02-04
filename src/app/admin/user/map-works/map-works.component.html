@@ -5,52 +5,72 @@
     <!-- Selector de estilos -->
     <div class="style-selector">
       <label>Estilo del mapa:</label>
-      <div class="style-options">
-        @for (style of mapStyles; track style.value) {
-          <div
-            class="style-option"
-            [class.active]="selectedStyleUrl === style.value"
-            (click)="changeMapStyle(style.value)"
-          >
-            <img [src]="style.imageUrl" [alt]="style.name" />
-            <span>{{ style.name }}</span>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Búsqueda de dirección -->
-    <div class="search-box">
-      <input
-        [(ngModel)]="busqueda"
-        (keyup.enter)="buscarDireccion()"
-        placeholder="Buscar dirección..."
-        type="text"
-      />
-      <button (click)="buscarDireccion()">🔍</button>
-    </div>
-
-    <!-- Resultados de búsqueda -->
-    @if (resultados.length) {
-      <ul class="resultados-busqueda">
-        @for (r of resultados; track r.place_id) {
-          <li (click)="seleccionarDireccion(r)">{{ r.display_name }}</li>
-        }
-      </ul>
-    }
-
-    <!-- Confirmación para guardar cliente temporal -->
-    @if (clienteTemporal) {
-      <div class="guardar-cliente">
-        <p>¿Agregar "{{ clienteTemporal.nombre }}"?</p>
-        <select #recorridoSelect>
-          @for (r of recorridos; track r.id) {
-            <option [value]="r.id">{{ r.nombre }}</option>
+      <nz-select
+        [ngModel]="selectedStyleUrl"
+        (ngModelChange)="changeMapStyle($event)"
+        nzShowSearch 
+        nzAllowClear 
+        nzPlaceHolder="Seleccionar estilo del mapa"
+        >
+        <!-- Template para el valor seleccionado -->
+        <ng-template nzCustomTemplate let-selected>
+          @if (selected) {
+            @let style = getStyleByValue(selected);
+            <div class="select-style-option">
+              <img [src]="style?.imageUrl" [alt]="style?.name" />
+              <span>{{ style?.name }}</span>
+            </div>
           }
-        </select>
-        <button (click)="guardarCliente(clienteTemporal!, recorridoSelect.value)">Guardar</button>
-        <button (click)="clienteTemporal = null">Cancelar</button>
+        </ng-template>
+
+        <!-- Opciones -->
+        @for (style of mapStyles; track style.value) {
+          <nz-option [nzValue]="style.value" [nzLabel]="style.name" nzCustomContent>
+            <ng-container>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <img [src]="style.imageUrl" [alt]="style.name" width="20" height="20" />
+                <span>{{ style.name }}</span>
+              </div>
+            </ng-container>
+          </nz-option>
+        }
+      </nz-select>
+    </div>
+
+    @if (busquedaDireccion) {
+      <!-- Búsqueda de dirección -->
+      <div class="search-box">
+        <input
+          [(ngModel)]="busqueda"
+          (keyup.enter)="buscarDireccion()"
+          placeholder="Buscar dirección..."
+          type="text"
+        />
+        <button (click)="buscarDireccion()">🔍</button>
       </div>
+
+      <!-- Resultados de búsqueda -->
+      @if (resultados.length) {
+        <ul class="resultados-busqueda">
+          @for (r of resultados; track r.place_id) {
+            <li (click)="seleccionarDireccion(r)">{{ r.display_name }}</li>
+          }
+        </ul>
+      }
+
+      <!-- Confirmación para guardar cliente temporal -->
+      @if (clienteTemporal) {
+        <div class="guardar-cliente">
+          <p>¿Agregar "{{ clienteTemporal.nombre }}"?</p>
+          <select #recorridoSelect>
+            @for (r of recorridos; track r.id) {
+              <option [value]="r.id">{{ r.nombre }}</option>
+            }
+          </select>
+          <button (click)="guardarCliente(clienteTemporal!, recorridoSelect.value)">Guardar</button>
+          <button (click)="clienteTemporal = null">Cancelar</button>
+        </div>
+      }
     }
 
     <!-- Listado de recorridos y clientes -->

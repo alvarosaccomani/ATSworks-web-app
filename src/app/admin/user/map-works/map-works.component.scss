@@ -109,6 +109,28 @@
   display: block;
 }
 
+nz-select {
+    width: 100%;
+}
+
+.select-style-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.select-style-option img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.select-style-option span {
+  font-size: 14px;
+}
+
 #map {
   flex: 1;
 }
