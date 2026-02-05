@@ -191,7 +191,8 @@ export class MassiveWorksComponent {
       wrk_operator4: null,
       wrk_customer: null,
       wrk_address: null,
-      wrk_coordinates: null,
+      wrk_lat: null,
+      wrk_lng: null,
       wrk_phone: null,
       twrk_uuid: '96c9c123-721d-4cd8-8d2a-f66c111dc3c1',
       wrk_route: null,
@@ -510,6 +511,8 @@ export class MassiveWorksComponent {
       for (const address of selectedAddresses) {
         this.work.adr_uuid = address.adr_uuid;
         this.work.wrk_address = address.adr_address;
+        this.work.wrk_lat = address.adr_lat;
+        this.work.wrk_lng = address.adr_lng;
         this.work.wrk_customer = address.cus?.cus_fullname || null;
         this.work.wrk_phone = address.cus?.cus_phone || null;
         this.work.wrk_route = address.cus?.rou?.rou_name || null;
