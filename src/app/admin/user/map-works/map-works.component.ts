@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import maplibregl, { Map } from 'maplibre-gl';
+import maplibregl, { Map as MapLibreMap } from 'maplibre-gl';
+import { SessionService } from '../../../core/services/session.service';
 import { FullAddress, GeocoderService, GeocodingResult } from '../../../core/services/geocoder.service';
+import { WorksService } from '../../../core/services/works.service';
 
-interface Cliente {
+export interface Cliente {
   id: string;
   nombre: string;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
 }
 
 interface Recorrido {
@@ -47,7 +49,7 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     { name: "Dark Matter no labels", value: "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json", imageUrl: "assets/imgs/tipos_mapas/dark_matter_nolabels.png" }
   ];
 
-  public map!: Map;
+  public map!: MapLibreMap;
 
   // Estilo actual (usa el primero por defecto)
   protected selectedStyleUrl = this.mapStyles[0].value;
@@ -64,6 +66,19 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     }
   ];
 
+  private cmp_uuid!: string;
+
+  //Pagination
+  public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
+  public perPage: number = 10; //Number of items displayed per page
+  public numElements!: number; //Total existing items
+
+  // Variables para filtros
+  public searchWorkState: string = "bcaa7b3b-cdbf-4b02-8a91-78a67b5aa823";
+  public searchRoute: string = "";
+  public fieldSortValue: string = "wrk_workdate";
+  public sortValue: string = "ASC";
+
   // Estado UI
   public busqueda = '';
   public resultados: GeocodingResult[] = [];
@@ -73,15 +88,76 @@ export class MapWorksComponent implements OnInit, OnDestroy {
   private marcadorTemporal: maplibregl.Marker | null = null;
 
   constructor(
-    private _geocoderService: GeocoderService
+    private _sessionService: SessionService,
+    private _geocoderService: GeocoderService,
+    private _worksService: WorksService
   ) { }
 
   ngOnInit(): void {
+    this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
+
     this.initializeMap();
+    this._worksService.getPendingWorks(this.cmp_uuid, this.searchWorkState, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue)
+      .subscribe(
+        response => {
+          console.info(response);
+          if(response.data) {
+            this.recorridos = this.convertirAPendientes(response.data);
+          }
+        },
+        error => {
+          console.log(<any>error);
+        }
+      );
   }
 
   ngOnDestroy(): void {
     if (this.map) this.map.remove();
+  }
+
+  /**
+   * Convierte el array de trabajos pendientes del backend a un array de recorridos.
+   * Agrupa los trabajos por wrks_uuid y rou_name para formar recorridos,
+   * y dentro de cada recorrido agrega los clientes únicos con su ubicación.
+   */
+  private convertirAPendientes(data: any[]): Recorrido[] {
+    const recorridosMap: Map<string, Recorrido> = new Map();
+
+    for (const trabajo of data) {
+      const rouUuid = trabajo.adr?.cus?.rou?.rou_uuid;
+      const rouName = trabajo.adr?.cus?.rou?.rou_name || 'Sin nombre';
+      const clienteId = trabajo.adr?.cus?.cus_uuid;
+      const clienteNombre = trabajo.adr?.cus?.cus_fullname || 'Cliente sin nombre';
+      const lat = trabajo.adr?.adr_lat ?? null;
+      const lng = trabajo.adr?.adr_lng ?? null;
+
+      // Si no hay cliente identificado, lo omitimos
+      if (!clienteId) continue;
+
+      // Crear o recuperar el recorrido
+      if (!recorridosMap.has(rouUuid)) {
+        recorridosMap.set(rouUuid, {
+          id: rouUuid,
+          nombre: rouName,
+          clientes: []
+        });
+      }
+
+      const recorrido = recorridosMap.get(rouUuid)!;
+
+      // Evitar duplicados de cliente en el mismo recorrido
+      const clienteYaExiste = recorrido.clientes.some((c: any) => c.id === clienteId);
+      if (!clienteYaExiste) {
+        recorrido.clientes.push({
+          id: clienteId,
+          nombre: clienteNombre,
+          lat,
+          lng
+        });
+      }
+    }
+
+    return Array.from(recorridosMap.values());
   }
 
   public initializeMap(): void {
@@ -172,6 +248,9 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     this.clienteTemporal = nuevoCliente;
     this.resultados = [];
     this.busqueda = '';
+
+    if (nuevoCliente.lat == null || nuevoCliente.lng == null) return;
+
     this.map.flyTo({ center: [nuevoCliente.lng, nuevoCliente.lat], zoom: 15 });
   }
 
@@ -215,16 +294,22 @@ export class MapWorksComponent implements OnInit, OnDestroy {
     });
     if (this.map.getSource('clientes')) this.map.removeSource('clientes');
 
-    const allClientes = this.recorridos.flatMap(r => r.clientes);
+    const allClientes = this.recorridos
+      .flatMap(r => r.clientes)
+      .filter(cliente => cliente.lat != null && cliente.lng != null);
 
     const geojson = {
       type: 'FeatureCollection' as const,
-      features: allClientes.map(c => ({
+      features: allClientes.map(cliente => ({
         type: 'Feature' as const,
-        properties: { ...c },
+        properties: {
+          ...cliente,
+          lat: cliente.lat!, // ahora sabemos que no es null
+          lng: cliente.lng!
+        },
         geometry: {
           type: 'Point' as const,
-          coordinates: [c.lng, c.lat]
+          coordinates: [cliente.lng!, cliente.lat!] // ← sin null
         }
       }))
     };
@@ -316,6 +401,8 @@ export class MapWorksComponent implements OnInit, OnDestroy {
   }
 
   public centrarEnCliente(cliente: Cliente): void {
+    if (cliente.lat == null || cliente.lng == null) return;
+
     this.clienteSeleccionado = cliente;
     this.map.flyTo({
       center: [cliente.lng, cliente.lat],
