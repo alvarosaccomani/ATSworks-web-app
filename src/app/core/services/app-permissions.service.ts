@@ -9,7 +9,7 @@ export class AppPermissionsService {
   // Si usas una versión vieja, cambia esto por un BehaviorSubject
   private _permissions = signal<string[]>([]);
 
-  constructor() { 
+  constructor() {
     this.recoverFromStorage();
   }
 
@@ -17,20 +17,27 @@ export class AppPermissionsService {
    * 1. RECUPERAR: Se ejecuta automáticamente al iniciar la app
    */
   private recoverFromStorage() {
-    // Verificamos si estamos en el navegador (para evitar errores si usas SSR)
     if (typeof window !== 'undefined' && window.localStorage) {
       const stored = localStorage.getItem('session');
-      
+
       if (stored) {
         try {
-          // Parseamos el JSON guardado
           const perms = JSON.parse(stored);
-          if(perms.company.roles.length) {
-            const rolpers = perms.company.roles[0].rolpers
-            // Si es un array válido, lo seteamos en la Signal
-            if (Array.isArray(rolpers)) {
-              this._permissions.set(rolpers);
-            }
+
+          if (perms.company && perms.company.roles && perms.company.roles.length > 0) {
+
+            // 1. Mapeamos todos los roles para obtener sus arrays de rolpers
+            // 2. Usamos flat() para convertir array de arrays en un solo array plano
+            const allPermissionsNested = perms.company.roles.map((role: any) => role.rolpers || []);
+            const flatPermissions: string[] = allPermissionsNested.flat();
+
+            // 3. Eliminamos duplicados usando Set y convertimos de nuevo a Array
+            const uniquePermissions = [...new Set(flatPermissions)];
+
+            // 4. Seteamos la Signal con la lista completa y única
+            this._permissions.set(uniquePermissions);
+
+            console.log('Permisos cargados satisfactoriamente:', uniquePermissions);
           }
         } catch (e) {
           console.error('Error al leer permisos del storage:', e);
@@ -45,10 +52,10 @@ export class AppPermissionsService {
   public hasPermission(slug: string): boolean {
     // Si es SUPERADMIN, podrías retornar siempre true aquí si tienes un rol especial
     // if (this.role === 'SYSADMIN') return true; 
-    
+
     return this._permissions().includes(slug);
   }
-  
+
   /**
    * (Opcional) Verifica si tiene AL MENOS UNO de un array de permisos
    */
