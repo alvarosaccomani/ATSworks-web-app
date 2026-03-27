@@ -121,7 +121,8 @@ export class CustomerComponent {
       subp: null,
       cus_createdat: null,
       cus_updatedat: null,
-      cus_active: true
+      cus_active: true,
+      cus_order: null
     }
   }
 

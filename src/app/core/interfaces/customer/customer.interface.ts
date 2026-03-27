@@ -17,6 +17,7 @@ export interface CustomerInterface {
     cus_subscriptionplanbycustomer: boolean | null,
     subp_uuid: string | null,
     subp?: SubscriptionPlanInterface | null,
+    cus_order: number | null,
     cus_active: boolean | null,
     cus_createdat: Date | null,
     cus_updatedat: Date | null,
