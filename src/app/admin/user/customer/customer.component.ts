@@ -44,9 +44,14 @@ export class CustomerComponent {
       title: "AGREGAR CLIENTE"
     },
     {
-       url: ['/admin/user/customers'],
-       icon: "fas fa-clipboard-list fa-fw",
-       title: "LISTA DE CLIENTES"
+      url: ['/admin/user/customers'],
+      icon: "fas fa-clipboard-list fa-fw",
+      title: "LISTA DE CLIENTES"
+    },
+    {
+      url: ['/admin/user/customers-order'],
+      icon: "fas fa-sort fa-fw",
+      title: "ORDEN DE CLIENTES"
     }
   ]
 
@@ -72,8 +77,8 @@ export class CustomerComponent {
     this.getPaymentMethods(this.customer.cmp_uuid!);
     this.getSubscriptionsPlans(this.customer.cmp_uuid!);
 
-    this._route.params.subscribe( (params) => {
-      if(params['cus_uuid'] && params['cus_uuid'] != 'new') {
+    this._route.params.subscribe((params) => {
+      if (params['cus_uuid'] && params['cus_uuid'] != 'new') {
         this.headerConfig = {
           title: "ACTUALIZAR CLIENTE",
           description: "Ficha para actualizar un Cliente.",
@@ -121,8 +126,8 @@ export class CustomerComponent {
   }
 
   private verifySubscriptionPlan(addresses: any): void {
-    if(addresses && addresses.length) {
-      this.cus_subscriptionplanbycustomer = !addresses.every((item: any) => 
+    if (addresses && addresses.length) {
+      this.cus_subscriptionplanbycustomer = !addresses.every((item: any) =>
         item.subp_uuid && item.subp_uuid.trim() !== ''
       );
     } else {
@@ -133,7 +138,7 @@ export class CustomerComponent {
   private getAdresses(cmp_uuid: string, cus_uuid: string) {
     this._addressesService.getAddresses(cmp_uuid, cus_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.customer.addresses = response.data;
         } else {
@@ -144,7 +149,7 @@ export class CustomerComponent {
       (error: any) => {
         let errorMessage = <any>error;
         console.log(errorMessage);
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -154,7 +159,7 @@ export class CustomerComponent {
   private getCustomerById(cmp_uuid: string, cus_uuid: string): void {
     this._customersService.getCustomerById(cmp_uuid, cus_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.customer = response.data;
           this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!);
@@ -166,7 +171,7 @@ export class CustomerComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -176,7 +181,7 @@ export class CustomerComponent {
   private getRoutes(cmp_uuid: string) {
     this._routesService.getRoutes(cmp_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.routes = response.data;
         } else {
@@ -187,17 +192,17 @@ export class CustomerComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
     )
   }
-  
+
   private getPaymentMethods(cmp_uuid: string) {
     this._paymentMethodsService.getPaymentMethods(cmp_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.paymentMethods = response.data;
         } else {
@@ -208,7 +213,7 @@ export class CustomerComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -218,7 +223,7 @@ export class CustomerComponent {
   private getSubscriptionsPlans(cmp_uuid: string) {
     this._subscriptionPlansService.getSubscriptionsPlans(cmp_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.subscriptionsPlans = response.data;
         } else {
@@ -229,7 +234,7 @@ export class CustomerComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -271,49 +276,49 @@ export class CustomerComponent {
   }
 
   private validate(): boolean {
-    if(!this.customer.cus_fullname) {
+    if (!this.customer.cus_fullname) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "El nombre de cliente no puede estar vacio."
       );
       return false;
     }
 
-    if(this.customer.cus_fullname.length > 255) {
+    if (this.customer.cus_fullname.length > 255) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "El nombre no puede superar los 255 caracteres."
       );
       return false;
     }
 
-    if(this.customer.cus_email && this.customer.cus_email.length > 255) {
+    if (this.customer.cus_email && this.customer.cus_email.length > 255) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "El email no puede superar los 255 caracteres."
       );
       return false;
     }
 
-    if(this.customer.cus_phone && this.customer.cus_phone.length > 20) {
+    if (this.customer.cus_phone && this.customer.cus_phone.length > 20) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "El telefono no puede superar los 20 caracteres."
       );
       return false;
     }
 
-    if(this.customer.cus_subscriptionplanbycustomer && !this.customer.subp_uuid) {
+    if (this.customer.cus_subscriptionplanbycustomer && !this.customer.subp_uuid) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "Selecciono plan por cliente y no selecciono un plan."
       );
       return false;
     }
 
-    if(!this.customer.cus_subscriptionplanbycustomer && this.customer.subp_uuid) {
+    if (!this.customer.cus_subscriptionplanbycustomer && this.customer.subp_uuid) {
       this._messageService.error(
-        "Error", 
+        "Error",
         "Selecciono un plan y no habilito plan por cliente."
       );
       return false;
@@ -327,15 +332,15 @@ export class CustomerComponent {
 
     //Valido fechas
     let customer = formCustomer.form.value
-    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
-  
+    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null);
+
     this._customersService.updateCustomer(customer).subscribe(
       response => {
-        if(response.success) {
+        if (response.success) {
           this.isLoading = false;
           const customer = response.customer;
           this._messageService.success(
-            "Informacion", 
+            "Informacion",
             "El Cliente fue actualizado correctamente.",
             () => {
               this._router.navigate(['/admin/user/customers']);
@@ -350,7 +355,7 @@ export class CustomerComponent {
         this.isLoading = false;
         let errorMessage = <any>error;
         console.log(errorMessage);
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -362,15 +367,15 @@ export class CustomerComponent {
 
     //Valido fechas
     let customer = formCustomer.form.value
-    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null );
+    customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null);
 
     this._customersService.saveCustomer(customer).subscribe(
       response => {
-        if(response.success) {
+        if (response.success) {
           this.isLoading = false;
           const customer = response.customer;
           this._messageService.success(
-            "Informacion", 
+            "Informacion",
             "El Cliente fue agregado correctamente.",
             () => {
               this._router.navigate(['/admin/user/customers']);
@@ -381,23 +386,23 @@ export class CustomerComponent {
           //this.status = 'error'
         }
       },
-      error =>{
-          this.isLoading = false;
-          let errorMessage = <any>error;
-          console.log(errorMessage);
-          if(errorMessage != null) {
-            this._messageService.error(
-              "Error", 
-              errorMessage.error.error
-            );
-          }
+      error => {
+        this.isLoading = false;
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+        if (errorMessage != null) {
+          this._messageService.error(
+            "Error",
+            errorMessage.error.error
+          );
+        }
       }
     )
   }
 
   public onSaveCustomer(formCustomer: NgForm): void {
-    if(this.validate()) {
-      if(this.customer.cus_uuid && this.customer.cus_uuid != 'new') {
+    if (this.validate()) {
+      if (this.customer.cus_uuid && this.customer.cus_uuid != 'new') {
         this.updateCustomer(formCustomer);
       } else {
         this.insertCustomer(formCustomer);
@@ -407,15 +412,15 @@ export class CustomerComponent {
 
   public deleteAddress(address: AddressInterface) {
     this._messageService.showCustomMessage({
-        title: "¿Estás seguro de eliminar la Direccion?",
-        type: "question",
-        text: "Estás a punto de eliminar la Direccion.",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: "Sí, eliminar!",
-        cancelButtonText: "No, cancelar"
-      },
+      title: "¿Estás seguro de eliminar la Direccion?",
+      type: "question",
+      text: "Estás a punto de eliminar la Direccion.",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: "Sí, eliminar!",
+      cancelButtonText: "No, cancelar"
+    },
       (result: any) => {
         if (result.value) {
           this._addressesService.deleteAddress(address.cmp_uuid!, address.cus_uuid!, address.adr_uuid!)

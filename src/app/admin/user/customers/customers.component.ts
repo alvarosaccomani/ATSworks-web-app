@@ -33,7 +33,7 @@ export class CustomersComponent implements OnInit {
   public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
   public perPage: number = 10; //Number of items displayed per page
   public numElements!: number; //Total existing items
-  
+
   // Variables para filtros
   public searchNombreApellido: string = "";
   public searchEmail: string = "";
@@ -54,9 +54,14 @@ export class CustomersComponent implements OnInit {
       title: "AGREGAR CLIENTE"
     },
     {
-       url: ['/admin/user/customers'],
-       icon: "fas fa-clipboard-list fa-fw",
-       title: "LISTA DE CLIENTES"
+      url: ['/admin/user/customers'],
+      icon: "fas fa-clipboard-list fa-fw",
+      title: "LISTA DE CLIENTES"
+    },
+    {
+      url: ['/admin/user/customers-order'],
+      icon: "fas fa-sort fa-fw",
+      title: "ORDEN DE CLIENTES"
     }
   ]
 
@@ -66,7 +71,7 @@ export class CustomersComponent implements OnInit {
     private _customersService: CustomersService,
     private _sharedDataService: SharedDataService
   ) { }
-  
+
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
@@ -90,15 +95,15 @@ export class CustomersComponent implements OnInit {
 
   public deleteCustomer(customer: CustomerInterface) {
     this._messageService.showCustomMessage({
-        title: "¿Estás seguro de eliminar el Cliente?",
-        type: "question",
-        text: "Estás a punto de eliminar el Cliente.",
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: "Sí, eliminar!",
-        cancelButtonText: "No, cancelar"
-      },
+      title: "¿Estás seguro de eliminar el Cliente?",
+      type: "question",
+      text: "Estás a punto de eliminar el Cliente.",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: "Sí, eliminar!",
+      cancelButtonText: "No, cancelar"
+    },
       (result: any) => {
         if (result.value) {
           this._customersService.deleteCustomer(customer.cmp_uuid!, customer.cus_uuid!)

@@ -7,6 +7,7 @@ import { RoutesComponent } from './routes/routes.component';
 import { RouteComponent } from './route/route.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
+import { CustomersOrderComponent } from './customers-order/customers-order.component';
 import { AddressComponent } from './address/address.component';
 import { ModelsItemsComponent } from './models-items/models-items.component';
 import { ModelItemComponent } from './model-item/model-item.component';
@@ -31,6 +32,7 @@ export const USER_ROUTES: Routes = [
             { path: 'route/:rou_uuid', component: RouteComponent },
             { path: 'customers', component: CustomersComponent },
             { path: 'customer/:cus_uuid', component: CustomerComponent },
+            { path: 'customers-order', component: CustomersOrderComponent },
             { path: 'address/:cus_uuid/:adr_uuid/:cus_subscriptionplanbycustomer', component: AddressComponent },
             { path: 'models-items', component: ModelsItemsComponent },
             { path: 'model-item/:itm_uuid/:cmpitm_uuid/:mitm_uuid', component: ModelItemComponent },
