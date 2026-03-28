@@ -51,24 +51,24 @@ export class WorkScheduleComponent {
   }
   public dataTabs: any = [
     {
-      url: ['/admin/user/work','new'],
+      url: ['/admin/user/work', 'new'],
       icon: "fas fa-plus fa-fw",
       title: "NUEVO TRABAJO"
     },
     {
-       url: ['/admin/user/works'],
-       icon: "fas fa-clipboard-list fa-fw",
-       title: "LISTA DE TRABAJOS"
+      url: ['/admin/user/works'],
+      icon: "fas fa-clipboard-list fa-fw",
+      title: "LISTA DE TRABAJOS"
     },
     {
-       url: ['/admin/user/pending-works'],
-       icon: "fas fa-hand-holding-usd fa-fw",
-       title: "TRABAJOS PENDIENTES"
+      url: ['/admin/user/pending-works'],
+      icon: "fas fa-hand-holding-usd fa-fw",
+      title: "TRABAJOS PENDIENTES"
     },
     {
-       url: ['/admin/user/work-schedule'],
-       icon: "fas fa-calendar fa-fw",
-       title: "CALENDARIO DE TRABAJOS"
+      url: ['/admin/user/work-schedule'],
+      icon: "fas fa-calendar fa-fw",
+      title: "CALENDARIO DE TRABAJOS"
     }
   ]
 
@@ -95,7 +95,7 @@ export class WorkScheduleComponent {
   private getWorkStates(cmp_uuid: string) {
     this._workStatesService.getWorkStates(cmp_uuid).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.isLoadingWorkStates = false;
           this.workStates = response.data;
@@ -107,7 +107,7 @@ export class WorkScheduleComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
@@ -120,13 +120,13 @@ export class WorkScheduleComponent {
 
   public clearSearch(): void {
     this.searchWorkState = "bcaa7b3b-cdbf-4b02-8a91-78a67b5aa823",
-    this.searchRoute = "Lunes";
+      this.searchRoute = "Lunes";
   }
 
-  private getWorkScheduler(cmp_uuid: string, wrk_dateFrom: string, wrk_dateTo: string, wrks_uuid: string, wrk_route: string, field_order: string, wrk_order: string) {
-    this._worksService.getWorkScheduler(cmp_uuid, wrk_dateFrom, wrk_dateTo, wrks_uuid, wrk_route, field_order, wrk_order).subscribe(
+  private getWorkScheduler(cmp_uuid: string, wrk_dateFrom: string, wrk_dateTo: string, wrks_uuid: string, wrk_route: string, field_order: string, wrk_orderby: string) {
+    this._worksService.getWorkScheduler(cmp_uuid, wrk_dateFrom, wrk_dateTo, wrks_uuid, wrk_route, field_order, wrk_orderby).subscribe(
       (response: any) => {
-        if(response.success) {
+        if (response.success) {
           console.info(response.data);
           this.worksScheduler = response.data;
           this.buildEventsByDate(response.data);
@@ -139,7 +139,7 @@ export class WorkScheduleComponent {
         let errorMessage = <any>error;
         console.log(errorMessage);
 
-        if(errorMessage != null) {
+        if (errorMessage != null) {
           //this.status = 'error'
         }
       }
