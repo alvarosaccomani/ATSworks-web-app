@@ -3,15 +3,18 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomersService } from '../../../core/services/customers.service';
+import { RoutesService } from '../../../core/services/routes.service';
 import { CustomerInterface, CustomerResults } from '../../../core/interfaces/customer';
+import { RouteInterface } from '../../../core/interfaces/route';
 import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 @Component({
   selector: 'app-customers',
@@ -19,6 +22,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     FormsModule,
     AsyncPipe,
     RouterLink,
+    NzIconModule,
     NzSelectModule,
     HeaderComponent,
     PageNavTabsComponent,
@@ -34,14 +38,18 @@ export class CustomersComponent implements OnInit {
   public perPage: number = 10; //Number of items displayed per page
   public numElements!: number; //Total existing items
 
+  public isLoadingRoutes: boolean = false;
+
   // Variables para filtros
   public searchNombreApellido: string = "";
   public searchEmail: string = "";
+  public searchRoute: string = '';
   public fieldSortValue: string = "rou_order";
   public sortValue: string = "ASC";
 
   private cmp_uuid!: string;
   public customers$!: Observable<CustomerResults>;
+  public routes: RouteInterface[] = [];
   public headerConfig: any = {
     title: "LISTA DE CLIENTES",
     description: "Listado de Clientes.",
@@ -69,28 +77,51 @@ export class CustomersComponent implements OnInit {
     private _sessionService: SessionService,
     private _messageService: MessageService,
     private _customersService: CustomersService,
+    private _routesService: RoutesService,
     private _sharedDataService: SharedDataService
   ) { }
 
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
 
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, 1, 20, this.fieldSortValue, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.searchRoute, 1, 20, this.fieldSortValue, this.sortValue);
+    this.getRoutes(this.cmp_uuid);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
-        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+        this.customers$ = this._customersService.getCustomers(company.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue);
       }
     });
   }
 
   public filter(): void {
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue);
   }
 
   public clearSearch(): void {
     this.searchNombreApellido = '';
     this.searchEmail = '';
+  }
+
+  private getRoutes(cmp_uuid: string) {
+    this._routesService.getRoutes(cmp_uuid).subscribe(
+      (response: any) => {
+        if (response.success) {
+          console.info(response.data);
+          this.routes = response.data;
+        } else {
+          //this.status = 'error'
+        }
+      },
+      (error: any) => {
+        let errorMessage = <any>error;
+        console.log(errorMessage);
+
+        if (errorMessage != null) {
+          //this.status = 'error'
+        }
+      }
+    )
   }
 
   public deleteCustomer(customer: CustomerInterface) {
@@ -110,7 +141,7 @@ export class CustomersComponent implements OnInit {
             .subscribe(
               response => {
                 console.info(response);
-                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+                this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
                 console.log(<any>error);
@@ -123,6 +154,6 @@ export class CustomersComponent implements OnInit {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, page, this.perPage, this.fieldSortValue, this.sortValue);
+    this.customers$ = this._customersService.getCustomers(this.cmp_uuid, this.searchNombreApellido, this.searchEmail, this.searchRoute, page, this.perPage, this.fieldSortValue, this.sortValue);
   }
 }
