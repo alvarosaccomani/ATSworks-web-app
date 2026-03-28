@@ -13,7 +13,7 @@ export class CustomersService {
     private _http: HttpClient
   ) { }
 
-  public getCustomers(cmp_uuid: string, cus_fullname?: string, cus_email?: string, page?: number, perPage?: number, field_order?: string, cus_orderby?: string): Observable<CustomerResults> {
+  public getCustomers(cmp_uuid: string, cus_fullname?: string, cus_email?: string, rou_uuid?: string, page?: number, perPage?: number, field_order?: string, cus_orderby?: string): Observable<CustomerResults> {
     const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
@@ -24,6 +24,10 @@ export class CustomersService {
 
     if (cus_email) {
       params = params.set('cus_email', cus_email);
+    }
+
+    if (rou_uuid) {
+      params = params.set('rou_uuid', rou_uuid);
     }
 
     if (page) {
