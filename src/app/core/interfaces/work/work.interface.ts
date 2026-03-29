@@ -37,6 +37,7 @@ export interface WorkInterface {
     cmpitm_uuid: string | null,
     mitm_uuid: string | null,
     mitm: ModelItemInterface | null,
+    wrk_order: number | null,
 	wrk_createdat: Date | null,
     wrk_updatedat: Date | null,
     workDetails?: WorkDetailInterface[],

@@ -200,6 +200,7 @@ export class MassiveWorksComponent {
       cmpitm_uuid: null,
       mitm_uuid: null,
       mitm: null,
+      wrk_order: null,
       wrk_createdat: null,
       wrk_updatedat: null
     }
@@ -516,6 +517,7 @@ export class MassiveWorksComponent {
         this.work.wrk_customer = address.cus?.cus_fullname || null;
         this.work.wrk_phone = address.cus?.cus_phone || null;
         this.work.wrk_route = address.cus?.rou?.rou_name || null;
+        this.work.wrk_order = address.cus?.cus_order || null;
 
         await this.insertWork(formWork); // ✅ espera cada inserción
 

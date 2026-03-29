@@ -206,6 +206,7 @@ export class WorkComponent {
       cmpitm_uuid: null,
       mitm_uuid: null,
       mitm: null,
+      wrk_order: null,
       wrk_createdat: null,
       wrk_updatedat: null
     }
@@ -409,6 +410,7 @@ export class WorkComponent {
       if (this.customer) {
         this.work.wrk_customer = this.customer.cus_fullname;
         this.work.wrk_phone = this.customer.cus_phone;
+        this.work.wrk_order = this.customer.cus_order;
         this.routeName = this.customer.rou_uuid;
         this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!);
       } else {

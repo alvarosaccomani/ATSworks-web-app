@@ -83,6 +83,7 @@ export class WorkSheetComponent {
       cmpitm_uuid: null,
       mitm_uuid: null,
       mitm: null,
+      wrk_order: null,
       wrk_createdat: null,
       wrk_updatedat: null
     }
