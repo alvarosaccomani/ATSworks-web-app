@@ -74,7 +74,8 @@ export class WorkSheetComponent {
       wrk_operator4: null,
       wrk_customer: null,
       wrk_address: null,
-      wrk_coordinates: null,
+      wrk_lat: null,
+      wrk_lng: null,
       wrk_phone: null,
       twrk_uuid: null,
       wrk_route: null,
@@ -82,6 +83,7 @@ export class WorkSheetComponent {
       cmpitm_uuid: null,
       mitm_uuid: null,
       mitm: null,
+      wrk_order: null,
       wrk_createdat: null,
       wrk_updatedat: null
     }

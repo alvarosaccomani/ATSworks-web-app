@@ -1,0 +1,100 @@
+<!-- map-view.component.html -->
+<div class="map-container">
+  <!-- Sidebar izquierdo -->
+  <div class="sidebar">
+    <!-- Selector de estilos -->
+    <div class="style-selector">
+      <label>Estilo del mapa:</label>
+      <nz-select
+        [ngModel]="selectedStyleUrl"
+        (ngModelChange)="changeMapStyle($event)"
+        nzShowSearch 
+        nzAllowClear 
+        nzPlaceHolder="Seleccionar estilo del mapa"
+        >
+        <!-- Template para el valor seleccionado -->
+        <ng-template nzCustomTemplate let-selected>
+          @if (selected) {
+            @let style = getStyleByValue(selected);
+            <div class="select-style-option">
+              <img [src]="style?.imageUrl" [alt]="style?.name" />
+              <span>{{ style?.name }}</span>
+            </div>
+          }
+        </ng-template>
+
+        <!-- Opciones -->
+        @for (style of mapStyles; track style.value) {
+          <nz-option [nzValue]="style.value" [nzLabel]="style.name" nzCustomContent>
+            <ng-container>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <img [src]="style.imageUrl" [alt]="style.name" width="20" height="20" />
+                <span>{{ style.name }}</span>
+              </div>
+            </ng-container>
+          </nz-option>
+        }
+      </nz-select>
+    </div>
+
+    @if (busquedaDireccion) {
+      <!-- Búsqueda de dirección -->
+      <div class="search-box">
+        <input
+          [(ngModel)]="busqueda"
+          (keyup.enter)="buscarDireccion()"
+          placeholder="Buscar dirección..."
+          type="text"
+        />
+        <button (click)="buscarDireccion()">🔍</button>
+      </div>
+
+      <!-- Resultados de búsqueda -->
+      @if (resultados.length) {
+        <ul class="resultados-busqueda">
+          @for (r of resultados; track r.place_id) {
+            <li (click)="seleccionarDireccion(r)">{{ r.display_name }}</li>
+          }
+        </ul>
+      }
+
+      <!-- Confirmación para guardar cliente temporal -->
+      @if (clienteTemporal) {
+        <div class="guardar-cliente">
+          <p>¿Agregar "{{ clienteTemporal.nombre }}"?</p>
+          <select #recorridoSelect>
+            @for (r of recorridos; track r.id) {
+              <option [value]="r.id">{{ r.nombre }}</option>
+            }
+          </select>
+          <button (click)="guardarCliente(clienteTemporal!, recorridoSelect.value)">Guardar</button>
+          <button (click)="clienteTemporal = null">Cancelar</button>
+        </div>
+      }
+    }
+
+    <!-- Listado de recorridos y clientes -->
+    <h3>Clientes por recorrido</h3>
+    @for (recorrido of recorridos; track recorrido.id) {
+      <div class="recorrido">
+        <h4 (click)="toggleRecorrido(recorrido.id)"
+            [class.expandido]="recorridoExpandidoId === recorrido.id">
+          {{ recorrido.nombre }}
+        </h4>
+        @if (recorridoExpandidoId === recorrido.id || !recorridoExpandidoId) {
+          <ul>
+            @for (cliente of recorrido.clientes; track cliente.id) {
+              <li (click)="centrarEnCliente(cliente)"
+                  [class.seleccionado]="clienteSeleccionado?.id === cliente.id">
+                {{ cliente.nombre }}
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Mapa -->
+  <div #map id="map"></div>
+</div>

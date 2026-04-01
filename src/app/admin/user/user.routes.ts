@@ -7,6 +7,8 @@ import { RoutesComponent } from './routes/routes.component';
 import { RouteComponent } from './route/route.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
+import { CustomersOrderComponent } from './customers-order/customers-order.component';
+import { CustomerWorksComponent } from './customer-works/customer-works.component';
 import { AddressComponent } from './address/address.component';
 import { ModelsItemsComponent } from './models-items/models-items.component';
 import { ModelItemComponent } from './model-item/model-item.component';
@@ -15,6 +17,7 @@ import { PendingWorksComponent } from './pending-works/pending-works.component';
 import { WorkComponent } from './work/work.component';
 import { WorkScheduleComponent } from './work-schedule/work-schedule.component';
 import { MassiveWorksComponent } from './massive-works/massive-works.component';
+import { MapWorksComponent } from './map-works/map-works.component';
 import { WorkSheetComponent } from './work-sheet/work-sheet.component';
 import { WorkSheetViewComponent } from './work-sheet-view/work-sheet-view.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
@@ -24,12 +27,14 @@ export const USER_ROUTES: Routes = [
         path: '',
         component: UserLayoutComponent,
         children: [
-            { path: 'no-company', component: NoCompanyComponent},
+            { path: 'no-company', component: NoCompanyComponent },
             { path: 'dashboard', component: DashboardComponent },
             { path: 'routes', component: RoutesComponent },
             { path: 'route/:rou_uuid', component: RouteComponent },
             { path: 'customers', component: CustomersComponent },
             { path: 'customer/:cus_uuid', component: CustomerComponent },
+            { path: 'customers-order', component: CustomersOrderComponent },
+            { path: 'customer-works', component: CustomerWorksComponent },
             { path: 'address/:cus_uuid/:adr_uuid/:cus_subscriptionplanbycustomer', component: AddressComponent },
             { path: 'models-items', component: ModelsItemsComponent },
             { path: 'model-item/:itm_uuid/:cmpitm_uuid/:mitm_uuid', component: ModelItemComponent },
@@ -38,6 +43,7 @@ export const USER_ROUTES: Routes = [
             { path: 'work/:wrk_uuid', component: WorkComponent },
             { path: 'work-schedule', component: WorkScheduleComponent },
             { path: 'massive-works', component: MassiveWorksComponent },
+            { path: 'map-works', component: MapWorksComponent },
             { path: 'work-sheet/:wrk_uuid', component: WorkSheetComponent },
             { path: 'work-sheet-view/:wrk_uuid', component: WorkSheetViewComponent },
             { path: 'company-profile/:cmp_uuid', component: CompanyProfileComponent }

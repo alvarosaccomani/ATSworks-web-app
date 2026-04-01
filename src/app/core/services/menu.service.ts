@@ -44,7 +44,7 @@ export class MenuService {
       allowedRoles: ['sysadmin'],
       appPermission: 'menu.configuracion',
       submenu: [
-        { 
+        {
           id: '11',
           name: 'Permisos',
           icon: 'fas fa-key fa-fw',
@@ -53,7 +53,7 @@ export class MenuService {
           isOpen: false,
           appPermission: 'menu.configuracion.permisos',
           submenu: [
-            { 
+            {
               id: '111',
               name: 'Agregar permiso',
               icon: 'fas fa-plus fa-fw',
@@ -61,7 +61,7 @@ export class MenuService {
               allowedRoles: ['sysadmin'],
               appPermission: 'menu.configuracion.permisos.agregar_permiso'
             },
-            { 
+            {
               id: '112',
               name: 'Lista de permisos',
               icon: 'fas fa-clipboard-list fa-fw',
@@ -80,7 +80,7 @@ export class MenuService {
           ],
           allowedRoles: ['sysadmin']
         },
-        { 
+        {
           id: '12',
           name: 'Permisos de roles',
           icon: 'fas fa-key fa-fw',
@@ -89,7 +89,7 @@ export class MenuService {
           isOpen: false,
           appPermission: 'menu.configuracion.permisos_de_roles',
           submenu: [
-            { 
+            {
               id: '121',
               name: 'Agregar permiso de rol',
               icon: 'fas fa-plus fa-fw',
@@ -97,7 +97,7 @@ export class MenuService {
               allowedRoles: ['sysadmin'],
               appPermission: 'menu.configuracion.permisos_de_roles.agregar_permiso_de_rol'
             },
-            { 
+            {
               id: '122',
               name: 'Lista de permisos de roles',
               icon: 'fas fa-clipboard-list fa-fw',
@@ -137,7 +137,7 @@ export class MenuService {
       allowedRoles: ['admin', 'viewer', 'editor'],
       appPermission: 'menu.recorridos',
       submenu: [
-        { 
+        {
           id: '31',
           name: 'Agregar Recorrido',
           icon: 'fas fa-plus fa-fw',
@@ -145,7 +145,7 @@ export class MenuService {
           allowedRoles: ['admin'],
           appPermission: 'menu.recorridos.agregar_recorrido'
         },
-        { 
+        {
           id: '32',
           name: 'Lista de recorridos',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -173,7 +173,7 @@ export class MenuService {
       allowedRoles: ['admin', 'viewer', 'editor'],
       appPermission: 'menu.clientes',
       submenu: [
-        { 
+        {
           id: '41',
           name: 'Agregar Cliente',
           icon: 'fas fa-plus fa-fw',
@@ -181,7 +181,7 @@ export class MenuService {
           allowedRoles: ['admin'],
           appPermission: 'menu.clientes.agregar_cliente'
         },
-        { 
+        {
           id: '42',
           name: 'Lista de clientes',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -191,6 +191,14 @@ export class MenuService {
         },
         {
           id: '43',
+          name: 'Orden clientes',
+          icon: 'fas fa-sort fa-fw',
+          url: 'customers-order',
+          allowedRoles: ['admin', 'editor'],
+          appPermission: 'menu.clientes.orden_clientes'
+        },
+        {
+          id: '44',
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -209,7 +217,7 @@ export class MenuService {
       allowedRoles: ['sysadmin'],
       appPermission: 'menu.items',
       submenu: [
-        { 
+        {
           id: '51',
           name: 'Agregar item',
           icon: 'fas fa-plus fa-fw',
@@ -217,7 +225,7 @@ export class MenuService {
           allowedRoles: ['sysadmin'],
           appPermission: 'menu.items.agregar_item'
         },
-        { 
+        {
           id: '52',
           name: 'Lista de items',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -245,7 +253,7 @@ export class MenuService {
       allowedRoles: ['admin'],
       appPermission: 'menu.modelo_items',
       submenu: [
-        { 
+        {
           id: '61',
           name: 'Agregar modelo item',
           icon: 'fas fa-plus fa-fw',
@@ -253,7 +261,7 @@ export class MenuService {
           allowedRoles: ['admin'],
           appPermission: 'menu.modelo_items.agregar_modelo_item'
         },
-        { 
+        {
           id: '62',
           name: 'Lista de modelo items',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -281,7 +289,7 @@ export class MenuService {
       allowedRoles: ['admin', 'viewer', 'editor'],
       appPermission: 'menu.trabajos',
       submenu: [
-        { 
+        {
           id: '71',
           name: 'Nuevo trabajo',
           icon: 'fas fa-plus fa-fw',
@@ -289,7 +297,7 @@ export class MenuService {
           allowedRoles: ['admin'],
           appPermission: 'menu.trabajos.nuevo_trabajo'
         },
-        { 
+        {
           id: '72',
           name: 'Lista de trabajos',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -320,6 +328,14 @@ export class MenuService {
           url: '/admin/user/massive-works',
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.trabajos_masivos'
+        },
+        {
+          id: '75',
+          name: 'Mapa de trabajos',
+          icon: 'fas fa-map fa-fw',
+          url: '/admin/user/map-works',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.mapa_trabajos'
         }
       ]
     },
@@ -333,7 +349,7 @@ export class MenuService {
       allowedRoles: ['sysadmin', 'admin'],
       appPermission: 'menu.usuarios',
       submenu: [
-        { 
+        {
           id: '81',
           name: 'Nuevo usuario',
           icon: 'fas fa-plus fa-fw',
@@ -341,7 +357,7 @@ export class MenuService {
           allowedRoles: ['sysadmin', 'admin'],
           appPermission: 'menu.usuarios.nuevo_usuario'
         },
-        { 
+        {
           id: '82',
           name: 'Lista de usuarios',
           icon: 'fas fa-clipboard-list fa-fw',
@@ -427,10 +443,10 @@ export class MenuService {
       allowedRoles: ['sysadmin', 'admin']
     }
   ];
-  
+
   private filteredSidebarItems = new BehaviorSubject<MenuItem[]>([]);
   private filteredDashboardItems = new BehaviorSubject<DashboardItem[]>([]);
-  
+
   constructor(
     private _sessionService: SessionService
   ) { }
@@ -441,7 +457,7 @@ export class MenuService {
     this.currentCompany = company;
     this.updateSidebarItems();
   }
-  
+
   // Método para obtener los items del sidebar con URLs actualizadas
   private getSidebarItemsWithUpdatedUrls(): MenuItem[] {
     return this.sidebarItems.map(item => {
@@ -469,16 +485,16 @@ export class MenuService {
       map(userRoles => {
         this.currentUserRoles = userRoles;
         this.currentCompany = cmp_uuid;
-        
+
         // Actualizar sidebar con la nueva compañía
         this.updateSidebarItems();
-        
+
         const dashboardItems = this.buildDashboardItems(dashboardData, cmp_uuid);
         const filteredItems = this.filterDashboardItemsByRoles(dashboardItems, userRoles);
-        
+
         // Actualizar el BehaviorSubject
         this.filteredDashboardItems.next(filteredItems);
-        
+
         return filteredItems;
       })
     );
@@ -492,7 +508,7 @@ export class MenuService {
       const allowedRoles = company.roles.map((role: any) => role.rol_name);
       return of(allowedRoles);
     }
-    
+
     // Si no hay roles, retornar array vacío
     return of([]);
   }
@@ -508,14 +524,14 @@ export class MenuService {
       if (!item.allowedRoles) {
         return true;
       }
-      
+
       // Verificar si el usuario tiene al menos uno de los roles permitidos
-      return item.allowedRoles.some((allowedRole: string) => 
+      return item.allowedRoles.some((allowedRole: string) =>
         userRoles.includes(allowedRole)
       );
     });
   }
-  
+
   // Construir items del dashboard basado en los datos de la API
   private buildDashboardItems(dashboardData: any, cmp_uuid: string): DashboardItem[] {
     return this.dashboardTemplate
@@ -523,7 +539,7 @@ export class MenuService {
         // Buscar el dato correspondiente en la respuesta de la API
         const dataKey = this.getDataKey(item.name);
         const count = dashboardData[dataKey] || 0;
-        
+
         // Construir la URL para la empresa
         let url = item.url;
         if (item.name === 'Empresa') {
@@ -540,7 +556,7 @@ export class MenuService {
 
   // Helper para mapear nombres a keys de datos
   private getDataKey(itemName: string): string {
-    const mapping: {[key: string]: string} = {
+    const mapping: { [key: string]: string } = {
       'Clientes': 'customersCount',
       'Items': 'itemsCount',
       'Modelo Items': 'modelsItemsCount',
@@ -548,17 +564,17 @@ export class MenuService {
       'Usuarios': 'usersCount',
       'Empresa': 'companiesCount'
     };
-    
+
     return mapping[itemName] || `${itemName.toLowerCase()}Count`;
   }
-    
+
   // Verificar acceso para items del dashboard
   private hasDashboardAccess(item: DashboardItem): boolean {
     if (!item.allowedRoles || item.allowedRoles.length === 0) {
       return true;
     }
-    
-    return item.allowedRoles.some(role => 
+
+    return item.allowedRoles.some(role =>
       role === '*' || this.currentUserRoles.includes(role)
     );
   }
@@ -581,11 +597,11 @@ export class MenuService {
 
   // Verificar si el usuario tiene acceso al item
   private hasAccess(item: MenuItem): boolean {
-    const hasRoleAccess = item.allowedRoles.some(role => 
+    const hasRoleAccess = item.allowedRoles.some(role =>
       this.currentUserRoles.includes(role) || role === '*'
     );
-    
-    if(item.companies) {
+
+    if (item.companies) {
       const hasCompanyAccess = item.companies.some(company =>
         company === '*' || company === this.currentCompany
       );

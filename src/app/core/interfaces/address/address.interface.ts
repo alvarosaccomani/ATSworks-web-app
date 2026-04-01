@@ -7,6 +7,8 @@ export interface AddressInterface {
     cus_uuid: string | null,
     cus: CustomerInterface | null,
     adr_address: string | null,
+    adr_lat: number | null,
+    adr_lng: number | null,
     adr_city: string | null,
     adr_province: string | null,
     adr_postalcode: string | null,

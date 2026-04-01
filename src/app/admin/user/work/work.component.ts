@@ -197,7 +197,8 @@ export class WorkComponent {
       wrk_operator4: null,
       wrk_customer: null,
       wrk_address: null,
-      wrk_coordinates: null,
+      wrk_lat: null,
+      wrk_lng: null,
       wrk_phone: null,
       twrk_uuid: '96c9c123-721d-4cd8-8d2a-f66c111dc3c1',
       wrk_route: null,
@@ -205,6 +206,7 @@ export class WorkComponent {
       cmpitm_uuid: null,
       mitm_uuid: null,
       mitm: null,
+      wrk_order: null,
       wrk_createdat: null,
       wrk_updatedat: null
     }
@@ -408,6 +410,7 @@ export class WorkComponent {
       if (this.customer) {
         this.work.wrk_customer = this.customer.cus_fullname;
         this.work.wrk_phone = this.customer.cus_phone;
+        this.work.wrk_order = this.customer.cus_order;
         this.routeName = this.customer.rou_uuid;
         this.getAdresses(this.customer.cmp_uuid!, this.customer.cus_uuid!);
       } else {
@@ -448,6 +451,8 @@ export class WorkComponent {
     if (selectedAddress) {
       this.work.adr_uuid = selectedAddress.adr_uuid;
       this.work.wrk_address = selectedAddress.adr_address;
+      this.work.wrk_lat = selectedAddress.adr_lat;
+      this.work.wrk_lng = selectedAddress.adr_lng;
     }
   }
 

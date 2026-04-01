@@ -1,0 +1,164 @@
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content here-->
+<div class="container-fluid">
+    <form 
+        class="form-neon" 
+        autocomplete="off">
+        <div class="container-fluid">
+            <div class="row align-items-end">
+
+                <div class="col-12 col-md-9">
+                    <div class="row">
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="selectCustomer" class="bmd-label-floating">Filtrar por Cliente:</label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    class="w-100" 
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="selectedCustomerUuid"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="onCustomerSelected($event)"
+                                    >
+                                    @if (!isLoadingCustomers) {
+                                        @for(customer of customers; track customer.cus_uuid) {
+                                            @if(customer){
+                                                <nz-option [nzValue]="customer.cus_uuid" [nzLabel]="customer.cus_fullname"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Clientes...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <div class="form-group">
+                                <label for="selectAddress" class="bmd-label-floating">Filtrar por Direccion:</label>
+                                <nz-select
+                                    nzPlaceHolder="Seleccione una opción"
+                                    class="w-100" 
+                                    nzAllowClear
+                                    nzShowSearch
+                                    [(ngModel)]="selectedAddressUuid"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (ngModelChange)="onAddressSelected($event)"
+                                    >
+                                    @if (!isLoadingAddresses) {
+                                        @for(address of addresses; track address.adr_uuid) {
+                                            @if(address){
+                                                <nz-option [nzValue]="address.adr_uuid" [nzLabel]="address.adr_address"></nz-option>
+                                            }
+                                        }
+                                    } @else {
+                                        <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                            Cargando Direcciones...
+                                        </nz-option>
+                                    }
+                                </nz-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputFieldSort" class="bmd-label-floating">Campo:</label>
+                        <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="wrks_name" nzLabel="Estado"></nz-option>
+                            <nz-option nzValue="rou_order" nzLabel="Recorrido"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputSort" class="bmd-label-floating">Ordenar:</label>
+                        <nz-select [(ngModel)]="sortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="ASC" nzLabel="A-Z (Asc)"></nz-option>
+                            <nz-option nzValue="DESC" nzLabel="Z-A (Desc)"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputItems" class="bmd-label-floating">Items:</label>
+                        <nz-select [(ngModel)]="perPage" [ngModelOptions]="{standalone: true}" name="perPage" style="width: 100%;">
+                            <nz-option [nzValue]="10" nzLabel="10"></nz-option>
+                            <nz-option [nzValue]="25" nzLabel="25"></nz-option>
+                            <nz-option [nzValue]="50" nzLabel="50"></nz-option>
+                            <nz-option [nzValue]="100" nzLabel="100"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12">
+                <p class="text-center" style="margin-top: 15px;">
+                    <button type="submit" (click)="filter()" class="btn btn-raised btn-info" style="margin: 0 5px 0 0;">
+                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+                    </button>
+                    <button type="button" (click)="clearSearch()" class="btn btn-raised btn-danger" style="margin: 0;">
+                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR BÚSQUEDA
+                    </button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid">
+    @if(works$ | async; as works) {
+        <div class="table-responsive">
+            <table class="table table-dark table-sm">
+                <thead>
+                    <tr class="text-center roboto-medium">
+                        <th>#</th>
+                        <th>RECORRIDO</th>
+                        <th>FECHA DE TRABAJO</th>
+                        <th>RUBRO</th>
+                        <th>ESTADO</th>
+                        <th>DESCRIPCION</th>
+                        <th>PLANILLA</th>
+                    </tr>
+                </thead>
+                <tbody>                    
+                    @for(work of works.data; track work.wrk_uuid) {
+                        <tr class="text-center" >
+                            <td>{{$index + 1}}</td>
+                            <td>{{work.adr?.cus?.rou?.rou_name}}</td>
+                            <td>{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{work.mitm?.mitm_name}}</td>
+                            <td>{{work.wrks?.wrks_name}}</td>
+                            <td>{{work.wrk_description}}</td>
+                            <td>
+                                @if(work.wrks?.wrks_name === "Completado") {
+                                    <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>	
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if(works.totalPages > 1) {
+            <app-pagination
+                (paginaEmitter)="goToPage($event)"
+                [page]="page"
+                [totalPages]="works.totalPages"
+                [numElements]="numElements"
+                >
+            </app-pagination>
+        }
+    }
+</div>

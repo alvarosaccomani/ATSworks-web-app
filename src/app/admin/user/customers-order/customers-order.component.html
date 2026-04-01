@@ -1,0 +1,109 @@
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<div class="container-fluid">
+    <form class="form-neon" autocomplete="off">
+
+        <div class="container-fluid">
+            <div class="col-12 col-md-9">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group d-flex flex-column">
+                            <label for="inputFilter" class="bmd-label-floating">Recorrido:</label>
+                            <nz-select nzPlaceHolder="Seleccione una opción" nzAllowClear nzShowSearch
+                                [(ngModel)]="searchRoute" [ngModelOptions]="{standalone: true}">
+                                @if (!isLoadingRoutes) {
+                                    @for(route of routes; track route.rou_uuid) {
+                                        @if(route){
+                                            <nz-option [nzValue]="route.rou_uuid" [nzLabel]="route.rou_name"></nz-option>
+                                        }
+                                        }
+                                } @else {
+                                    <nz-option nzDisabled nzCustomContent>
+                                        <nz-icon nzType="loading" class="loading-icon" />
+                                        Cargando Rutas...
+                                    </nz-option>
+                                }
+                            </nz-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <p class="text-center" style="margin-top: 15px;">
+                    <button type="button" (click)="getCustomers()" class="btn btn-raised btn-info"
+                        style="margin: 0 5px 0 0;">
+                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+                    </button>
+                    <button type="button" (click)="searchRoute = ''; getCustomers()" class="btn btn-raised btn-danger"
+                        style="margin: 0 5px 0 0;">
+                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR
+                    </button>
+                    <button type="button" class="btn btn-raised btn-success" (click)="onSaveOrder()" style="margin: 0"
+                        [disabled]="isLoading">
+                        <i class="fas fa-save"></i> &nbsp; GUARDAR CAMBIOS
+                    </button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                    <th>#</th>
+                    <th>ORDEN</th>
+                    <th>NOMBRE</th>
+                    <th>EMAIL</th>
+                    <th>RECORRIDO</th>
+                    <th>MOVER</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(customer of customers; track customer.cus_uuid) {
+                <tr class="text-center">
+                    <td>{{$index + 1}}</td>
+                    <td style="width: 100px;">
+                        <input type="number" class="form-control text-center" [(ngModel)]="customer.cus_order"
+                            style="background: transparent; border: 1px solid #555;">
+                    </td>
+                    <td>{{customer.cus_fullname}}</td>
+                    <td>{{customer.cus_email}}</td>
+                    <td>{{customer.rou?.rou_name}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-info" (click)="moveUp($index)"
+                                [disabled]=" $first || isLoading">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-info" (click)="moveDown($index)"
+                                [disabled]=" $last || isLoading">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                }
+                @if (customers.length === 0 && !isLoading) {
+                <tr>
+                    <td colspan="6" class="text-center">No se encontraron clientes.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if(isLoading) {
+        <div class="text-center">
+            <div class="spinner-border text-info" role="status">
+                <span class="sr-only">Cargando...</span>
+            </div>
+            <p>Procesando...</p>
+        </div>
+    }
+</div>

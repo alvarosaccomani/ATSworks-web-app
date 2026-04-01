@@ -35,7 +35,7 @@ export class SideBarComponent {
 
   ngOnInit(): void {
     let cmp_uuid;
-    
+
     // Cargar compañía desde localStorage si existe
     if (this._sessionService.getCompany()) {
       let company = this._sessionService.getCompany();
@@ -61,10 +61,10 @@ export class SideBarComponent {
   private setCompany(company: any): void {
     if (company) {
       this.selectedCompany = company;
-      
+
       // Guardar en localStorage
       this._sessionService.setCompany(JSON.stringify(company));
-      
+
       // Aplicar filtro de roles si los items del menú ya están cargados
       if (this.menuItems) {
         this.applyRoleFilter();
@@ -74,14 +74,25 @@ export class SideBarComponent {
 
   private applyRoleFilter(): void {
     if (this.selectedCompany && this.selectedCompany.roles) {
-      // Extraer los nombres de los roles usando el algoritmo proporcionado
-      const allowedRoles = this.selectedCompany.roles.map((role: any) => role.rol_name);
-      
-      // Filtrar la navegación basada en los roles permitidos
-      this.filteredNavigation = this.filterNavigationByRoles(this.menuItems, allowedRoles);
+      // 1. Extraer los nombres de los roles (ej: ['admin', 'sysadmin'])
+      const userRoles = this.selectedCompany.roles.map((role: any) => role.rol_name);
+
+      // 2. Extraer los permisos (slugs) de TODOS los roles que tiene el usuario en esta empresa
+      // Usamos flatMap para aplanar los arrays de rolpers de cada rol
+      const userPermissions = this.selectedCompany.roles.flatMap((role: any) =>
+        role.rolpers ? role.rolpers.map((rp: any) => rp.per?.per_slug || rp) : []
+      );
+
+      // 3. Filtrar la navegación usando ambos criterios
+      this.filteredNavigation = this.filterNavigationByRolesAndPermissions(
+        this.menuItems,
+        userRoles,
+        userPermissions
+      );
+
     } else {
-      // Si no hay roles definidos, mostrar toda la navegación
-      this.filteredNavigation = [...this.menuItems];
+      // Si no hay empresa o roles, por seguridad podrías preferir un menú vacío
+      this.filteredNavigation = [];
     }
   }
 
@@ -101,36 +112,52 @@ export class SideBarComponent {
     item.isOpen = !item.isOpen;
   }
 
-  public filterNavigationByRoles(navigation: any[], allowedRoles: string[]): any[] {
+  public filterNavigationByRolesAndPermissions(
+    navigation: any[],
+    allowedRoles: string[],
+    userPermissions: string[] // Aquí pasas los slugs: ['menu.dashboard', 'menu.configuracion', ...]
+  ): any[] {
     return navigation
       .map((item) => {
-        // Crear una copia del item para no modificar el original
         const newItem = { ...item };
 
-        // Si el item tiene roles permitidos definidos, verificar acceso
+        // 1. Validar por Roles (Si el ítem tiene la restricción)
+        let roleAllowed = true;
         if (newItem.allowedRoles) {
-          const isAllowed = newItem.allowedRoles.some((role: string) =>
+          roleAllowed = newItem.allowedRoles.some((role: string) =>
             allowedRoles.includes(role)
           );
-
-          // Si no tiene permisos, excluir el item
-          if (!isAllowed) {
-            return null;
-          }
         }
 
-        // Si el item tiene submenú, filtrar recursivamente
+        // 2. Validar por Permisos Específicos (Si el ítem tiene appPermission)
+        let permissionAllowed = true;
+        if (newItem.appPermission) {
+          permissionAllowed = userPermissions.includes(newItem.appPermission);
+        }
+
+        // El ítem solo se muestra si cumple AMBAS o si no tiene restricciones
+        if (!roleAllowed || !permissionAllowed) {
+          return null;
+        }
+
+        // 3. Filtrar submenús recursivamente
         if (newItem.submenu) {
-          newItem.submenu = this.filterNavigationByRoles(newItem.submenu, allowedRoles);
-          
-          // Si después de filtrar el submenú queda vacío, eliminarlo
+          newItem.submenu = this.filterNavigationByRolesAndPermissions(
+            newItem.submenu,
+            allowedRoles,
+            userPermissions
+          );
+
+          // Si el submenú quedó vacío tras el filtro, eliminamos la propiedad
           if (newItem.submenu.length === 0) {
             delete newItem.submenu;
+            // Opcional: Si el ítem padre NO tiene URL y su submenú quedó vacío, eliminar al padre
+            if (!newItem.url) return null;
           }
         }
 
         return newItem;
       })
-      .filter((item) => item !== null); // Eliminar items nulos
+      .filter((item) => item !== null);
   }
 }

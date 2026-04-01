@@ -26,6 +26,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -44,6 +45,7 @@
               "src/assets/css/bootstrap-material-design.min.css",
               "src/assets/css/all.css",
               "src/assets/css/jquery.mCustomScrollbar.css",
+              "https://unpkg.com/maplibre-gl@latest/dist/maplibre-gl.css",
               "src/styles.scss"
             ],
             "scripts": [

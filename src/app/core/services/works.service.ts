@@ -13,8 +13,8 @@ export class WorksService {
     private _http: HttpClient
   ) { }
 
-  public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, page?: number, perPage?: number, field_order?: string, wrk_order?: string): Observable<WorkResults> {
-    const headers = new HttpHeaders().set('content-type','application/json');
+  public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
 
@@ -38,45 +38,45 @@ export class WorksService {
       params = params.set('perPage', perPage.toString());
     }
 
-    if(field_order) {
+    if (field_order) {
       params = params.set('field_order', field_order);
     }
 
-    if(wrk_order) {
-      params = params.set('wrk_order', wrk_order);
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
     }
 
     return this._http.get<WorkResults>(`${environment.apiUrl}works/${cmp_uuid}`, { headers, params });
   }
 
   public getWorkById(cmp_uuid: string, wrk_uuid: string): Observable<any> {
-    let headers = new HttpHeaders().set('content-type','application/json');
+    let headers = new HttpHeaders().set('content-type', 'application/json');
 
-    return this._http.get(environment.apiUrl + 'work/' + cmp_uuid + '/' + wrk_uuid, {headers:headers});
+    return this._http.get(environment.apiUrl + 'work/' + cmp_uuid + '/' + wrk_uuid, { headers: headers });
   }
 
   public saveWork(work: any): Observable<any> {
     let params = JSON.stringify(work);
-    let headers = new HttpHeaders().set('content-type','application/json');
+    let headers = new HttpHeaders().set('content-type', 'application/json');
 
-    return this._http.post(environment.apiUrl + 'work', params, {headers:headers});
+    return this._http.post(environment.apiUrl + 'work', params, { headers: headers });
   }
 
   public updateWork(work: any): Observable<any> {
     let params = JSON.stringify(work);
-    let headers = new HttpHeaders().set('content-type','application/json');
+    let headers = new HttpHeaders().set('content-type', 'application/json');
 
-    return this._http.put(environment.apiUrl + 'work/' + work.cmp_uuid + '/' + work.wrk_uuid, params, {headers:headers});
+    return this._http.put(environment.apiUrl + 'work/' + work.cmp_uuid + '/' + work.wrk_uuid, params, { headers: headers });
   }
 
   public deleteWork(cmp_uuid: string, wrk_uuid: string): Observable<any> {
-    let headers = new HttpHeaders().set('content-type','application/json');
+    let headers = new HttpHeaders().set('content-type', 'application/json');
 
-    return this._http.delete(environment.apiUrl + 'work/' + cmp_uuid + '/' + wrk_uuid, {headers:headers});
+    return this._http.delete(environment.apiUrl + 'work/' + cmp_uuid + '/' + wrk_uuid, { headers: headers });
   }
 
-  public getPendingWorks(cmp_uuid: string, wrks_uuid?: string, wrk_route?: string, page?: number, perPage?: number, field_order?: string, wrk_order?: string): Observable<WorkResults> {
-    const headers = new HttpHeaders().set('content-type','application/json');
+  public getPendingWorks(cmp_uuid: string, wrks_uuid?: string, wrk_route?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
 
@@ -96,19 +96,19 @@ export class WorksService {
       params = params.set('perPage', perPage.toString());
     }
 
-    if(field_order) {
+    if (field_order) {
       params = params.set('field_order', field_order);
     }
 
-    if(wrk_order) {
-      params = params.set('wrk_order', wrk_order);
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
     }
 
     return this._http.get<WorkResults>(`${environment.apiUrl}pending-works/${cmp_uuid}`, { headers, params });
   }
 
-  public getWorkScheduler(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrks_uuid?: string, wrk_route?: string, field_order?: string, wrk_order?: string): Observable<WorkResults> {
-    const headers = new HttpHeaders().set('content-type','application/json');
+  public getWorkScheduler(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrks_uuid?: string, wrk_route?: string, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
 
@@ -128,14 +128,46 @@ export class WorksService {
       params = params.set('wrk_route', wrk_route);
     }
 
-    if(field_order) {
+    if (field_order) {
       params = params.set('field_order', field_order);
     }
 
-    if(wrk_order) {
-      params = params.set('wrk_order', wrk_order);
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
     }
 
     return this._http.get<WorkResults>(`${environment.apiUrl}works-scheduler/${cmp_uuid}`, { headers, params });
+  }
+
+  public getWorksByAddress(cmp_uuid: string, cus_uuid?: string, adr_uuid?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+
+    let params = new HttpParams();
+
+    if (cus_uuid) {
+      params = params.set('cus_uuid', cus_uuid);
+    }
+
+    if (adr_uuid) {
+      params = params.set('adr_uuid', adr_uuid);
+    }
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if (field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
+    }
+
+    return this._http.get<WorkResults>(`${environment.apiUrl}works-by-address/${cmp_uuid}`, { headers, params });
   }
 }
