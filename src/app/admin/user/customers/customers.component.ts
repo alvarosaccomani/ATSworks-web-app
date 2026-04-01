@@ -149,7 +149,7 @@ export class CustomersComponent implements OnInit {
                 this.customers$ = this._customersService.getCustomers(customer.cmp_uuid!, this.searchNombreApellido, this.searchEmail, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el cliente.");
               }
             );
         }

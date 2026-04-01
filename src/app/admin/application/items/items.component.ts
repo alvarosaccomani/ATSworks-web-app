@@ -77,7 +77,7 @@ export class ItemsComponent implements OnInit {
                 this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el rubro.");
               }
             );
         }

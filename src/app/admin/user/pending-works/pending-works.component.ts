@@ -148,7 +148,7 @@ export class PendingWorksComponent {
                 this.works$ = this._worksService.getPendingWorks(this.cmp_uuid, this.searchWorkState, this.searchRoute, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el trabajo.");
               }
             );
         }

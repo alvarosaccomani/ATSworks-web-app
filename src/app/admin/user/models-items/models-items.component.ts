@@ -89,7 +89,7 @@ export class ModelsItemsComponent {
                 this.modelItems$ = this._modelItemsService.getModelItems(modelItem.cmp_uuid!, "null", this.page, this.perPage);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el modelo de rubro.");
               }
             );
         }

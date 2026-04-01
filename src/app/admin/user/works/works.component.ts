@@ -139,7 +139,7 @@ export class WorksComponent {
                 this.works$ = this._worksService.getWorks(work.cmp_uuid!, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el trabajo.");
               }
             );
         }

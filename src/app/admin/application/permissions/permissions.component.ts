@@ -88,7 +88,7 @@ export class PermissionsComponent {
                   this.permissions$ = this._permissionsService.getPermissions("null", this.page, this.perPage);
                 },
                 error => {
-                  console.log(<any>error);
+                  this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el permiso.");
                 }
               );
           }

@@ -88,7 +88,7 @@ export class RolPermissionsComponent {
                 this.rolPermissions$ = this._rolPermissionsService.getRolPermissions("null", this.page, this.perPage);
               },
               error => {
-                console.log(<any>error);
+                this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el permiso de rol.");
               }
             );
         }
