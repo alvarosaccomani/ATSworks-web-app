@@ -70,6 +70,11 @@ export class CustomersComponent implements OnInit {
       url: ['/admin/user/customers-order'],
       icon: "fas fa-sort fa-fw",
       title: "ORDEN DE CLIENTES"
+    },
+    {
+      url: ['/admin/user/customer-works'],
+      icon: "fas fa-sort fa-fw",
+      title: "TRABAJOS POR CLIENTE"
     }
   ]
 
