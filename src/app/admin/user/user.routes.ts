@@ -8,7 +8,7 @@ import { RouteComponent } from './route/route.component';
 import { CustomersComponent } from './customers/customers.component';
 import { CustomerComponent } from './customer/customer.component';
 import { CustomersOrderComponent } from './customers-order/customers-order.component';
-import { CustomerWorksComponent } from '../application/customer-works/customer-works.component';
+import { CustomerWorksComponent } from './customer-works/customer-works.component';
 import { AddressComponent } from './address/address.component';
 import { ModelsItemsComponent } from './models-items/models-items.component';
 import { ModelItemComponent } from './model-item/model-item.component';
