@@ -138,4 +138,36 @@ export class WorksService {
 
     return this._http.get<WorkResults>(`${environment.apiUrl}works-scheduler/${cmp_uuid}`, { headers, params });
   }
+
+  public getWorksByAddress(cmp_uuid: string, cus_uuid?: string, adr_uuid?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+
+    let params = new HttpParams();
+
+    if (cus_uuid) {
+      params = params.set('cus_uuid', cus_uuid);
+    }
+
+    if (adr_uuid) {
+      params = params.set('adr_uuid', adr_uuid);
+    }
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if (field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
+    }
+
+    return this._http.get<WorkResults>(`${environment.apiUrl}works-by-address/${cmp_uuid}`, { headers, params });
+  }
 }
