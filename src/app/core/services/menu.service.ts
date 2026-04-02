@@ -336,6 +336,14 @@ export class MenuService {
           url: '/admin/user/map-works',
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.mapa_trabajos'
+        },
+        {
+          id: '76',
+          name: 'Trabajos Clientes',
+          icon: 'fas fa-briefcase fa-fw',
+          url: '/admin/user/customer-works',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.trabajos.trabajos_clientes'
         }
       ]
     },
