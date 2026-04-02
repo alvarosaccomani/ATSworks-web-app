@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 
@@ -152,6 +152,13 @@ export class CustomerWorksComponent {
         this.selectedCustomerUuid = '';
       }
     }
+  }
+
+  public onCustomerClear() {
+    this.selectedCustomerUuid = '';
+    this.selectedAddressUuid = '';
+    this.addresses = [];
+    this.works$ = of<WorkResults>([] as any);
   }
 
   public onAddressSelected(adr_uuid: string | null) {

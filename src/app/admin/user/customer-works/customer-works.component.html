@@ -24,6 +24,7 @@
                                     [(ngModel)]="selectedCustomerUuid"
                                     [ngModelOptions]="{standalone: true}"
                                     (ngModelChange)="onCustomerSelected($event)"
+                                    (nzOnClear)="onCustomerClear()"
                                     >
                                     @if (!isLoadingCustomers) {
                                         @for(customer of customers; track customer.cus_uuid) {
