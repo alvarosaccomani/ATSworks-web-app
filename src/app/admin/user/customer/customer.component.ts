@@ -55,7 +55,7 @@ export class CustomerComponent {
     },
     {
       url: ['/admin/user/customer-works'],
-      icon: "fas fa-sort fa-fw",
+      icon: "fas fa-briefcase fa-fw",
       title: "TRABAJOS POR CLIENTE"
     }
   ]
