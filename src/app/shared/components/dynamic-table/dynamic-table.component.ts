@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -36,9 +36,8 @@ interface TableColumn {
 @Component({
   selector: 'app-dynamic-table',
   imports: [
-    CommonModule,
     FormsModule
-  ],
+],
   templateUrl: './dynamic-table.component.html',
   styleUrl: './dynamic-table.component.scss'
 })

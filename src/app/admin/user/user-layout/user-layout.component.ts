@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { SideBarComponent } from '../../../shared/components/side-bar/side-bar.component';
 import { NavBarComponent } from '../../../shared/components/nav-bar/nav-bar.component';
@@ -9,11 +9,10 @@ import { UsersService } from '../../../core/services/users.service';
 @Component({
   selector: 'app-user-layout',
   imports: [
-    CommonModule,
     RouterModule,
     SideBarComponent,
     NavBarComponent
-  ],
+],
   templateUrl: './user-layout.component.html',
   styleUrl: './user-layout.component.scss'
 })

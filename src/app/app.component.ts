@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NzMessageModule, NzMessageService } from 'ng-zorro-antd/message';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { ConnectionService } from './core/services/connection.service';
 import { UpdateNotificationComponent } from './shared/components/update-notification/update-notification.component';
 
@@ -9,7 +9,6 @@ import { UpdateNotificationComponent } from './shared/components/update-notifica
   selector: 'app-root',
   imports: [
     RouterOutlet,
-    NzMessageModule,
     UpdateNotificationComponent
   ],
   templateUrl: './app.component.html',

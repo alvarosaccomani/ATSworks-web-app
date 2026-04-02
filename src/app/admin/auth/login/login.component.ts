@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SessionService } from '../../../core/services/session.service';
@@ -9,9 +9,8 @@ import { AuthenticationInterface } from '../../../core/interfaces/authentication
 @Component({
   selector: 'app-login',
   imports: [
-    CommonModule,
     FormsModule
-  ],
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
