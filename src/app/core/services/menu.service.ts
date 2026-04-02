@@ -199,6 +199,14 @@ export class MenuService {
         },
         {
           id: '44',
+          name: 'Trabajos Clientes',
+          icon: 'fas fa-briefcase fa-fw',
+          url: 'customer-works',
+          allowedRoles: ['admin', 'viewer', 'editor'],
+          appPermission: 'menu.clientes.trabajos_clientes'
+        },
+        {
+          id: '45',
           name: 'Buscar cliente',
           icon: 'fas fa-search fa-fw',
           url: null,
@@ -336,14 +344,6 @@ export class MenuService {
           url: '/admin/user/map-works',
           allowedRoles: ['admin', 'viewer', 'editor'],
           appPermission: 'menu.trabajos.mapa_trabajos'
-        },
-        {
-          id: '76',
-          name: 'Trabajos Clientes',
-          icon: 'fas fa-briefcase fa-fw',
-          url: '/admin/user/customer-works',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.trabajos_clientes'
         }
       ]
     },
