@@ -80,43 +80,53 @@
     </form>
 
     @if(items$ | async; as items) {
-        <div class="table-responsive">
-            <table class="table table-dark table-sm">
+        <div class="table-container mt-3">
+            <nz-table 
+                #basicTable 
+                [nzData]="items.data" 
+                [nzFrontPagination]="false" 
+                [nzLoading]="isLoading"
+                nzSize="small"
+                nzBordered
+                >
                 <thead>
-                    <tr class="text-center roboto-medium">
-                        <th>#</th>
-                        <th>NOMBRE</th>
-                        <th>DESCRIPCION</th>
-                        <th>ACTUALIZAR</th>
-                        <th>ELIMINAR</th>
+                    <tr class="roboto-medium">
+                        <th nzWidth="60px" class="text-center">#</th>
+                        <th nzWidth="250px" class="text-start">NOMBRE</th>
+                        <th class="text-start">DESCRIPCION</th>
+                        <th nzWidth="120px" class="text-center">ACTUALIZAR</th>
+                        <th nzWidth="120px" class="text-center">ELIMINAR</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for(item of items.data; track item.itm_uuid) {
-                        <tr class="text-center" >
-                            <td>{{$index + 1}}</td>
-                            <th>{{item.itm_name}}</th>
-                            <th>{{item.itm_description}}</th>
-                            <td>
-                                <a [routerLink]="['/admin/application/item', item.itm_uuid]" class="btn btn-success">
-                                    <i class="fas fa-sync-alt"></i>	
+                    @for (item of basicTable.data; track item.itm_uuid) {
+                        <tr class="align-middle">
+                            <td class="text-center index-cell">{{$index + 1}}</td>
+                            <td class="text-start"><strong>{{item.itm_name}}</strong></td>
+                            <td class="text-start desc-cell">{{item.itm_description}}</td>
+                            <td class="text-center">
+                                <a nz-button nzType="primary" [routerLink]="['/admin/application/item', item.itm_uuid]" nzShape="circle" title="Actualizar" class="d-inline-flex align-items-center justify-content-center">
+                                    <span nz-icon nzType="sync"></span>
                                 </a>
                             </td>
                             <td>
-                                <form action="">
-                                    <button 
-                                        type="button" 
-                                        class="btn btn-warning"
-                                        (click)="deleteItem(item)">
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </form>
+                                <button 
+                                    nz-button 
+                                    nzType="primary" 
+                                    nzDanger
+                                    nzShape="circle"
+                                    (click)="deleteItem(item)"
+                                    title="Eliminar"
+                                    class="d-inline-flex align-items-center justify-content-center">
+                                    <span nz-icon nzType="delete"></span>
+                                </button>
                             </td>
                         </tr>
                     }
                 </tbody>
-            </table>
+            </nz-table>
         </div>
+
         @if(items.totalPages > 1) {
             <app-pagination
                 (paginaEmitter)="goToPage($event)"
@@ -127,4 +137,4 @@
             </app-pagination>
         }
     }
-</div>
+</div>

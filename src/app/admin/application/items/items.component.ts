@@ -6,6 +6,9 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ItemInterface, ItemResults } from '../../../core/interfaces/item';
 import { MessageService } from '../../../core/services/message.service';
 import { ItemsService } from '../../../core/services/items.service';
@@ -20,7 +23,10 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     PageNavTabsComponent,
     PaginationComponent,
     FormsModule,
-    NzSelectModule
+    NzSelectModule,
+    NzTableModule,
+    NzIconModule,
+    NzButtonModule
   ],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'
@@ -31,6 +37,7 @@ export class ItemsComponent implements OnInit {
   public page: number = 1; //Page number we are on. Will be 1 the first time the component is loaded (<li> hidden)
   public perPage: number = 10; //Number of items displayed per page
   public numElements!: number; //Total existing items
+  public isLoading: boolean = false;
 
   private cmp_uuid!: string;
   public items$!: Observable<ItemResults>;
@@ -69,6 +76,7 @@ export class ItemsComponent implements OnInit {
   }
 
   public onSearch(): void {
+    this.isLoading = true;
     this.items$ = this._itemsService.getItems(
       this.searchName.trim(), 
       this.searchDescription.trim(), 
@@ -77,6 +85,14 @@ export class ItemsComponent implements OnInit {
       this.fieldSortValue,
       this.sortValue
     );
+
+    this.items$.subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.numElements = res.numElements;
+      },
+      error: () => this.isLoading = false
+    });
   }
 
   public clearSearch(): void {
