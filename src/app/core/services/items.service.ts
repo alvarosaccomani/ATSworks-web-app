@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ItemResults } from '../interfaces/item/item-results.interface';
@@ -13,14 +13,36 @@ export class ItemsService {
     private _http: HttpClient
   ) { }
 
-  public getItems(filter: string, page?: number, perPage?: number): Observable<ItemResults> {
-    let headers = new HttpHeaders().set('content-type','application/json');
+  public getItems(itm_name?: string, itm_description?: string, page?: number, perPage?: number, field_order?: string, itm_orderby?: string): Observable<ItemResults> {
+    const headers = new HttpHeaders().set('content-type','application/json');
 
-    if(page && perPage) {
-      filter = `${filter}/${page}/${perPage}`;
+    let params = new HttpParams();
+
+    if(itm_name) {
+      params = params.set('itm_name', itm_name);
     }
 
-    return this._http.get<ItemResults>(environment.apiUrl + 'items/' + filter, {headers:headers})
+    if(itm_description) {
+      params = params.set('itm_description', itm_description);
+    }
+
+    if(page) {
+      params = params.set('page', page.toString());
+    }
+
+    if(perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if(field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if(itm_orderby) {
+      params = params.set('itm_orderby', itm_orderby);
+    }
+
+    return this._http.get<ItemResults>(`${environment.apiUrl}items`, { headers, params });
   }
 
   public getItemById(itm_uuid: string): Observable<any> {
