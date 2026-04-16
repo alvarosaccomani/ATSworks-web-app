@@ -5,76 +5,85 @@
 
 <!-- Content -->
 <div class="container-fluid">
-    <form class="form-neon" autocomplete="off">
+    <form class="filters-form mt-4" autocomplete="off">
         <div class="container-fluid">
-            <div class="row align-items-end">
-                <div class="col-12 col-md-4">
-                    <div class="form-group">
-                        <label for="inputFilterName" class="bmd-label-floating">Buscar por nombre:</label>
+            <div class="row align-items-end mb-3">
+                <div class="col-12 col-md-3">
+                    <label class="mb-1 text-muted small uppercase font-weight-bold">Nombre del Rubro</label>
+                    <nz-input-group [nzPrefix]="prefixIconSearch" [nzSuffix]="suffixIconCloseName">
                         <input 
                             type="text" 
-                            class="form-control" 
-                            id="inputFilterName"
+                            nz-input 
                             [(ngModel)]="searchName" 
                             [ngModelOptions]="{standalone: true}"
-                            placeholder="Nombre del rubro..."
+                            placeholder="Buscar por nombre..."
                             (keyup.enter)="onSearch()"
-                        >
-                    </div>
+                        />
+                    </nz-input-group>
+                    <ng-template #prefixIconSearch><span nz-icon nzType="search"></span></ng-template>
+                    <ng-template #suffixIconCloseName>
+                        @if (searchName) {
+                            <span nz-icon nzType="close-circle" nzTheme="fill" class="clear-icon" (click)="searchName = ''; onSearch()"></span>
+                        }
+                    </ng-template>
                 </div>
-                <div class="col-12 col-md-4">
-                    <div class="form-group">
-                        <label for="inputFilterDesc" class="bmd-label-floating">Filtrar por descripción:</label>
+
+                <div class="col-12 col-md-3">
+                    <label class="mb-1 text-muted small uppercase font-weight-bold">Descripción</label>
+                    <nz-input-group [nzPrefix]="prefixIconFile" [nzSuffix]="suffixIconCloseDesc">
                         <input 
                             type="text" 
-                            class="form-control" 
-                            id="inputFilterDesc"
+                            nz-input 
                             [(ngModel)]="searchDescription" 
                             [ngModelOptions]="{standalone: true}"
-                            placeholder="Descripción..."
+                            placeholder="Buscar por descripción..."
                             (keyup.enter)="onSearch()"
-                        >
-                    </div>
+                        />
+                    </nz-input-group>
+                    <ng-template #prefixIconFile><span nz-icon nzType="file-text"></span></ng-template>
+                    <ng-template #suffixIconCloseDesc>
+                        @if (searchDescription) {
+                            <span nz-icon nzType="close-circle" nzTheme="fill" class="clear-icon" (click)="searchDescription = ''; onSearch()"></span>
+                        }
+                    </ng-template>
                 </div>
-                <div class="col-12 col-md-1">
-                    <div class="form-group">
-                        <label for="inputFieldSort" class="bmd-label-floating">Campo:</label>
-                        <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sortField" style="width: 100%;" (ngModelChange)="onSearch()">
-                            <nz-option nzValue="itm_name" nzLabel="Nombre"></nz-option>
-                            <nz-option nzValue="itm_description" nzLabel="Descripción"></nz-option>
-                        </nz-select>
-                    </div>
-                </div>
+
                 <div class="col-12 col-md-2">
-                    <div class="form-group">
-                        <label for="inputSort" class="bmd-label-floating">Ordenar:</label>
-                        <nz-select [(ngModel)]="sortValue" [ngModelOptions]="{standalone: true}" name="sortOrder" style="width: 100%;" (ngModelChange)="onSearch()">
-                            <nz-option nzValue="ASC" nzLabel="A-Z (Asc)"></nz-option>
-                            <nz-option nzValue="DESC" nzLabel="Z-A (Desc)"></nz-option>
-                        </nz-select>
-                    </div>
+                    <label class="mb-1 text-muted small uppercase font-weight-bold">Ordenar por</label>
+                    <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sortField" class="w-100" (ngModelChange)="onSearch()">
+                        <nz-option nzValue="itm_name" nzLabel="Nombre"></nz-option>
+                        <nz-option nzValue="itm_description" nzLabel="Descripción"></nz-option>
+                    </nz-select>
                 </div>
-                <div class="col-12 col-md-1">
-                    <div class="form-group">
-                        <label for="inputItems" class="bmd-label-floating">Items:</label>
-                        <nz-select [(ngModel)]="perPage" [ngModelOptions]="{standalone: true}" name="perPage" style="width: 100%;" (ngModelChange)="onSearch()">
-                            <nz-option [nzValue]="10" nzLabel="10"></nz-option>
-                            <nz-option [nzValue]="25" nzLabel="25"></nz-option>
-                            <nz-option [nzValue]="50" nzLabel="50"></nz-option>
-                            <nz-option [nzValue]="100" nzLabel="100"></nz-option>
-                        </nz-select>
-                    </div>
+
+                <div class="col-12 col-md-2">
+                    <label class="mb-1 text-muted small uppercase font-weight-bold">Sentido</label>
+                    <nz-select [(ngModel)]="sortValue" [ngModelOptions]="{standalone: true}" name="sortOrder" class="w-100" (ngModelChange)="onSearch()">
+                        <nz-option nzValue="ASC" nzLabel="A-Z (Asc)"></nz-option>
+                        <nz-option nzValue="DESC" nzLabel="Z-A (Desc)"></nz-option>
+                    </nz-select>
+                </div>
+
+                <div class="col-12 col-md-2">
+                    <label class="mb-1 text-muted small uppercase font-weight-bold">Ver</label>
+                    <nz-select [(ngModel)]="perPage" [ngModelOptions]="{standalone: true}" name="perPage" class="w-100" (ngModelChange)="onSearch()">
+                        <nz-option [nzValue]="10" nzLabel="10 registros"></nz-option>
+                        <nz-option [nzValue]="25" nzLabel="25 registros"></nz-option>
+                        <nz-option [nzValue]="50" nzLabel="50 registros"></nz-option>
+                        <nz-option [nzValue]="100" nzLabel="100 registros"></nz-option>
+                    </nz-select>
                 </div>
             </div>
-            <div class="col-12">
-                <p class="text-center" style="margin-top: 15px;">
-                    <button type="submit" (click)="onSearch()" class="btn btn-raised btn-info" style="margin: 0 5px 0 0;">
-                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+
+            <div class="row">
+                <div class="col-12 text-center mt-2">
+                    <button nz-button nzType="primary" (click)="onSearch()" class="mr-2">
+                        <span nz-icon nzType="search"></span> BUSCAR
                     </button>
-                    <button type="button" (click)="clearSearch()" class="btn btn-raised btn-danger" style="margin: 0;">
-                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR BÚSQUEDA
+                    <button nz-button nzType="default" (click)="clearSearch()" nzDanger>
+                        <span nz-icon nzType="rest"></span> LIMPIAR FILTROS
                     </button>
-                </p>
+                </div>
             </div>
         </div>
     </form>

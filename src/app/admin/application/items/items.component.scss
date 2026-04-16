@@ -1,6 +1,51 @@
+.filters-form {
+    background: #ffffff; // Cambiado de un gris oscuro a blanco sólido
+    padding: 20px;
+    border-radius: 4px; 
+    border: 1px solid #d8d8d8; // Uso del estándar var(--border-color)
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 0.75rem;
+        color: #4a5568; // Color más oscuro para legibilidad en fondo blanco
+        letter-spacing: 0.025em;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    ::ng-deep .ant-input-group-wrapper, 
+    ::ng-deep .ant-select-selector,
+    ::ng-deep .ant-input {
+        border-radius: 4px !important; // Consistencia en inputs y selects
+    }
+
+    .clear-icon {
+        cursor: pointer;
+        color: #718096;
+        transition: color 0.2s;
+        font-size: 14px;
+
+        &:hover {
+            color: #f56565;
+        }
+    }
+}
+
+.table-container {
+    border-radius: 4px; // Reducido de 8px
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    ::ng-deep .ant-table {
+        border-radius: 4px !important;
+    }
+}
+
 .empty-state-container {
     background: rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
+    border-radius: 4px; // Reducido de 12px
     border: 2px dashed rgba(255, 255, 255, 0.1);
     
     .empty-icon {
@@ -16,12 +61,6 @@
     100% { transform: scale(1); opacity: 0.5; }
 }
 
-.table-container {
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-// Asegurar que el texto de descripción no se rompa de forma extraña
 .desc-cell {
     max-width: 0;
     width: 100%;

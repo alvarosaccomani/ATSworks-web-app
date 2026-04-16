@@ -9,6 +9,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { ItemInterface, ItemResults } from '../../../core/interfaces/item';
 import { MessageService } from '../../../core/services/message.service';
 import { ItemsService } from '../../../core/services/items.service';
@@ -26,7 +27,8 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     NzSelectModule,
     NzTableModule,
     NzIconModule,
-    NzButtonModule
+    NzButtonModule,
+    NzInputModule
   ],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'
