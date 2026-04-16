@@ -4,6 +4,8 @@ import { RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
+import { FormsModule } from '@angular/forms';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ItemInterface, ItemResults } from '../../../core/interfaces/item';
 import { MessageService } from '../../../core/services/message.service';
 import { ItemsService } from '../../../core/services/items.service';
@@ -16,7 +18,9 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
     RouterLink,
     HeaderComponent,
     PageNavTabsComponent,
-    PaginationComponent
+    PaginationComponent,
+    FormsModule,
+    NzSelectModule
   ],
   templateUrl: './items.component.html',
   styleUrl: './items.component.scss'
@@ -30,6 +34,13 @@ export class ItemsComponent implements OnInit {
 
   private cmp_uuid!: string;
   public items$!: Observable<ItemResults>;
+  
+  // Filters
+  public searchName: string = '';
+  public searchDescription: string = '';
+  public fieldSortValue: string = 'itm_name';
+  public sortValue: string = 'ASC';
+
   public headerConfig: any = {
     title: "LISTA DE ITEMS",
     description: "Listado de Rubros.",
@@ -54,7 +65,27 @@ export class ItemsComponent implements OnInit {
     ) { }
     
     ngOnInit(): void {
-      this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
+      this.onSearch();
+  }
+
+  public onSearch(): void {
+    this.items$ = this._itemsService.getItems(
+      this.searchName.trim(), 
+      this.searchDescription.trim(), 
+      this.page, 
+      this.perPage,
+      this.fieldSortValue,
+      this.sortValue
+    );
+  }
+
+  public clearSearch(): void {
+    this.searchName = '';
+    this.searchDescription = '';
+    this.fieldSortValue = 'itm_name';
+    this.sortValue = 'ASC';
+    this.page = 1;
+    this.onSearch();
   }
 
   public deleteItem(item: ItemInterface) {
@@ -74,7 +105,7 @@ export class ItemsComponent implements OnInit {
             .subscribe(
               response => {
                 console.info(response);
-                this.items$ = this._itemsService.getItems("null", this.page, this.perPage);
+                this.onSearch();
               },
               error => {
                 this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el rubro.");
@@ -87,6 +118,6 @@ export class ItemsComponent implements OnInit {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.items$ = this._itemsService.getItems("null", page, this.perPage);
+    this.onSearch();
   }
 }
