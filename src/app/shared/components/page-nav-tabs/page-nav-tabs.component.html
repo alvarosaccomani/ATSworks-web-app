@@ -1,11 +1,14 @@
-<div class="container-fluid">
-    <ul class="full-box list-unstyled page-nav-tabs">
-        @for(item of data; track $index) {
-            <li>
-                <a [routerLink]="item.url" routerLinkActive="active">
-                    <i [class]="item.icon"></i> &nbsp; {{item.title}}
-                </a>
-            </li>
-        }
-    </ul>	
-</div>
+<div class="nav-tabs-container">
+    <div class="container-fluid">
+        <ul class="nav-tabs-list">
+            @for(item of data; track $index) {
+                <li class="nav-item">
+                    <a [routerLink]="item.url" routerLinkActive="active" class="nav-link-item">
+                        <i [class]="item.icon" class="nav-icon"></i>
+                        <span class="nav-title">{{item.title}}</span>
+                    </a>
+                </li>
+            }
+        </ul>	
+    </div>
+</div>

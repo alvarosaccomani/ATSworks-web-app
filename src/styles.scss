@@ -74,42 +74,7 @@ body,html{
 	font-size: 18px;
 }
 
-/*----------  Page nav tabs  ----------*/
-.page-nav-tabs{
-	display: flex;
-	justify-content: center;
-	flex-wrap: wrap;
-	margin-bottom: 30px;
-}
-.page-nav-tabs li,
-.page-nav-tabs li a{
-	height: 40px;
-	line-height: 40px;
-}
-.page-nav-tabs li{
-	margin: 5px 20px;
-}
-.page-nav-tabs li a{
-	color: var(--accent-color);
-	font-size: 17px;
-	min-width: 200px;
-	width: auto;
-	display: block;
-	text-align: center;
-	user-select: none;
-	transition: all .2s ease-in-out;
-	border-bottom: 2px solid transparent;
-}
-.page-nav-tabs li a.active{
-	color: var(--color-three);
-	cursor: none;
-	pointer-events: none;
-}
-.page-nav-tabs li a:hover{
-	text-decoration: none;
-	color: #333;
-	border-bottom: 2px solid #333;
-}
+/* Los estilos de .page-nav-tabs han sido movidos y modernizados en su componente respectivo */
 
 /*----------  Edit bootstrap styles  ----------*/
 .form-control[readonly]{
