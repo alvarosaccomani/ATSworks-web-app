@@ -1,0 +1,97 @@
+.header-container {
+    padding: 2.5rem 1.5rem;
+    background: transparent;
+    animation: fadeInSlide 0.6s ease-out;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+}
+
+.header-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    background: #ffffff;
+    border-radius: 16px;
+    margin-right: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.05) rotate(3deg);
+    }
+}
+
+.header-icon {
+    font-size: 1.8rem;
+    color: var(--color-three); // Usamos el color de acento del proyecto
+}
+
+.header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-title {
+    font-family: 'roboto_medium_regular';
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+}
+
+.header-subtitle {
+    font-size: 1rem;
+    color: #6c757d;
+    margin: 0.25rem 0 0 0;
+    font-family: 'roboto_condensed_light';
+    max-width: 700px;
+}
+
+// Micro-animación
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Responsividad
+@media (max-width: 768px) {
+    .header-container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .header-icon-wrapper {
+        width: 50px;
+        height: 50px;
+        margin-right: 1rem;
+        border-radius: 12px;
+    }
+    
+    .header-icon {
+        font-size: 1.4rem;
+    }
+    
+    .header-title {
+        font-size: 1.4rem;
+    }
+    
+    .header-subtitle {
+        font-size: 0.9rem;
+    }
+}
