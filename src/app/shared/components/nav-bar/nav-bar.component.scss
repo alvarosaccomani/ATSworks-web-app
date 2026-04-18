@@ -1,7 +1,131 @@
-.select-rol {
-    width: 250px;
+.navbar-info-container {
+    height: 60px; // Aumentamos ligeramente el alto para un aire más premium
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+}
+
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right {
+    gap: 1.5rem;
+}
+
+.nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
     height: 40px;
-    display: inline-block;
-    padding: 10px;
-    margin: 0 20px 0 0;
+    border-radius: 4px; // Cambiado de 50% a 4px
+    color: var(--accent-color);
+    font-size: 1.1rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+        background-color: rgba(37, 53, 86, 0.05);
+        color: var(--color-three);
+        transform: scale(1.05);
+    }
+
+    &.logout-btn:hover {
+        background-color: rgba(236, 82, 82, 0.1);
+        color: var(--color-three);
+    }
+}
+
+.company-selector-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px; // Cambiado de 50px a 4px
+    padding: 0 0.75rem;
+    height: 40px;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: var(--color-three);
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+
+    .select-icon {
+        color: #94a3b8;
+        font-size: 0.9rem;
+        margin-right: 0.75rem;
+        margin-top: 0.50rem;
+    }
+}
+
+.select-rol-modern {
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-color);
+    outline: none;
+    min-width: 180px;
+    cursor: pointer;
+
+    ::ng-deep {
+        .ant-select-selector {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            height: 40px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        .ant-select-selection-item, 
+        .ant-select-selection-placeholder {
+            color: var(--accent-color) !important;
+            font-weight: 500;
+            line-height: 40px !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        .ant-select-selection-search {
+            display: flex !important;
+            align-items: center !important;
+        }
+
+    }
+}
+
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 1px solid #e2e8f0;
+    padding-left: 1rem;
+}
+
+// Mobile alignment
+@media (max-width: 768px) {
+    .navbar-info-container {
+        padding: 0 1rem;
+    }
+    
+    .select-rol-modern {
+        min-width: 100px;
+        font-size: 0.8rem;
+    }
+    
+    .company-selector-wrapper {
+        padding: 0 0.75rem;
+    }
 }

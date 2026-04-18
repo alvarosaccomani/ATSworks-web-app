@@ -17,7 +17,7 @@
     width: 65px;
     height: 65px;
     background: #ffffff;
-    border-radius: 16px;
+    border-radius: 4px; // Cambiado de 16px a 4px
     margin-right: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.02);
@@ -80,7 +80,7 @@
         width: 50px;
         height: 50px;
         margin-right: 1rem;
-        border-radius: 12px;
+        border-radius: 4px;
     }
     
     .header-icon {

@@ -12,6 +12,8 @@ import { SharedDataService } from '../../../core/services/shared-data.service';
 import { MenuService } from '../../../core/services/menu.service';
 import { MessageService } from '../../../core/services/message.service';
 import { CompanyItemsService } from '../../../core/services/company-items.service';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+
 
 declare var $:any;
 
@@ -19,7 +21,9 @@ declare var $:any;
   selector: 'app-nav-bar',
   imports: [
     FormsModule,
-    RouterLink
+    RouterLink,
+    NzSelectModule
+
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
@@ -140,8 +144,8 @@ export class NavBarComponent implements OnInit {
     return Array.from(grouped.values());
   }
 
-  public onCompanyChange(event: Event): void {
-    const selectedValue = (event.target as HTMLSelectElement).value;
+  public onCompanyChange(event: string | Event): void {
+    const selectedValue = typeof event === 'string' ? event : (event.target as HTMLSelectElement).value;
     const selectedCompany = this.userRolesCompany.find(
       (company: any) => company.cmp_uuid === selectedValue
     );
