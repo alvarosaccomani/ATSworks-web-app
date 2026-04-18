@@ -186,15 +186,17 @@ table form{
 }
 .page-content,
 .nav-lateral{
-	height: 100%;
-	overflow: auto;
+	height: 100vh;
 }
 .page-content{
 	position: relative;
 	padding-left: 300px;
 	transition: all .2s ease-in-out;
-	padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
+
 /*  Nav Lateral */
 .nav-lateral{
 	width: 300px;
