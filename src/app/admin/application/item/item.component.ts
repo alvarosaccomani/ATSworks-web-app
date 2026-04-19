@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
 import { FormsModule, NgForm } from '@angular/forms';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
@@ -48,7 +50,9 @@ export class ItemComponent {
   constructor(
     private _router: Router,
     private _route: ActivatedRoute,
+    private _location: Location,
     private _messageService: MessageService,
+
     private _itemsService: ItemsService
   ) {
     this.isLoading = false;
@@ -201,4 +205,9 @@ export class ItemComponent {
     }
   }
 
+  public goBack(): void {
+    this._location.back();
+  }
+
 }
+
