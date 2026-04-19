@@ -4,88 +4,101 @@
 <app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
 
 <!-- Content -->
-<div class="container-fluid">
-    <form 
-        name="formItem"
-        #formItem="ngForm" 
-        class="form-neon" 
-        autocomplete="off">
-        <fieldset>
-            <legend><i class="far fa-address-card"></i> &nbsp; Información personal</legend>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label 
-                                for="itm_name" 
-                                class="bmd-label-floating">
-                                Nombre
-                            </label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="itm_name" 
-                                name="itm_name"
-                                [(ngModel)]="item.itm_name">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-group">
-                            <label 
-                                for="itm_description" 
-                                class="bmd-label-floating">
-                                Descripcion
-                            </label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="itm_description" 
-                                name="itm_description" 
-                                [(ngModel)]="item.itm_description">
-                        </div>
-                    </div>
+<div class="item-form-container">
+    <div class="item-card">
+        <div class="item-card-header">
+            <i class="fas fa-tag header-icon"></i>
+            <span class="header-title">Detalles del Rubro</span>
+        </div>
+        
+        <form 
+            nz-form 
+            nzLayout="vertical"
+            name="formItem"
+            #formItem="ngForm" 
+            autocomplete="off"
+            class="modern-form">
+            
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <nz-form-item>
+                        <nz-form-label nzRequired nzFor="itm_name">Nombre del Rubro</nz-form-label>
+                        <nz-form-control nzErrorTip="Por favor ingrese el nombre del rubro">
+                            <nz-input-group [nzPrefix]="prefixIconTag">
+                                <input 
+                                    nz-input 
+                                    type="text" 
+                                    id="itm_name" 
+                                    name="itm_name"
+                                    placeholder="Ej: Electrónica, Servicios, etc."
+                                    [(ngModel)]="item.itm_name"
+                                    required />
+                            </nz-input-group>
+                            <ng-template #prefixIconTag><span nz-icon nzType="tag"></span></ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <nz-form-item>
+                        <nz-form-label nzFor="itm_description">Descripción</nz-form-label>
+                        <nz-form-control>
+                            <nz-input-group [nzPrefix]="prefixIconFile">
+                                <input 
+                                    nz-input 
+                                    type="text" 
+                                    id="itm_description" 
+                                    name="itm_description" 
+                                    placeholder="Descripción breve opcional..."
+                                    [(ngModel)]="item.itm_description" />
+                            </nz-input-group>
+                            <ng-template #prefixIconFile><span nz-icon nzType="file-text"></span></ng-template>
+                        </nz-form-control>
+                    </nz-form-item>
                 </div>
             </div>
-        </fieldset>
-        <br><br><br>
-        <p class="text-center" style="margin-top: 40px;">
-            @if(item.itm_uuid === "new") {
-                <button 
-                    type="reset" 
-                    class="btn btn-raised btn-secondary btn-sm"
-                    (click)="itemInit()"
-                    >
-                    <i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR
-                </button>
-                &nbsp; &nbsp;
-                <button 
-                    type="submit" 
-                    class="btn btn-raised btn-info btn-sm"
-                    (click)="onSaveItem(formItem)"
-                    [disabled]="isLoading"
-                    >
-                    @if(isLoading) {
-                        <span class="spinner spinner-sm me-2"></span>
-                        <span>Procesando...</span>
-                    } @else {
-                        <i class="far fa-save"></i> &nbsp; GUARDAR
-                    }
-                </button>
-            } @else {
-                <button 
-                    type="submit" 
-                    class="btn btn-raised btn-success btn-sm"
-                    (click)="onSaveItem(formItem)"
-                    [disabled]="isLoading"
-                    >
-                    @if(isLoading) {
-                        <span class="spinner spinner-sm me-2"></span>
-                        <span>Procesando...</span>
-                    } @else {
-                        <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
-                    }
-                </button>
-            }
-        </p>
-    </form>
-</div>
+
+            <div class="form-actions mt-4">
+                @if(item.itm_uuid === "new") {
+                    <button 
+                        nz-button 
+                        nzType="default" 
+                        type="button"
+                        class="action-btn clear-btn"
+                        (click)="itemInit()">
+                        <span nz-icon nzType="rest"></span> LIMPIAR FORMULARIO
+                    </button>
+                    
+                    <button 
+                        nz-button 
+                        nzType="primary" 
+                        type="submit"
+                        class="action-btn save-btn"
+                        (click)="onSaveItem(formItem)"
+                        [nzLoading]="isLoading">
+                        <span nz-icon nzType="save"></span> GUARDAR RUBRO
+                    </button>
+                } @else {
+                    <button 
+                        nz-button 
+                        nzType="default" 
+                        type="button"
+                        class="action-btn back-btn"
+                        routerLink="/admin/application/items">
+                        <span nz-icon nzType="arrow-left"></span> VOLVER
+                    </button>
+
+                    <button 
+                        nz-button 
+                        nzType="primary" 
+                        type="submit"
+                        class="action-btn update-btn"
+                        (click)="onSaveItem(formItem)"
+                        [nzLoading]="isLoading">
+                        <span nz-icon nzType="sync"></span> ACTUALIZAR RUBRO
+                    </button>
+                }
+            </div>
+        </form>
+    </div>
+</div>

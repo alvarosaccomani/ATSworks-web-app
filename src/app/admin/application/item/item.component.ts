@@ -6,13 +6,23 @@ import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/p
 import { MessageService } from '../../../core/services/message.service';
 import { ItemInterface } from '../../../core/interfaces/item';
 import { ItemsService } from '../../../core/services/items.service';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+
 
 @Component({
   selector: 'app-item',
   imports: [
     FormsModule,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    NzFormModule,
+    NzInputModule,
+    NzButtonModule,
+    NzIconModule
+
   ],
   templateUrl: './item.component.html',
   styleUrl: './item.component.scss'
