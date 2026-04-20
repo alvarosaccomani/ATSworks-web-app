@@ -4,15 +4,15 @@
     <div class="full-box nav-lateral-content">
         <figure class="full-box nav-lateral-avatar">
             @if(identity) {
-                <i 
-                    class="far fa-times-circle
-                    show-nav-lateral"
-                    (click)="closeNavBar()"
-                    >
-                </i>
-                <img [src]="identity.usr_image" class="img-fluid" alt="Avatar">
+                <i class="far fa-times-circle show-nav-lateral" (click)="closeNavBar()"></i>
+                <div class="avatar-container">
+                    <img [src]="identity.usr_image" class="img-fluid" alt="Avatar">
+                    <span class="status-indicator"></span>
+                </div>
                 <figcaption class="roboto-medium text-center">
-                    {{identity.usr_nick}} <br><small class="roboto-condensed-light">{{identity.usr_name}} {{identity.usr_surname}}</small>
+                    {{identity.usr_nick}} 
+                    <br>
+                    <small class="roboto-condensed-light">{{identity.usr_name}} {{identity.usr_surname}}</small>
                 </figcaption>
             }
         </figure>
