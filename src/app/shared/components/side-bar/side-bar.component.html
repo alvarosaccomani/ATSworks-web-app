@@ -1,10 +1,19 @@
+<!-- Nav lateral background (Overlay) -->
+<div class="full-box nav-lateral-bg" 
+     *ngIf="isSidebarVisible" 
+     (click)="closeNavBar()"></div>
+
 <!-- Nav lateral -->
-<section class="full-box nav-lateral">
-    <div class="full-box nav-lateral-bg show-nav-lateral"></div>
-    <div class="full-box nav-lateral-content">
+<section class="full-box nav-lateral" [class.mini-mode]="isMiniMode" [class.active]="!isSidebarVisible">
+    <div class="full-box nav-lateral-content" (click)="$event.stopPropagation()">
+        <div class="nav-lateral-header" *ngIf="!isMiniMode">
+            <button class="close-sidebar-btn show-nav-lateral" (click)="closeNavBar()" title="Cerrar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
         <figure class="full-box nav-lateral-avatar">
             @if(identity) {
-                <i class="far fa-times-circle show-nav-lateral" (click)="closeNavBar()"></i>
                 <div class="avatar-container">
                     <img [src]="identity.usr_image" class="img-fluid" alt="Avatar">
                     <span class="status-indicator"></span>
@@ -16,7 +25,19 @@
                 </figcaption>
             }
         </figure>
+
+        <div class="nav-lateral-search" *ngIf="!isMiniMode">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" 
+                       [(ngModel)]="searchText" 
+                       (input)="onSearchChange()" 
+                       placeholder="Buscar en el menú...">
+            </div>
+        </div>
+
         <div class="full-box nav-lateral-bar"></div>
+
         @if(selectedCompany) {
             <nav class="full-box nav-lateral-menu">
                 <ul>
@@ -24,6 +45,18 @@
                 </ul>
             </nav>
         }
+
+        <div class="nav-lateral-footer">
+            <div class="footer-info" *ngIf="!isMiniMode">
+                <span class="version">v{{appVersion}}</span>
+                <span class="status">
+                    <i class="fas fa-check-circle"></i> {{syncStatus}}
+                </span>
+            </div>
+            <button class="toggle-mini" (click)="toggleMiniMode()" [title]="isMiniMode ? 'Expandir' : 'Colapsar'">
+                <i class="fas" [ngClass]="isMiniMode ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+            </button>
+        </div>
     </div>
 </section>
 
@@ -37,9 +70,15 @@
                style="cursor: pointer;">
 
                 <i class="{{ item.icon }}"></i>
-                &nbsp; {{ item.name }}
+                <span class="menu-label">{{ item.name }}</span>
 
-                @if(item.hasSubmenu) {
+                @if(item.badge && !isMiniMode) {
+                    <span class="menu-badge" [ngClass]="'badge-' + (item.badgeType || 'primary')">
+                        {{ item.badge }}
+                    </span>
+                }
+
+                @if(item.hasSubmenu && !isMiniMode) {
                     <i class="fas fa-chevron-down"
                        [class.fa-rotate-180]="item.isOpen">
                     </i>
@@ -53,4 +92,4 @@
             }
         </li>
     }
-</ng-template>
+</ng-template>

@@ -109,15 +109,7 @@ export class NavBarComponent implements OnInit {
   }
 
   public showCloseNavBar(): void {
-    var NavLateral = $('.nav-lateral');
-    var PageConten = $('.page-content');
-    if (NavLateral.hasClass('active')) {
-      NavLateral.removeClass('active');
-      PageConten.removeClass('active');
-    } else {
-      NavLateral.addClass('active');
-      PageConten.addClass('active');
-    }
+    this._sharedDataService.toggleSidebarVisibility();
   }
 
   public groupByCompany(data: any[]): any[] {

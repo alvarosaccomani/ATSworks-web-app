@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { HasPermissionDirective } from '../../directives/has-permission.directive';
 import { UserInterface } from '../../../core/interfaces/user';
 import { SessionService } from '../../../core/services/session.service';
@@ -14,7 +15,8 @@ declare var $: any;
   imports: [
     CommonModule,
     HasPermissionDirective,
-    RouterLink
+    RouterLink,
+    FormsModule
   ],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss'
@@ -32,6 +34,11 @@ export class SideBarComponent {
   public menuItems: any;
   public selectedCompany: any;
   public filteredNavigation: any[] = [];
+  public originalNavigation: any[] = []; // Full navigation after role filtering
+  public searchText: string = '';
+  public isMiniMode: boolean = false;
+  public appVersion: string = '1.2.4-stable';
+  public syncStatus: string = 'Sincronizado';
 
   ngOnInit(): void {
     let cmp_uuid;
@@ -56,7 +63,18 @@ export class SideBarComponent {
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       this.setCompany(company);
     });
+
+    // Suscribirse al estado del sidebar
+    this._sharedDataService.sidebarVisible$.subscribe(visible => {
+      this.isSidebarVisible = visible;
+    });
+
+    this._sharedDataService.sidebarMini$.subscribe(mini => {
+      this.isMiniMode = mini;
+    });
   }
+
+  public isSidebarVisible: boolean = true;
 
   private setCompany(company: any): void {
     if (company) {
@@ -84,28 +102,64 @@ export class SideBarComponent {
       );
 
       // 3. Filtrar la navegación usando ambos criterios
-      this.filteredNavigation = this.filterNavigationByRolesAndPermissions(
+      const filtered = this.filterNavigationByRolesAndPermissions(
         this.menuItems,
         userRoles,
         userPermissions
       );
+      this.originalNavigation = filtered;
+      this.applySearchFilter();
 
     } else {
       // Si no hay empresa o roles, por seguridad podrías preferir un menú vacío
+      this.originalNavigation = [];
       this.filteredNavigation = [];
     }
   }
 
-  public closeNavBar(): void {
-    var NavLateral = $('.nav-lateral');
-    var PageConten = $('.page-content');
-    if (NavLateral.hasClass('active')) {
-      NavLateral.removeClass('active');
-      PageConten.removeClass('active');
-    } else {
-      NavLateral.addClass('active');
-      PageConten.addClass('active');
+  public onSearchChange(): void {
+    this.applySearchFilter();
+  }
+
+  private applySearchFilter(): void {
+    if (!this.searchText.trim()) {
+      this.filteredNavigation = this.originalNavigation;
+      return;
     }
+
+    const search = this.searchText.toLowerCase().trim();
+    this.filteredNavigation = this.filterBySearch(this.originalNavigation, search);
+  }
+
+  private filterBySearch(items: any[], term: string): any[] {
+    return items
+      .map(item => {
+        const matchesName = item.name.toLowerCase().includes(term);
+        let matchingSubmenu = [];
+
+        if (item.submenu) {
+          matchingSubmenu = this.filterBySearch(item.submenu, term);
+        }
+
+        if (matchesName || matchingSubmenu.length > 0) {
+          // Si hay coincidencias en hijos o en el nombre, clonamos e incluimos
+          return {
+            ...item,
+            isOpen: matchesName ? item.isOpen : true, // Auto-expandir si coinciden hijos
+            submenu: item.submenu ? matchingSubmenu : undefined
+          };
+        }
+        return null;
+      })
+      .filter(item => item !== null);
+  }
+
+  public toggleMiniMode(): void {
+    this._sharedDataService.toggleSidebarMini();
+  }
+
+  public closeNavBar(): void {
+    this._sharedDataService.toggleSidebarVisibility();
   }
 
   public toggleSubMenu(item: any) {

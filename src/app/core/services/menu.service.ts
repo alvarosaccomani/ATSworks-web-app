@@ -14,6 +14,8 @@ export interface MenuItem {
   companies?: string[];
   submenu?: MenuItem[];
   visible?: boolean;
+  badge?: number | string;
+  badgeType?: 'primary' | 'danger' | 'warning' | 'success' | 'info';
 }
 
 export interface DashboardItem {
@@ -172,6 +174,8 @@ export class MenuService {
       isOpen: false,
       allowedRoles: ['admin', 'viewer', 'editor'],
       appPermission: 'menu.clientes',
+      badge: 12,
+      badgeType: 'info',
       submenu: [
         {
           id: '41',
@@ -296,6 +300,8 @@ export class MenuService {
       isOpen: false,
       allowedRoles: ['admin', 'viewer', 'editor'],
       appPermission: 'menu.trabajos',
+      badge: 5,
+      badgeType: 'danger',
       submenu: [
         {
           id: '71',

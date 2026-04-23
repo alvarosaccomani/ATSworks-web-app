@@ -63,6 +63,22 @@ body,html{
 	border-radius: 3px;
 }
 
+/* Improve contrast for Material Labels */
+.bmd-label-floating {
+    color: #555 !important; /* Darker for better legibility */
+    font-weight: 500;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Global Avatar fix (Safety) */
+.nav-lateral-avatar img {
+    max-width: 90px !important;
+    height: auto !important;
+}
+
 /* Los estilos de .page-header han sido movidos y modernizados en su componente respectivo */
 
 /* Los estilos de .page-nav-tabs han sido movidos y modernizados en su componente respectivo */
@@ -187,13 +203,101 @@ table form{
 .page-content{
 	height: 100vh;
 }
-.page-content{
+.page-content {
 	position: relative;
 	padding-left: 300px;
-	transition: all .2s ease-in-out;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+
+    &.active {
+        padding-left: 0 !important;
+    }
+
+    &.mini-active {
+        padding-left: 80px !important;
+    }
+}
+
+.page-container-body {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+/* Premium Switch Component */
+.premium-switch-container {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--color-three);
+    }
+
+    .switch-info {
+        flex: 1;
+        
+        h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--accent-color);
+            font-family: 'roboto_medium_regular';
+        }
+
+        p {
+            margin: 4px 0 0;
+            font-size: 0.8rem;
+            color: #777;
+        }
+    }
+}
+
+.premium-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        &:checked + .slider {
+            background-color: var(--color-three);
+            &::before { transform: translateX(20px); }
+        }
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+        &::before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+    }
 }
 
 /* Los estilos de .nav-lateral han sido movidos y modernizados en su componente respectivo */

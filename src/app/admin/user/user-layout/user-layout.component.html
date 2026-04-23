@@ -1,8 +1,12 @@
 <!-- Main container -->
 <main class="full-box main-container">
     <app-side-bar [identity]="identity"></app-side-bar>
-    <section class="full-box page-content">
+    <section class="full-box page-content" 
+             [class.active]="!isSidebarVisible"
+             [class.mini-active]="isMiniMode && isSidebarVisible">
         <app-nav-bar [identity]="identity"></app-nav-bar>
-        <router-outlet></router-outlet>
+        <div class="page-container-body">
+            <router-outlet></router-outlet>
+        </div>
     </section>
 </main>
