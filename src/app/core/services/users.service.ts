@@ -49,6 +49,20 @@ export class UsersService {
     return this._http.get<UserResults>(environment.apiUrl + 'users/' + filter, {headers:headers})
   }
 
+  public userNickExist(usr_nick: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+    let params = JSON.stringify({usr_nick: usr_nick});
+
+    return this._http.post(environment.apiUrl + 'user-nick-exist', params, {headers:headers});
+  }
+
+  public userEmailExist(usr_email: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type','application/json');
+    let params = JSON.stringify({usr_email: usr_email});
+
+    return this._http.post(environment.apiUrl + 'user-email-exist', params, {headers:headers});
+  }
+
   public getUserById(usr_uuid: string): Observable<any> {
     let headers = new HttpHeaders().set('content-type','application/json');
 
