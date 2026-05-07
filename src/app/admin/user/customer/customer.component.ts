@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { CustomerInterface } from '../../../core/interfaces/customer';
@@ -14,6 +16,9 @@ import { RoutesService } from '../../../core/services/routes.service';
 import { PaymentMethodsService } from '../../../core/services/payment-methods.service';
 import { SubscriptionPlansService } from '../../../core/services/subscription-plans.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
+import { UsersService } from '../../../core/services/users.service';
+import { RolesService } from '../../../core/services/roles.service';
+import { UserRolesCompanyService } from '../../../core/services/user-roles-company.service';
 import { AddressInterface } from '../../../core/interfaces/address';
 import { SubscriptionPlanInterface } from '../../../core/interfaces/subscription-plan';
 
@@ -36,6 +41,14 @@ export class CustomerComponent {
   public subscriptionsPlans: SubscriptionPlanInterface[] = [];
   public cus_subscriptionplanbycustomer: boolean = true;
   public isLoading: boolean = false;
+  public createSystemUser: boolean = false;
+  public automatedUserNick: string = '';
+  public nickStatus: 'none' | 'checking' | 'available' | 'taken' = 'none';
+  public emailStatus: 'none' | 'checking' | 'available' | 'taken' = 'none';
+  private isNickManual: boolean = false;
+  private nickSubject = new Subject<string>();
+  private emailSubject = new Subject<string>();
+  public currentYear: number = new Date().getFullYear();
   public headerConfig: any = {};
   public dataTabs: any = [
     {
@@ -70,10 +83,33 @@ export class CustomerComponent {
     private _routesService: RoutesService,
     private _paymentMethodsService: PaymentMethodsService,
     private _subscriptionPlansService: SubscriptionPlansService,
-    private _sharedDataService: SharedDataService
+    private _sharedDataService: SharedDataService,
+    private _usersService: UsersService,
+    private _rolesService: RolesService,
+    private _userRolesCompanyService: UserRolesCompanyService
   ) {
     this.isLoading = false;
     this.customerInit();
+    this.initNickValidation();
+    this.initEmailValidation();
+  }
+
+  private initNickValidation(): void {
+    this.nickSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(nick => {
+      this.performNickCheck(nick);
+    });
+  }
+
+  private initEmailValidation(): void {
+    this.emailSubject.pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    ).subscribe(email => {
+      this.performEmailCheck(email);
+    });
   }
 
   ngOnInit(): void {
@@ -128,7 +164,11 @@ export class CustomerComponent {
       cus_updatedat: null,
       cus_active: true,
       cus_order: null
-    }
+    };
+    this.automatedUserNick = '';
+    this.isNickManual = false;
+    this.nickStatus = 'none';
+    this.emailStatus = 'none';
   }
 
   private verifySubscriptionPlan(addresses: any): void {
@@ -281,11 +321,103 @@ export class CustomerComponent {
     }
   }
 
+  public onFullNameChange(name: string): void {
+    if (this.customer.cus_uuid === 'new' && !this.isNickManual) {
+      this.automatedUserNick = this.generateNick(name);
+      this.checkNickAvailability();
+    }
+  }
+
+  public onNickChange(): void {
+    this.isNickManual = true;
+    this.checkNickAvailability();
+  }
+
+  public onEmailChange(): void {
+    this.checkEmailAvailability();
+  }
+
+  private generateNick(name: string): string {
+    if (!name) return '';
+    return name.toLowerCase()
+      .trim()
+      .replace(/\s+/g, '')
+      .replace(/[^a-z0-9]/g, '')
+      .substring(0, 50);
+  }
+
+  private checkNickAvailability(): void {
+    if (!this.automatedUserNick || this.automatedUserNick.length < 3) {
+      this.nickStatus = 'none';
+      return;
+    }
+    this.nickStatus = 'checking';
+    this.nickSubject.next(this.automatedUserNick);
+  }
+
+  private performNickCheck(nick: string): void {
+    this._usersService.userNickExist(nick).subscribe(
+      (response: any) => {
+        if (response.success && response.data) {
+          this.nickStatus = 'taken';
+        } else {
+          this.nickStatus = 'available';
+        }
+      },
+      error => {
+        console.error('Error checking nick availability', error);
+        this.nickStatus = 'none';
+      }
+    );
+  }
+
+  private checkEmailAvailability(): void {
+    const email = this.customer.cus_email;
+    if (!email || email.length < 3 || !email.includes('@')) {
+      this.emailStatus = 'none';
+      return;
+    }
+    this.emailStatus = 'checking';
+    this.emailSubject.next(email);
+  }
+
+  private performEmailCheck(email: string): void {
+    this._usersService.userEmailExist(email).subscribe(
+      (response: any) => {
+        if (response.success && response.data) {
+          this.emailStatus = 'taken';
+        } else {
+          this.emailStatus = 'available';
+        }
+      },
+      error => {
+        console.error('Error checking email availability', error);
+        this.emailStatus = 'none';
+      }
+    );
+  }
+
   private validate(): boolean {
     if (!this.customer.cus_fullname) {
       this._messageService.error(
         "Error",
         "El nombre de cliente no puede estar vacio."
+      );
+      return false;
+    }
+
+    if ((this.createSystemUser && this.nickStatus === 'taken') || this.emailStatus === 'taken') {
+      this._messageService.error(
+        "Error",
+        "El nombre de usuario o email ya está en uso. Por favor elija otro."
+      );
+      return false;
+    }
+
+    if (this.createSystemUser && !this.automatedUserNick) {
+      this._messageService.error(
+        "Error",
+        "El nombre de usuario es obligatorio si desea crear un acceso digital."
       );
       return false;
     }
@@ -376,12 +508,18 @@ export class CustomerComponent {
     customer.cus_dateofbirth = (customer.cus_dateofbirth && customer.cus_dateofbirth.indexOf("-") != -1 ? customer.cus_dateofbirth : null);
 
     this._customersService.saveCustomer(customer).subscribe(
-      response => {
+      async (response: any) => {
         if (response.success) {
           this.isLoading = false;
-          const customer = response.customer;
+          // El API debería retornar el cliente creado
+          const createdCustomer = response.data;
+          
+          if (this.createSystemUser && createdCustomer) {
+            await this.createAutomatedUser(createdCustomer);
+          }
+
           this._messageService.success(
-            "Informacion",
+            "Información",
             "El Cliente fue agregado correctamente.",
             () => {
               this._router.navigate(['/admin/user/customers']);
@@ -389,7 +527,6 @@ export class CustomerComponent {
           );
         } else {
           this.isLoading = false;
-          //this.status = 'error'
         }
       },
       error => {
@@ -404,6 +541,52 @@ export class CustomerComponent {
         }
       }
     )
+  }
+
+  private async createAutomatedUser(customer: CustomerInterface): Promise<void> {
+    const currentYear = this.currentYear;
+    // Usar el nick validado manualmente
+    const nick = this.automatedUserNick || this.generateNick(customer.cus_fullname || '');
+    const password = `${nick}${currentYear}`;
+
+    const newUser = {
+      usr_name: customer.cus_fullname?.split(' ')[0] || customer.cus_fullname,
+      usr_surname: customer.cus_fullname?.split(' ').slice(1).join(' ') || '',
+      usr_email: customer.cus_email,
+      usr_nick: nick,
+      usr_password: password,
+      usr_confirmed: true
+    };
+
+    try {
+      // Registro de usuario
+      const userResponse: any = await this._usersService.saveUser(newUser).toPromise();
+      if (userResponse && userResponse.user) {
+        const usr_uuid = userResponse.user.usr_uuid;
+
+        // Buscar Rol "Cliente" (asumimos que existe)
+        const rolesResponse: any = await this._rolesService.getRoles('all').toPromise();
+        const clientRole = rolesResponse?.data?.find((r: any) => 
+          r.rol_name.toLowerCase().includes('client') || r.rol_name.toLowerCase().includes('cliente')
+        );
+
+        if (clientRole) {
+          await this._userRolesCompanyService.insertUserRolCompany({
+            usr_uuid: usr_uuid,
+            rol_uuid: clientRole.rol_uuid,
+            cmp_uuid: customer.cmp_uuid
+          }).toPromise();
+        }
+
+        // Vincular el usr_uuid al registro del cliente
+        customer.usr_uuid = usr_uuid;
+        await this._customersService.updateCustomer(customer).toPromise();
+        console.info('Acceso digital creado exitosamente para el cliente');
+      }
+    } catch (error) {
+      console.error('Error en creación automatizada:', error);
+      this._messageService.error("Aviso", "El cliente se creó, pero no se pudo generar su acceso digital automáticamente.");
+    }
   }
 
   public onSaveCustomer(formCustomer: NgForm): void {

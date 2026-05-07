@@ -60,7 +60,8 @@
                                 class="form-control"
                                 id="cus_fullname"
                                 name="cus_fullname"
-                                [(ngModel)]="customer.cus_fullname">
+                                [(ngModel)]="customer.cus_fullname"
+                                (ngModelChange)="onFullNameChange($event)">
                         </div>
                     </div>
                     <div class="col-12 col-md-5">
@@ -75,7 +76,23 @@
                                 class="form-control"
                                 id="cus_email"
                                 name="cus_email"
-                                [(ngModel)]="customer.cus_email">
+                                [(ngModel)]="customer.cus_email"
+                                (ngModelChange)="onEmailChange()">
+                            <div class="nick-validation-status">
+                                @if(emailStatus === 'checking') {
+                                    <span class="status-checking">
+                                        <i class="fas fa-spinner fa-spin"></i> Validando...
+                                    </span>
+                                } @else if(emailStatus === 'available') {
+                                    <span class="status-available">
+                                        <i class="fas fa-check-circle"></i> Email disponible
+                                    </span>
+                                } @else if(emailStatus === 'taken') {
+                                    <span class="status-taken">
+                                        <i class="fas fa-times-circle"></i> Email en uso
+                                    </span>
+                                }
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-2">
@@ -230,6 +247,85 @@
                 </div>
             </div>
         </fieldset>
+
+        <!-- Acceso Digital (Premium Toggle) -->
+        @if(customer.cus_uuid === "new") {
+            <fieldset>
+                <legend><i class="fas fa-key"></i> &nbsp; Acceso Digital</legend>
+                <div class="container-fluid">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-8">
+                            <div class="premium-switch-container">
+                                <div class="switch-info">
+                                    <h5>¿Crear usuario de sistema?</h5>
+                                    <p>Habilita el acceso del cliente a la plataforma usando su nombre como login.</p>
+                                </div>
+                                <label class="premium-switch">
+                                    <input type="checkbox" name="createSystemUser" [(ngModel)]="createSystemUser">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            @if(createSystemUser) {
+                                <div class="row align-items-end mt-3 animate__animated animate__fadeIn">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group mb-0">
+                                            <label for="automatedUserNick" class="bmd-label-floating">Nombre de Usuario (Login)</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" style="background: transparent; border: none; padding-right: 0;">
+                                                        <i class="fas fa-at text-muted"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="text" 
+                                                       class="form-control" 
+                                                       id="automatedUserNick" 
+                                                       name="automatedUserNick" 
+                                                       [(ngModel)]="automatedUserNick"
+                                                       (ngModelChange)="onNickChange()"
+                                                       placeholder="ej: juanperez">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="nick-validation-status">
+                                            @if(nickStatus === 'checking') {
+                                                <span class="status-checking">
+                                                    <i class="fas fa-spinner fa-spin"></i> Validando...
+                                                </span>
+                                            } @else if(nickStatus === 'available') {
+                                                <span class="status-available">
+                                                    <i class="fas fa-check-circle"></i> Usuario disponible
+                                                </span>
+                                            } @else if(nickStatus === 'taken') {
+                                                <span class="status-taken">
+                                                    <i class="fas fa-times-circle"></i> Usuario en uso
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert mt-3" 
+                                     style="background: rgba(236, 82, 82, 0.05); border: 1px dashed var(--color-three); color: var(--accent-color); border-radius: 12px; padding: 15px;">
+                                    <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                        <i class="fas fa-shield-alt" style="font-size: 1.5rem; color: var(--color-three); margin-top: 5px;"></i>
+                                        <div>
+                                            <strong style="display: block; margin-bottom: 5px;">Credenciales de Acceso:</strong>
+                                            <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">
+                                                El cliente ingresará con el usuario <strong>{{automatedUserNick || '...'}}</strong> 
+                                                y la contraseña inicial será <strong>{{automatedUserNick || 'usuario'}}{{currentYear}}</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        }
+
         <fieldset>
             <legend><i class="fa fa-map"></i> &nbsp; Direcciones</legend>
             <button (click)="addAddress()" class="btn btn-primary">
@@ -288,7 +384,7 @@
                     type="submit" 
                     class="btn btn-raised btn-info btn-sm"
                     (click)="onSaveCustomer(formCustomer)"
-                    [disabled]="isLoading"
+                    [disabled]="isLoading || (createSystemUser && nickStatus === 'taken') || emailStatus === 'taken'"
                     >
                     @if(isLoading) {
                         <span class="spinner spinner-sm me-2"></span>
@@ -302,7 +398,7 @@
                     type="submit" 
                     class="btn btn-raised btn-success btn-sm"
                     (click)="onSaveCustomer(formCustomer)"
-                    [disabled]="isLoading"
+                    [disabled]="isLoading || (createSystemUser && nickStatus === 'taken') || emailStatus === 'taken'"
                     >
                     @if(isLoading) {
                         <span class="spinner spinner-sm me-2"></span>
