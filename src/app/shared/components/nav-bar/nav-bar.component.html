@@ -1,8 +1,10 @@
 <nav class="navbar-info-container">
     <div class="navbar-left">
+    @if(!isCustomer) {
         <a class="nav-icon-btn" (click)="showCloseNavBar()" title="Menú">
             <i class="fas fa-bars"></i>
         </a>
+    }
     </div>
 
     <div class="navbar-right">

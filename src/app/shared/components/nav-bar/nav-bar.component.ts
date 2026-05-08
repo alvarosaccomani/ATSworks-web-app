@@ -36,6 +36,7 @@ export class NavBarComponent implements OnInit {
   public userRolesCompany$!: Observable<UserRolCompanyResults>;
   public userRolesCompany!: any;
   public companyItems$!: Observable<CompanyItemResults>;
+  public isCustomer: boolean = false;
 
   constructor(
     private _router: Router,
@@ -76,9 +77,10 @@ export class NavBarComponent implements OnInit {
       this.userRolesCompany$.subscribe((userRolesCompany: any) => {
         this.userRolesCompany = this.groupByCompany(userRolesCompany.data);
         if(this.userRolesCompany.length === 1) {
-          let company = this.userRolesCompany[0];
-          this.selectedCompany = company.cmp_uuid;
-          this._sessionService.setCompany(JSON.stringify(company));
+          this.company = this.userRolesCompany[0];
+          this.selectedCompany = this.company.cmp_uuid;
+          this._sessionService.setCompany(JSON.stringify(this.company));
+          this.checkIsCustomer();
         }
         //Obtengo Company Items
         this.companyItems$ = this._companyItemsService.getCompanyItems(userRolesCompany.data[0].cmp.cmp_uuid!);
@@ -105,6 +107,18 @@ export class NavBarComponent implements OnInit {
     if(this.company) {
       this.selectedCompany = this.company.cmp_uuid;
       this._sharedDataService.setSelectedCompany(this.company);
+      this.checkIsCustomer();
+    }
+  }
+
+  private checkIsCustomer(): void {
+    if (this.company && this.company.roles) {
+      this.isCustomer = this.company.roles.some((r: any) => 
+        r.rol_name.toLowerCase().includes('client') || 
+        r.rol_name.toLowerCase().includes('cliente')
+      );
+    } else {
+      this.isCustomer = false;
     }
   }
 
@@ -157,6 +171,7 @@ export class NavBarComponent implements OnInit {
         this._sessionService.setCompanyItems(companyItems.data);
       });
       this._sharedDataService.setSelectedCompany(selectedCompany);
+      this.checkIsCustomer();
       this._router.navigate(['/admin/user/dashboard']);
     }
   }
