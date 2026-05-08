@@ -1,62 +1,125 @@
 .card-address {
-    display: flex; 
+    display: flex;
     flex-direction: row;
-    align-items: center;
-    width: 100%; 
-    border: 1px solid var(--border-color);
-    background-color: #FFF;
-    box-shadow: 1.5px 1.5px 1.5px 1px rgba(0, 0, 0, 0.2);
-    border-radius: 3px; 
-    padding: 10px; 
-    margin: 5px 0 0 0;
+    align-items: stretch;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 0;
+    margin: 15px 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: var(--color-three, #3085d6);
+    }
 }
 
 .card-address-left {
-    width: 90%;
-}
+    flex: 1;
+    padding: 20px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-.card-address-left-label {
-    font-size: 13px;
+    .address-main {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+
+        i {
+            color: var(--color-three, #3085d6);
+            font-size: 1.2rem;
+            margin-top: 4px;
+        }
+
+        h4 {
+            margin: 0;
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+    }
 }
 
 .card-address-left-bottom {
     display: flex;
-    flex-direction: row;
+    gap: 20px;
+    padding-left: 32px;
 }
 
-.card-address-left-bottom-city {
+.address-info-group {
     display: flex;
     flex-direction: column;
-    margin: 5px 10px 0 0;
-}
+    gap: 4px;
 
-.card-address-left-bottom-city-data {
-    display: flex;
-    flex-direction: row;
-    h5 {
-        margin: 0 10px 0 0;
+    label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #718096;
+        font-weight: 600;
+        margin: 0;
     }
-}
 
-.card-address-left-bottom-province {
-    display: flex;
-    flex-direction: column;
-    margin: 5px 10px 0 0;
-    h5 {
-        margin: 0 10px 0 0;
+    .info-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .postal-code {
+            background: #edf2f7;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
     }
 }
 
 .card-address-right {
-    display: flex; 
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 10%;
-}
+    display: flex;
+    flex-direction: column;
+    width: 70px;
+    background: #f8fafc;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
 
-.card-address-right-form {
-    margin: 0;
+    .action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border: none;
+        background: transparent;
+        transition: all 0.2s;
+        font-size: 1.1rem;
+        cursor: pointer;
+
+        &.edit {
+            color: #38a169;
+            &:hover { background: #f0fff4; }
+        }
+
+        &.delete {
+            color: #e53e3e;
+            &:hover { background: #fff5f5; }
+        }
+    }
 }
 
 .nick-validation-status {

@@ -336,34 +336,39 @@
                 @for(address of customer.addresses; track address.adr_uuid) {
                     <div class="card-address">
                         <div class="card-address-left">
-                            <label class="card-address-left-label">Direccion</label>
-                            <h4>{{address.adr_address}}</h4>
+                            <div class="address-main">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <h4>{{address.adr_address}}</h4>
+                            </div>
+                            
                             <div class="card-address-left-bottom">
-                                <div class="card-address-left-bottom-city">
-                                    <label class="card-address-left-label">Ciudad</label>
-                                    <div class="card-address-left-bottom-city-data">
-                                        <h5>{{address.adr_postalcode}}</h5>
+                                <div class="address-info-group">
+                                    <label>Ciudad</label>
+                                    <div class="info-content">
+                                        <span class="postal-code">{{address.adr_postalcode}}</span>
                                         <h5>{{address.adr_city}}</h5>
                                     </div>
                                 </div>
-                                <div class="card-address-left-bottom-province">
-                                    <label class="card-address-left-label">Provincia</label>
-                                    <h5>{{address.adr_province}}</h5>
+                                <div class="address-info-group">
+                                    <label>Provincia</label>
+                                    <div class="info-content">
+                                        <h5>{{address.adr_province}}</h5>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="card-address-right">
-                            <a [routerLink]="['/admin/user/address', address.cus_uuid, address.adr_uuid, customer.cus_subscriptionplanbycustomer]" class="btn btn-success">
-                                <i class="fas fa-sync-alt"></i>	
+                            <a [routerLink]="['/admin/user/address', address.cus_uuid, address.adr_uuid, customer.cus_subscriptionplanbycustomer]" 
+                               class="action-btn edit" title="Editar Dirección">
+                                <i class="fas fa-edit"></i>
                             </a>
-                            <form action="" class="card-address-right-form">
-                                <button 
-                                    type="button" 
-                                    class="btn btn-warning"
-                                    (click)="deleteAddress(address)">
-                                    <i class="far fa-trash-alt"></i>
-                                </button>
-                            </form>
+                            <button type="button" 
+                                    class="action-btn delete" 
+                                    (click)="deleteAddress(address)"
+                                    title="Eliminar Dirección">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
                     </div>
                 }
