@@ -55,6 +55,12 @@ export class CustomersService {
     return this._http.get(environment.apiUrl + 'customer/' + cmp_uuid + '/' + cus_uuid, { headers: headers });
   }
 
+  public getCustomerByUserId(cmp_uuid: string, usr_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type', 'application/json');
+
+    return this._http.get(environment.apiUrl + 'customer-user/' + cmp_uuid + '/' + usr_uuid, { headers: headers });
+  }
+
   public saveCustomer(customer: any): Observable<any> {
     let params = JSON.stringify(customer);
     let headers = new HttpHeaders().set('content-type', 'application/json');
