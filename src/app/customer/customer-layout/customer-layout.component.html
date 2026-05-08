@@ -1,1 +1,9 @@
-<p>customer-layout works!</p>
+<!-- Main container -->
+<main class="full-box main-container">
+    <section class="full-box page-content active">
+        <app-nav-bar [identity]="identity"></app-nav-bar>
+        <div class="page-container-body">
+            <router-outlet></router-outlet>
+        </div>
+    </section>
+</main>
