@@ -287,8 +287,25 @@ export class CustomerComponent {
     )
   }
 
-  public addAddress(): void {
-    this._router.navigate(['/admin/user/address', this.customer.cus_uuid, 'new', this.customer.cus_subscriptionplanbycustomer]);
+  public addAddress(formCustomer: NgForm): void {
+    if (this.customer.cus_uuid === 'new') {
+      if (this.validate()) {
+        this._messageService.showCustomMessage({
+          title: "Guardar cliente necesario",
+          text: "Para agregar una dirección primero debemos registrar al cliente. ¿Deseas guardarlo ahora y continuar?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonText: "Sí, guardar y agregar dirección",
+          cancelButtonText: "No, cancelar"
+        }, (result: any) => {
+          if (result.value) {
+            this.insertCustomer(formCustomer, true);
+          }
+        });
+      }
+    } else {
+      this._router.navigate(['/admin/user/address', this.customer.cus_uuid, 'new', this.customer.cus_subscriptionplanbycustomer]);
+    }
   }
 
   public onRouteChange(event: Event): void {
@@ -465,7 +482,7 @@ export class CustomerComponent {
     return true;
   }
 
-  private async updateCustomer(formCustomer: NgForm): Promise<void> {
+  private async updateCustomer(formCustomer: NgForm, redirectToAddress: boolean = false): Promise<void> {
     this.isLoading = true;
 
     //Valido fechas
@@ -481,7 +498,11 @@ export class CustomerComponent {
             "Informacion",
             "El Cliente fue actualizado correctamente.",
             () => {
-              this._router.navigate(['/admin/user/customers']);
+              if (redirectToAddress && response.customer) {
+                this._router.navigate(['/admin/user/address', response.customer.cus_uuid, 'new', this.customer.cus_subscriptionplanbycustomer]);
+              } else {
+                this._router.navigate(['/admin/user/customers']);
+              }
             }
           );
         } else {
@@ -500,7 +521,7 @@ export class CustomerComponent {
     )
   }
 
-  private async insertCustomer(formCustomer: NgForm): Promise<void> {
+  private async insertCustomer(formCustomer: NgForm, redirectToAddress: boolean = false): Promise<void> {
     this.isLoading = true;
 
     //Valido fechas
@@ -522,7 +543,11 @@ export class CustomerComponent {
             "Información",
             "El Cliente fue agregado correctamente.",
             () => {
-              this._router.navigate(['/admin/user/customers']);
+              if (redirectToAddress && createdCustomer) {
+                this._router.navigate(['/admin/user/address', createdCustomer.cus_uuid, 'new', this.customer.cus_subscriptionplanbycustomer]);
+              } else {
+                this._router.navigate(['/admin/user/customers']);
+              }
             }
           );
         } else {
