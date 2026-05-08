@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
     {
@@ -7,10 +8,14 @@ export const routes: Routes = [
     },
     { 
         path: 'admin',
+        canActivate: [roleGuard],
+        data: { role: 'admin' },
         loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
     },
     { 
         path: 'customer',
+        canActivate: [roleGuard],
+        data: { role: 'cliente' },
         loadChildren: () => import('./customer/customer.routes').then(m => m.CUSTOMER_ROUTES)
     },
     { path: '**', redirectTo: 'auth/login'}
