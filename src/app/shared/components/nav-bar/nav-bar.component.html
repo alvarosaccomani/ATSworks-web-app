@@ -27,6 +27,21 @@
             </div>
         }
 
+        @if(hasMultipleContexts) {
+            <div class="context-switcher">
+                @if(currentContext === 'admin') {
+                    <a class="nav-icon-btn switcher-btn" routerLink="/customer/customer-works" title="Cambiar a Vista Cliente">
+                        <i class="fas fa-user-tag"></i>
+                        <span class="switcher-text">Vista Cliente</span>
+                    </a>
+                } @else {
+                    <a class="nav-icon-btn switcher-btn" routerLink="/admin/user/dashboard" title="Cambiar a Vista Admin">
+                        <i class="fas fa-user-shield"></i>
+                        <span class="switcher-text">Vista Admin</span>
+                    </a>
+                }
+            </div>
+        }
 
         <div class="nav-actions">
             <a class="nav-icon-btn" [routerLink]="['/admin/application/user', identity.usr_uuid]" title="Configuración">

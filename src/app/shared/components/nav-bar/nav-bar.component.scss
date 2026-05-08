@@ -114,6 +114,32 @@
     padding-left: 1rem;
 }
 
+.context-switcher {
+    display: flex;
+    align-items: center;
+
+    .switcher-btn {
+        width: auto;
+        padding: 0 0.75rem;
+        gap: 8px;
+        background-color: #f1f5f9;
+        color: var(--color-three);
+        font-weight: 600;
+        font-size: 0.85rem;
+        border: 1px solid #e2e8f0;
+
+        &:hover {
+            background-color: var(--color-three);
+            color: #ffffff;
+            border-color: var(--color-three);
+        }
+    }
+
+    .switcher-text {
+        display: inline;
+    }
+}
+
 // Mobile alignment
 @media (max-width: 768px) {
     .navbar-info-container {
@@ -127,5 +153,13 @@
     
     .company-selector-wrapper {
         padding: 0 0.75rem;
+    }
+
+    .switcher-text {
+        display: none;
+    }
+    .context-switcher .switcher-btn {
+        width: 40px;
+        padding: 0;
     }
 }
