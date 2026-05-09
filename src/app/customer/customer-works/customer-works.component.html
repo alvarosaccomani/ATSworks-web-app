@@ -12,7 +12,7 @@
                     [(ngModel)]="selectedAddressUuid" 
                     (ngModelChange)="onAddressChange($event)"
                     nzPlaceHolder="Seleccionar dirección"
-                    [nzDisabled]="addresses.length === 1"
+                    [nzDisabled]="addresses.length <= 1"
                     class="modern-select w-100">
                     @for (address of addresses; track address.adr_uuid) {
                         <nz-option [nzValue]="address.adr_uuid" [nzLabel]="address.adr_address"></nz-option>
