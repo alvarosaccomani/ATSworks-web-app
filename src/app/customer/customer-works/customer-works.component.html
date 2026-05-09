@@ -29,57 +29,63 @@
                 <span>Cargando tus servicios...</span>
             </div>
         } @else {
-            @if (works$ | async; as works) {
-                @if (works.data.length > 0) {
-                    <div class="works-grid">
-                        @for (work of works.data; track work.wrk_uuid) {
-                            <div class="work-card" [class]="'status-' + (work.wrks?.wrks_name ? work.wrks!.wrks_name!.toLowerCase().split(' ').join('-') : 'default')">
-                                <div class="card-header">
-                                    <span class="work-date">
-                                        <i class="far fa-calendar-alt"></i>
-                                        {{work.wrk_workdate | date: 'dd/MM/yyyy'}}
-                                    </span>
-                                    <span class="status-badge">
-                                        {{work.wrks?.wrks_name}}
-                                    </span>
-                                </div>
-                                <div class="card-body">
-                                    <div class="rubro-tag">{{work.mitm?.mitm_name}}</div>
-                                    <p class="work-description">{{work.wrk_description || 'Sin descripción adicional.'}}</p>
-                                    <div class="work-location">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        {{work.adr?.adr_address}}
+            @if (addresses.length === 0) {
+                <div class="empty-state">
+                    <nz-empty nzNotFoundImage="simple" nzNotFoundContent="Cliente sin direcciones registradas."></nz-empty>
+                </div>
+            } @else {
+                @if (works$ | async; as works) {
+                    @if (works.data.length > 0) {
+                        <div class="works-grid">
+                            @for (work of works.data; track work.wrk_uuid) {
+                                <div class="work-card" [class]="'status-' + (work.wrks?.wrks_name ? work.wrks!.wrks_name!.toLowerCase().split(' ').join('-') : 'default')">
+                                    <div class="card-header">
+                                        <span class="work-date">
+                                            <i class="far fa-calendar-alt"></i>
+                                            {{work.wrk_workdate | date: 'dd/MM/yyyy'}}
+                                        </span>
+                                        <span class="status-badge">
+                                            {{work.wrks?.wrks_name}}
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="rubro-tag">{{work.mitm?.mitm_name}}</div>
+                                        <p class="work-description">{{work.wrk_description || 'Sin descripción adicional.'}}</p>
+                                        <div class="work-location">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{work.adr?.adr_address}}
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        @if (work.wrks?.wrks_name === 'Completado') {
+                                            <a [routerLink]="['/customer/work-sheet', work.wrk_uuid]" class="btn-action primary">
+                                                <i class="fas fa-file-pdf"></i> Ver Planilla
+                                            </a>
+                                        } @else {
+                                            <div class="status-info">
+                                                <i class="fas fa-clock"></i> Pendiente de finalización
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                                <div class="card-footer">
-                                    @if (work.wrks?.wrks_name === 'Completado') {
-                                        <a [routerLink]="['/customer/work-sheet', work.wrk_uuid]" class="btn-action primary">
-                                            <i class="fas fa-file-pdf"></i> Ver Planilla
-                                        </a>
-                                    } @else {
-                                        <div class="status-info">
-                                            <i class="fas fa-clock"></i> Pendiente de finalización
-                                        </div>
-                                    }
-                                </div>
+                            }
+                        </div>
+
+                        @if (works.totalPages > 1) {
+                            <div class="pagination-wrapper">
+                                <app-pagination
+                                    (paginaEmitter)="goToPage($event)"
+                                    [page]="page"
+                                    [totalPages]="works.totalPages"
+                                    [numElements]="numElements">
+                                </app-pagination>
                             </div>
                         }
-                    </div>
-
-                    @if (works.totalPages > 1) {
-                        <div class="pagination-wrapper">
-                            <app-pagination
-                                (paginaEmitter)="goToPage($event)"
-                                [page]="page"
-                                [totalPages]="works.totalPages"
-                                [numElements]="numElements">
-                            </app-pagination>
+                    } @else {
+                        <div class="empty-state">
+                            <nz-empty nzNotFoundImage="simple" nzNotFoundContent="No se encontraron trabajos registrados."></nz-empty>
                         </div>
                     }
-                } @else {
-                    <div class="empty-state">
-                        <nz-empty nzNotFoundImage="simple" nzNotFoundContent="No se encontraron trabajos registrados."></nz-empty>
-                    </div>
                 }
             }
         }
