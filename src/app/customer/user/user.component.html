@@ -1,1 +1,106 @@
-<p>user works!</p>
+<div class="customer-portal-container">
+    <header class="portal-header">
+        <div class="header-content">
+            <h1>Mi Perfil</h1>
+            <p class="welcome-text">Gestiona tu información personal y seguridad de la cuenta.</p>
+        </div>
+    </header>
+
+    <main class="portal-content">
+        @if (isLoading) {
+            <div class="loading-state">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <span>Procesando...</span>
+            </div>
+        }
+
+        <div class="profile-card">
+            <form #formUser="ngForm" (ngSubmit)="onSaveUser(formUser)" class="modern-form">
+                <div class="profile-layout">
+                    <!-- Sección de Imagen -->
+                    <div class="profile-sidebar">
+                        <div class="image-upload-section">
+                            <h3>Imagen de Perfil</h3>
+                            <app-image (imageSelected)="onImageSelected($event)"></app-image>
+                            <p class="image-hint">Haz clic en la imagen para cambiarla.</p>
+                        </div>
+
+                        <div class="roles-section">
+                            <h3>Tus Roles</h3>
+                            <div class="roles-list">
+                                @for (role of identity?.roles; track role.rol_uuid) {
+                                    <span class="role-badge">{{role.rol_name}}</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Datos -->
+                    <div class="profile-main">
+                        <fieldset>
+                            <legend><i class="far fa-address-card"></i> Información Personal</legend>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="usr_name">Nombres</label>
+                                    <input type="text" id="usr_name" name="usr_name" [(ngModel)]="user.usr_name" placeholder="Tus nombres">
+                                </div>
+                                <div class="form-group">
+                                    <label for="usr_surname">Apellidos</label>
+                                    <input type="text" id="usr_surname" name="usr_surname" [(ngModel)]="user.usr_surname" placeholder="Tus apellidos">
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="usr_bio">Biografía / Notas</label>
+                                <textarea id="usr_bio" name="usr_bio" [(ngModel)]="user.usr_bio" rows="3" placeholder="Cuéntanos un poco sobre ti..."></textarea>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend><i class="fas fa-user-lock"></i> Datos de Acceso</legend>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="usr_nick">Nombre de usuario</label>
+                                    <input type="text" id="usr_nick" name="usr_nick" [(ngModel)]="user.usr_nick" placeholder="Usuario">
+                                </div>
+                                <div class="form-group">
+                                    <label for="usr_email">Email</label>
+                                    <input type="email" id="usr_email" name="usr_email" [(ngModel)]="user.usr_email" placeholder="correo@ejemplo.com">
+                                </div>
+                            </div>
+
+                            <div class="password-toggle-section">
+                                <button type="button" class="btn-toggle-password" (click)="togglePasswordFields()">
+                                    <i class="fas fa-key"></i>
+                                    {{ showPasswordFields ? 'Cancelar cambio de contraseña' : 'Cambiar contraseña' }}
+                                </button>
+                            </div>
+
+                            @if (showPasswordFields) {
+                                <div class="form-row animate-fade-in">
+                                    <div class="form-group">
+                                        <label for="usr_password">Nueva Contraseña</label>
+                                        <input type="password" id="usr_password" name="usr_password" [(ngModel)]="user.usr_password" placeholder="••••••••">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="usr_password_repeat">Repetir Contraseña</label>
+                                        <input type="password" id="usr_password_repeat" name="usr_password_repeat" [(ngModel)]="usr_password_repeat" placeholder="••••••••">
+                                    </div>
+                                </div>
+                            }
+                        </fieldset>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save" [disabled]="isLoading">
+                                @if (isLoading) {
+                                    <i class="fas fa-circle-notch fa-spin"></i> Guardando...
+                                } @else {
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
