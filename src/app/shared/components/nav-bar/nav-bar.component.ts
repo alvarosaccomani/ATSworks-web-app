@@ -98,8 +98,13 @@ export class NavBarComponent implements OnInit {
             this.userRolesCompany[0].roles.map((item: any) => item.rol_name),
             this.selectedCompany
           );
+          
           if(this._route.getCurrentRoute() === '/admin/user/dashboard' || this._route.getCurrentRoute() === '/admin/user/no-company') {
-            this._router.navigate(['/admin/user/dashboard']);
+            if (this.isCustomer && !this.hasAdminRole()) {
+              this._router.navigate(['/customer/customer-works']);
+            } else {
+              this._router.navigate(['/admin/user/dashboard']);
+            }
           }
         }
       });
@@ -127,6 +132,14 @@ export class NavBarComponent implements OnInit {
       this.isCustomer = false;
       this.hasMultipleContexts = false;
     }
+  }
+
+  private hasAdminRole(): boolean {
+    if (!this.company || !this.company.roles) return false;
+    return this.company.roles.some((r: any) => {
+      const name = r.rol_name.toLowerCase();
+      return !name.includes('client') && !name.includes('cliente');
+    });
   }
 
   public showCloseNavBar(): void {
@@ -179,7 +192,12 @@ export class NavBarComponent implements OnInit {
       });
       this._sharedDataService.setSelectedCompany(selectedCompany);
       this.checkIsCustomer();
-      this._router.navigate(['/admin/user/dashboard']);
+      
+      if (this.isCustomer && !this.hasAdminRole()) {
+        this._router.navigate(['/customer/customer-works']);
+      } else {
+        this._router.navigate(['/admin/user/dashboard']);
+      }
     }
   }
 
