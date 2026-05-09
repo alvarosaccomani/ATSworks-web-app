@@ -134,7 +134,7 @@ export class NavBarComponent implements OnInit {
     }
   }
 
-  private hasAdminRole(): boolean {
+  public hasAdminRole(): boolean {
     if (!this.company || !this.company.roles) return false;
     return this.company.roles.some((r: any) => {
       const name = r.rol_name.toLowerCase();

@@ -44,7 +44,9 @@
         }
 
         <div class="nav-actions">
-            <a class="nav-icon-btn" [routerLink]="['/admin/application/user', identity.usr_uuid]" title="Configuración">
+            <a class="nav-icon-btn" 
+               [routerLink]="isCustomer && !hasAdminRole() ? ['/customer/user'] : ['/admin/application/user', identity.usr_uuid]" 
+               title="Configuración">
                 <i class="fas fa-user-cog"></i>
             </a>
             <a href="#" class="nav-icon-btn btn-exit-system logout-btn" title="Cerrar Sesión">
