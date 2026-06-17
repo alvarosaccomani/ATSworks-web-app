@@ -208,7 +208,7 @@
                                 [(ngModel)]="work.wrk_operator_uuid1"
                                 (change)="onWorkOperator1Change($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                @for(userOperatorWork of getFilteredOperators('op1'); track userOperatorWork.usr?.usr_uuid) {
                                     @if(userOperatorWork){
                                         <option [value]="userOperatorWork.usr?.usr_uuid">
                                             @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
@@ -235,7 +235,7 @@
                                 [(ngModel)]="work.wrk_operator_uuid2"
                                 (change)="onWorkOperator2Change($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                @for(userOperatorWork of getFilteredOperators('op2'); track userOperatorWork.usr?.usr_uuid) {
                                     @if(userOperatorWork){
                                         <option [value]="userOperatorWork.usr?.usr_uuid">
                                             @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
@@ -264,7 +264,7 @@
                                 [(ngModel)]="work.wrk_operator_uuid3"
                                 (change)="onWorkOperator3Change($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                @for(userOperatorWork of getFilteredOperators('op3'); track userOperatorWork.usr?.usr_uuid) {
                                     @if(userOperatorWork){
                                         <option [value]="userOperatorWork.usr?.usr_uuid">
                                             @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {
@@ -291,7 +291,7 @@
                                 [(ngModel)]="work.wrk_operator_uuid4"
                                 (change)="onWorkOperator4Change($event)">
                                 <option value="" selected="" disabled="">Seleccione una opción</option>
-                                @for(userOperatorWork of usersOperatorWork; track userOperatorWork.rol_uuid) {
+                                @for(userOperatorWork of getFilteredOperators('op4'); track userOperatorWork.usr?.usr_uuid) {
                                     @if(userOperatorWork){
                                         <option [value]="userOperatorWork.usr?.usr_uuid">
                                             @if(userOperatorWork.usr?.usr_surname || userOperatorWork.usr?.usr_name) {

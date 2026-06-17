@@ -328,7 +328,16 @@ export class MassiveWorksComponent {
       (response: any) => {
         if(response.success) {
           console.info(response.data);
-          this.usersOperatorWork = response.data;
+          const uniqueUsers: UserRolCompanyInterface[] = [];
+          const seenUuids = new Set<string>();
+          for (const item of response.data) {
+            const usrUuid = item.usr?.usr_uuid;
+            if (usrUuid && !seenUuids.has(usrUuid)) {
+              seenUuids.add(usrUuid);
+              uniqueUsers.push(item);
+            }
+          }
+          this.usersOperatorWork = uniqueUsers;
         } else {
           //this.status = 'error'
         }
@@ -342,6 +351,20 @@ export class MassiveWorksComponent {
         }
       }
     )
+  }
+
+  public getFilteredOperators(currentField: string): UserRolCompanyInterface[] {
+    const selectedUuids = [
+      currentField !== 'op1' ? this.work.wrk_operator_uuid1 : null,
+      currentField !== 'op2' ? this.work.wrk_operator_uuid2 : null,
+      currentField !== 'op3' ? this.work.wrk_operator_uuid3 : null,
+      currentField !== 'op4' ? this.work.wrk_operator_uuid4 : null
+    ].filter(uuid => !!uuid) as string[];
+
+    return this.usersOperatorWork.filter(op => {
+      const usrUuid = op.usr?.usr_uuid;
+      return usrUuid ? !selectedUuids.includes(usrUuid) : true;
+    });
   }
 
   public setModelItem(modelItem: ModelItemInterface) {
