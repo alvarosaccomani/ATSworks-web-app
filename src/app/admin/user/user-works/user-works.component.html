@@ -1,1 +1,194 @@
-<p>user-works works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<!--CONTENT-->
+<div class="container-fluid">
+    <form class="form-neon" autocomplete="off">
+        <div class="container-fluid">
+            <div class="row align-items-end">
+                <div class="col-12 col-md-7">
+                    <div class="form-group" style="margin: 0;">
+                        <label for="inputSearchCustomer" class="bmd-label-floating">Cliente / Dirección / Descripción:</label>
+                        <input 
+                            type="text"
+                            class="form-control"
+                            id="inputSearchCustomer"
+                            [(ngModel)]="searchTerm"
+                            [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="onSearchChange()"
+                            placeholder="Filtro por cliente, dirección o descripción"
+                        >
+                    </div>
+                </div>
+                <div class="col-6 col-md-2" style="margin-top: 15px;">
+                    <div class="form-group" style="margin: 0;">
+                        <label class="bmd-label-floating d-none d-md-block">Conexión:</label>
+                        <div>
+                            @if (isOnline()) {
+                                <span class="badge bg-success w-100 text-center" style="padding: 10px; border-radius: 5px; font-weight: 500; display: inline-block;">
+                                    <i class="fas fa-wifi"></i> ONLINE
+                                </span>
+                            } @else {
+                                <span class="badge bg-danger w-100 text-center" style="padding: 10px; border-radius: 5px; font-weight: 500; display: inline-block;">
+                                    <i class="fas fa-wifi-slash"></i> LOCAL
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" style="margin-top: 15px;">
+                    <button type="button" (click)="loadWorks()" [disabled]="isLoading" class="btn btn-raised btn-info w-100" style="margin: 0; padding: 10px 0; border-radius: 5px;">
+                        @if (isLoading) {
+                            <i class="fas fa-sync-alt fa-spin"></i> &nbsp; SINCRONIZANDO
+                        } @else {
+                            <i class="fas fa-sync-alt"></i> &nbsp; SINCRONIZAR
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid" style="margin-top: 20px;">
+    @if (isLoading && filteredWorks.length === 0) {
+        <div class="text-center py-5">
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2 text-muted">Buscando y descargando trabajos...</p>
+        </div>
+    } @else if (filteredWorks.length === 0) {
+        <div class="text-center py-5 bg-dark text-light rounded" style="border: 1px solid rgba(255, 255, 255, 0.1);">
+            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+            <h5>No se encontraron trabajos asignados</h5>
+            <p class="text-muted">Si estás online, intenta hacer clic en el botón "Sincronizar".</p>
+        </div>
+    } @else {
+        <!-- Vista Desktop (Tabla) -->
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-dark table-sm">
+                <thead>
+                    <tr class="text-center roboto-medium">
+                        <th>#</th>
+                        <th>CLIENTE</th>
+                        <th>DIRECCIÓN</th>
+                        <th>RECORRIDO</th>
+                        <th>FECHA DE TRABAJO</th>
+                        <th>ESTADO</th>
+                        <th>SINCRONIZACIÓN</th>
+                        <th>PLANILLA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (work of filteredWorks; track work.wrk_uuid) {
+                        <tr class="text-center">
+                            <td>{{ $index + 1 }}</td>
+                            <td>
+                                @if (work.wrk_customer) {
+                                    <span class="works-eventual-client">
+                                        {{ work.wrk_customer }}
+                                    </span>
+                                } @else {
+                                    <span class="works-fixed-client">
+                                        {{ work.adr?.cus?.cus_fullname }}
+                                    </span>
+                                }
+                            </td>
+                            <td>{{ work.wrk_address }}</td>
+                            <td>{{ work.wrk_route || 'Sin Ruta' }}</td>
+                            <td>{{ work.wrk_workdate | date: 'dd/MM/yyyy' }}</td>
+                            <td>{{ work.wrks?.wrks_name || (work.wrks_uuid === '598d9ae5-c82a-4bc6-89b4-d166c99e80c7' ? 'Cerrado' : 'Pendiente') }}</td>
+                            <td>
+                                @if (work.syncStatus === 'local') {
+                                    <span class="badge bg-warning text-dark" style="padding: 5px; border-radius: 5px; font-weight: 500;">
+                                        <i class="fas fa-spinner fa-spin"></i> Local (Pendiente)
+                                    </span>
+                                } @else {
+                                    <span class="badge bg-success" style="padding: 5px; border-radius: 5px; font-weight: 500;">
+                                        <i class="fas fa-check-circle"></i> Sincronizado
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (work.wrks_uuid === '598d9ae5-c82a-4bc6-89b4-d166c99e80c7' || work.wrks?.wrks_name === 'Cerrado') {
+                                    <a [routerLink]="['/admin/user/work-sheet-view', work.wrk_uuid]" [queryParams]="{ from: 'user-works' }" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                } @else {
+                                    <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" [queryParams]="{ from: 'user-works' }" class="btn btn-info">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Vista Móvil (Tarjetas / Cards) -->
+        <div class="d-block d-md-none mobile-works-list">
+            @for (work of filteredWorks; track work.wrk_uuid) {
+                <div class="mobile-work-card">
+                    <div class="card-header">
+                        <div class="client-badge-wrapper">
+                            @if (work.wrk_customer) {
+                                <span class="works-eventual-client">
+                                    {{ work.wrk_customer }}
+                                </span>
+                            } @else {
+                                <span class="works-fixed-client">
+                                    {{ work.adr?.cus?.cus_fullname }}
+                                </span>
+                            }
+                        </div>
+                        <span class="route-tag">
+                            <i class="fas fa-route"></i> {{ work.wrk_route || 'Sin Ruta' }}
+                        </span>
+                    </div>
+                    <div class="card-body-details">
+                        <div class="detail-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><strong>Dirección:</strong> {{ work.wrk_address }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <span><strong>Fecha:</strong> {{ work.wrk_workdate | date: 'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span><strong>Estado:</strong> {{ work.wrks?.wrks_name || (work.wrks_uuid === '598d9ae5-c82a-4bc6-89b4-d166c99e80c7' ? 'Cerrado' : 'Pendiente') }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-sync"></i>
+                            <span>
+                                <strong>Sincronización:</strong>
+                                @if (work.syncStatus === 'local') {
+                                    <span class="badge bg-warning text-dark ml-2" style="padding: 4px 8px; border-radius: 4px; font-weight: 500;">
+                                        <i class="fas fa-spinner fa-spin"></i> Local (Pendiente)
+                                    </span>
+                                } @else {
+                                    <span class="badge bg-success ml-2" style="padding: 4px 8px; border-radius: 4px; font-weight: 500;">
+                                        <i class="fas fa-check-circle"></i> Sincronizado
+                                    </span>
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer-actions">
+                        @if (work.wrks_uuid === '598d9ae5-c82a-4bc6-89b4-d166c99e80c7' || work.wrks?.wrks_name === 'Cerrado') {
+                            <a [routerLink]="['/admin/user/work-sheet-view', work.wrk_uuid]" [queryParams]="{ from: 'user-works' }" class="btn btn-raised btn-info btn-action-full">
+                                <i class="fas fa-file-pdf"></i> VER RESUMEN
+                            </a>
+                        } @else {
+                            <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" [queryParams]="{ from: 'user-works' }" class="btn btn-raised btn-success btn-action-full" style="color: #ffffff;">
+                                <i class="fas fa-clipboard-list"></i> REALIZAR TRABAJO
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
