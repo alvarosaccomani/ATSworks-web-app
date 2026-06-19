@@ -40,8 +40,8 @@ export class CameraComponent implements AfterViewInit, OnDestroy, OnChanges {
         this.capturedImage = newImage;
         this.isCameraActive = false;
         this.isLoading = false;
-      } else {
-        // Si se borra la imagen existente, volver a la cámara
+      } else if (!changes['existingImage'].isFirstChange()) {
+        // Si se borra la imagen existente (y no es la carga inicial), volver a la cámara
         this.capturedImage = null;
         this.isCameraActive = true;
         this.startCamera();
@@ -79,7 +79,14 @@ export class CameraComponent implements AfterViewInit, OnDestroy, OnChanges {
         this.videoElement.nativeElement.srcObject = stream;
 
         // Esperar a que el video esté listo para reproducirse
-        await this.videoElement.nativeElement.play();
+        try {
+          await this.videoElement.nativeElement.play();
+        } catch (playError: any) {
+          // Ignorar AbortError provocado por arranques/cargas consecutivas rápidas
+          if (playError.name !== 'AbortError') {
+            console.error('Error al reproducir el stream de cámara:', playError);
+          }
+        }
 
         // Ocultar el mensaje de carga
         this.isLoading = false;
