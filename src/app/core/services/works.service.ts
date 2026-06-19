@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { WorkResults } from '../interfaces/work';
+import { ConnectionService } from './connection.service';
+import { PouchdbService } from './pouchdb.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,9 @@ import { WorkResults } from '../interfaces/work';
 export class WorksService {
 
   constructor(
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _connectionService: ConnectionService,
+    private _pouchdbService: PouchdbService
   ) { }
 
   public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
@@ -76,6 +81,19 @@ export class WorksService {
   }
 
   public getPendingWorks(cmp_uuid: string, wrks_uuid?: string, wrk_route?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    if (!this._connectionService.isOnline()) {
+      return from(
+        this._pouchdbService.getPendingWorksLocal(
+          wrks_uuid || '',
+          wrk_route || '',
+          page || 1,
+          perPage || 10,
+          field_order || 'wrk_workdate',
+          wrk_orderby || 'ASC'
+        )
+      );
+    }
+
     const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
@@ -104,7 +122,64 @@ export class WorksService {
       params = params.set('wrk_orderby', wrk_orderby);
     }
 
-    return this._http.get<WorkResults>(`${environment.apiUrl}pending-works/${cmp_uuid}`, { headers, params });
+    return this._http.get<WorkResults>(`${environment.apiUrl}pending-works/${cmp_uuid}`, { headers, params }).pipe(
+      tap((response: WorkResults) => {
+        if (response && response.data) {
+          this._pouchdbService.saveWorksBatch(response.data);
+        }
+      })
+    );
+  }
+
+  public getPendingWorksByUser(cmp_uuid: string, usr_uuid: string, wrks_uuid?: string, wrk_route?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+    if (!this._connectionService.isOnline()) {
+      return from(
+        this._pouchdbService.getPendingWorksLocal(
+          wrks_uuid || '',
+          wrk_route || '',
+          page || 1,
+          perPage || 10,
+          field_order || 'wrk_workdate',
+          wrk_orderby || 'ASC'
+        )
+      );
+    }
+
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+
+    let params = new HttpParams();
+
+    if (wrks_uuid) {
+      params = params.set('wrks_uuid', wrks_uuid);
+    }
+
+    if (wrk_route) {
+      params = params.set('wrk_route', wrk_route);
+    }
+
+    if (page) {
+      params = params.set('page', page.toString());
+    }
+
+    if (perPage) {
+      params = params.set('perPage', perPage.toString());
+    }
+
+    if (field_order) {
+      params = params.set('field_order', field_order);
+    }
+
+    if (wrk_orderby) {
+      params = params.set('wrk_orderby', wrk_orderby);
+    }
+
+    return this._http.get<WorkResults>(`${environment.apiUrl}pending-works-by-user/${cmp_uuid}/${usr_uuid}`, { headers, params }).pipe(
+      tap((response: WorkResults) => {
+        if (response && response.data) {
+          this._pouchdbService.saveWorksBatch(response.data);
+        }
+      })
+    );
   }
 
   public getWorkScheduler(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrks_uuid?: string, wrk_route?: string, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
