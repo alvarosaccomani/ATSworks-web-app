@@ -1,3 +1,8 @@
+(window as any).global = window;
+(window as any).process = {
+  env: {},
+  nextTick: setTimeout,
+};
 import { enableProdMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
