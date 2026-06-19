@@ -135,7 +135,7 @@
                 </table>
             </div>
             <p class="text-center" style="margin-top: 40px;">
-                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
+                <button type="button" (click)="goBack()" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
                 @if(isFormComplete) {
                     &nbsp; &nbsp;
                     <button 
@@ -271,7 +271,7 @@
                 </table>
             </div>
             <p class="text-center" style="margin-top: 40px;">
-                <button type="reset" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
+                <button type="button" (click)="goBack()" class="btn btn-raised btn-secondary btn-sm"><i class="fas fa-paint-roller"></i> &nbsp; VOLVER</button>
                 &nbsp; &nbsp;
                 <button 
                     type="submit" 

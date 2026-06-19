@@ -12,6 +12,8 @@ import { MessageService } from '../../../core/services/message.service';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksDetailsService } from '../../../core/services/works-details.service';
 import { WorksAttachmentsService } from '../../../core/services/works-attachments.service';
+import { PouchdbService } from '../../../core/services/pouchdb.service';
+import { ConnectionService } from '../../../core/services/connection.service';
 
 @Component({
   selector: 'app-work-sheet',
@@ -33,6 +35,7 @@ export class WorkSheetComponent {
   public isLoading: boolean = false;
   public workDetailsDetail: any;
   public workDetailsObservations: any;
+  public fromSource: string = "works";
   public headerConfig: any = {
     title: "HOJA DE TRABAJO",
     description: "Ficha de Hoja de Trabajo.",
@@ -48,7 +51,9 @@ export class WorkSheetComponent {
     private _messageService: MessageService,
     private _worksService: WorksService,
     private _worksDetailsService: WorksDetailsService,
-    private _worksAttachmentsService: WorksAttachmentsService
+    private _worksAttachmentsService: WorksAttachmentsService,
+    private _pouchdbService: PouchdbService,
+    private _connectionService: ConnectionService
   )
   {
     this.work = {
@@ -139,6 +144,11 @@ export class WorkSheetComponent {
         this.getWorkById(this.work.cmp_uuid!, params['wrk_uuid']);
       }
     });
+    this._route.queryParams.subscribe( (params) => {
+      if (params['from']) {
+        this.fromSource = params['from'];
+      }
+    });
   }
 
   get isFormComplete(): boolean {
@@ -163,34 +173,51 @@ export class WorkSheetComponent {
   }
 
   private getWorkById(cmp_uuid: string, wrk_uuid: string): void {
+    this._pouchdbService.getWork(wrk_uuid).then((localWork) => {
+      if (localWork) {
+        console.log('[PouchDB] Cargando trabajo local:', localWork);
+        this.setWorkData(localWork);
+        if (this._connectionService.isOnline()) {
+          this.fetchWorkFromServer(cmp_uuid, wrk_uuid);
+        }
+      } else {
+        this.fetchWorkFromServer(cmp_uuid, wrk_uuid);
+      }
+    }).catch((err) => {
+      console.error('[PouchDB] Error al buscar localmente, cargando del servidor:', err);
+      this.fetchWorkFromServer(cmp_uuid, wrk_uuid);
+    });
+  }
+
+  private fetchWorkFromServer(cmp_uuid: string, wrk_uuid: string): void {
     this._worksService.getWorkById(cmp_uuid, wrk_uuid).subscribe(
       (response: any) => {
         if(response.success) {
           console.info(response.data);
-          this.work = response.data;
-          if(this.work.workDetails) {
-            this.workDetailsDetail = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_detail');
-            this.workDetailsObservations = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_observations');
-          }
-          if(this.work.workAttachments) {
-            this.initImage = (this.work.workAttachments[0].wrka_filepath ? this.work.workAttachments[0].wrka_filepath : "");
-            if(this.work.workAttachments.length > 1) {
-              this.finishImage = (this.work.workAttachments[1].wrka_filepath ? this.work.workAttachments[1].wrka_filepath : "");
-            }
-          }
-        } else {
-          //this.status = 'error'
+          this._pouchdbService.saveWork(response.data).then(() => {
+            this.setWorkData(response.data);
+          });
         }
       },
       (error: any) => {
         var errorMessage = <any>error;
         console.log(errorMessage);
-
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
       }
-    )
+    );
+  }
+
+  private setWorkData(work: any): void {
+    this.work = work;
+    if(this.work.workDetails) {
+      this.workDetailsDetail = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_detail');
+      this.workDetailsObservations = this.work.workDetails.filter(e => e.wrkd_groupkey === 'work_observations');
+    }
+    if(this.work.workAttachments && this.work.workAttachments.length > 0) {
+      this.initImage = (this.work.workAttachments[0].wrka_filepath ? this.work.workAttachments[0].wrka_filepath : "");
+      if(this.work.workAttachments.length > 1) {
+        this.finishImage = (this.work.workAttachments[1].wrka_filepath ? this.work.workAttachments[1].wrka_filepath : "");
+      }
+    }
   }
 
   public goToStep($event: any): void {
@@ -232,99 +259,71 @@ export class WorkSheetComponent {
     this.work.wrk_workdateinit = new Date();
     this.work.wrk_workdatefinish = this.parseValidDate(this.work.wrk_workdatefinish!);
 
-    this._worksService.updateWork(this.work).subscribe(
-      (response: any) => {
-        if(response.success) {
-          console.info(response.data);
-          this.work.wrk_workdateinit = response.data.wrk_workdateinit;
-          console.info(image); // Guardar la imagen recibida
-          let workAttachment = {
-            cmp_uuid: this.work.cmp_uuid,
-            wrk_uuid: this.work.wrk_uuid,
-            wrka_uuid: null,
-            wrka_attachmenttype: 'imagen',
-            wrka_filepath: image,
-            wrka_createdat:null,
-            wrka_updatedat: null
-          }
-          this.insertWorAttachment(workAttachment);
-        } else {
-          //this.status = 'error'
-        }
-      },
-      (error: any) => {
-        var errorMessage = <any>error;
-        console.log(errorMessage);
+    const workAttachment = {
+      cmp_uuid: this.work.cmp_uuid,
+      wrk_uuid: this.work.wrk_uuid,
+      wrka_uuid: 'temp_init_' + Date.now(),
+      wrka_attachmenttype: 'imagen',
+      wrka_filepath: image,
+      wrka_createdat: new Date(),
+      wrka_updatedat: new Date()
+    };
 
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
-      }
-    )
+    this._pouchdbService.addLocalWorkAttachment(this.work.wrk_uuid!, workAttachment).then(() => {
+      this.setWorkData(this.work);
+      this.continue();
+    });
+
+    this._pouchdbService.enqueue('update_work', {
+      ...this.work,
+      _id: undefined,
+      _rev: undefined
+    }, `work_${this.work.wrk_uuid}`);
+
+    this._pouchdbService.enqueue('insert_attachment', {
+      cmp_uuid: workAttachment.cmp_uuid,
+      wrk_uuid: workAttachment.wrk_uuid,
+      wrka_uuid: workAttachment.wrka_uuid,
+      wrka_attachmenttype: workAttachment.wrka_attachmenttype,
+      wrka_filepath: workAttachment.wrka_filepath,
+      wrka_createdat: null,
+      wrka_updatedat: null
+    }, `attachment_init_${this.work.wrk_uuid}`);
   }
 
   public insertFinalPhoto(image: string) {
     this.work.wrk_workdatefinish = new Date();
 
-    this._worksService.updateWork(this.work).subscribe(
-      (response: any) => {
-        if(response.success) {
-          console.info(response.data);
-          console.info(image); // Guardar la imagen recibida
-          let workAttachment = {
-            cmp_uuid: this.work.cmp_uuid,
-            wrk_uuid: this.work.wrk_uuid,
-            wrka_uuid: null,
-            wrka_attachmenttype: 'imagen',
-            wrka_filepath: image,
-            wrka_createdat:null,
-            wrka_updatedat: null
-          }
-          this.insertWorAttachment(workAttachment);
-        } else {
-          //this.status = 'error'
-        }
-      },
-      (error: any) => {
-        var errorMessage = <any>error;
-        console.log(errorMessage);
+    const workAttachment = {
+      cmp_uuid: this.work.cmp_uuid,
+      wrk_uuid: this.work.wrk_uuid,
+      wrka_uuid: 'temp_final_' + Date.now(),
+      wrka_attachmenttype: 'imagen',
+      wrka_filepath: image,
+      wrka_createdat: new Date(),
+      wrka_updatedat: new Date()
+    };
 
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
-      }
-    )
-  }
+    this._pouchdbService.addLocalWorkAttachment(this.work.wrk_uuid!, workAttachment).then(() => {
+      this.setWorkData(this.work);
+      this.continue();
+    });
 
-  public insertWorAttachment(workAttachment: WorkAttachmentInterface): void {
-    this._worksAttachmentsService.insertWorAttachment(workAttachment).subscribe(
-      (response: any) => {
-        if(response.success) {
-          console.info(response.data);
-          if(!this.work.workAttachments) {
-            this.work.workAttachments = [];
-          }
-          this.work.workAttachments.push(response.data);
-          if(this.work.workAttachments) {
-            this.initImage = (this.work.workAttachments[0].wrka_filepath ? this.work.workAttachments[0].wrka_filepath : "");
-            if(this.work.workAttachments.length > 1) {
-              this.finishImage = (this.work.workAttachments[1].wrka_filepath ? this.work.workAttachments[1].wrka_filepath : "");
-            }
-          }
-          this.continue();
-        } else {
-          //this.status = 'error'
-        }
-      },
-      (error: any) => {
-        var errorMessage = <any>error;
-        console.log(errorMessage);
+    this._pouchdbService.enqueue('update_work', {
+      ...this.work,
+      _id: undefined,
+      _rev: undefined
+    }, `work_${this.work.wrk_uuid}`);
 
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
-      }
-    )
+    this._pouchdbService.enqueue('insert_attachment', {
+      cmp_uuid: workAttachment.cmp_uuid,
+      wrk_uuid: workAttachment.wrk_uuid,
+      wrka_uuid: workAttachment.wrka_uuid,
+      wrka_attachmenttype: workAttachment.wrka_attachmenttype,
+      wrka_filepath: workAttachment.wrka_filepath,
+      wrka_createdat: null,
+      wrka_updatedat: null
+    }, `attachment_final_${this.work.wrk_uuid}`);
   }
 
   public findDetailModelItemArrayValues(key: string) {
@@ -366,57 +365,42 @@ export class WorkSheetComponent {
   public updateWorkDetail(workDetail: WorkDetailInterface) {
     this.isLoading = true;
     workDetail.wrkd_worker = this.wrkd_worker;
-    this._worksDetailsService.updateWorkDetail(workDetail).subscribe(
-      response => {
-        if(response.success) {
-          this.isLoading = false;
-          const customer = response.customer;
-          this.status = 'success';
-        } else {
-          this.isLoading = false;
-          //this.status = 'error'
-        }
-      },
-      error => {
-        this.isLoading = false;
-        var errorMessage = <any>error;
-        console.log(errorMessage);
 
-        if(errorMessage != null) {
-          //this.status = 'error'
-        }
-      }
-    )
+    this._pouchdbService.updateLocalWorkDetail(this.work.wrk_uuid!, workDetail).then(() => {
+      this.isLoading = false;
+      this.status = 'success';
+    });
+
+    this._pouchdbService.enqueue('update_work_detail', workDetail, `detail_${workDetail.wrkd_uuid}`);
+  }
+
+  public goBack(): void {
+    if (this.fromSource === 'user-works') {
+      this._router.navigate(['/admin/user/user-works']);
+    } else {
+      this._router.navigate(['/admin/user/works']);
+    }
   }
 
   public closeWork(): void {
     this.work.wrk_workdatefinish = new Date();
     this.work.wrks_uuid = "598d9ae5-c82a-4bc6-89b4-d166c99e80c7";
-    this._worksService.updateWork(this.work).subscribe(
-      (response: any) => {
-        if(response.success) {
-          console.info(response.data);
-          this.work.wrk_workdatefinish = response.data.wrk_workdatefinish;
-          this._messageService.success(
-            "Informacion", 
-            "El trabajo fue cerrado de manera correcta",
-            () => {
-              this._router.navigate(['/admin/user/works']);
-            }
-          );
-        } else {
-          //this.status = 'error'
-        }
-      },
-      (error: any) => {
-        var errorMessage = <any>error;
-        console.log(errorMessage);
 
-        if(errorMessage != null) {
-          //this.status = 'error'
+    this._pouchdbService.saveWork(this.work).then(() => {
+      this._messageService.success(
+        "Informacion", 
+        "El trabajo fue cerrado de manera correcta (guardado localmente)",
+        () => {
+          this.goBack();
         }
-      }
-    )
+      );
+    });
+
+    this._pouchdbService.enqueue('update_work', {
+      ...this.work,
+      _id: undefined,
+      _rev: undefined
+    }, `work_${this.work.wrk_uuid}`);
   }
 
 }
