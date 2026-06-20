@@ -6,7 +6,7 @@
 <!-- Content here-->
 <div class="container-fluid">
     @if(rolPermissions$ | async; as rolPermissions) {
-        <div class="table-responsive">
+        <div class="table-responsive desktop-only-view">
             <table class="table table-dark table-sm">
                 <thead>
                     <tr class="text-center roboto-medium">
@@ -44,6 +44,53 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        <!-- Vista Móvil (Tarjetas / Cards) -->
+        <div class="mobile-works-list mobile-only-view">
+            @for (rolPermission of rolPermissions.data; track $index) {
+                <div class="mobile-work-card">
+                    <!-- Cabecera de la Tarjeta (Rol y Permiso) -->
+                    <div class="card-header">
+                        <div class="client-badge-wrapper">
+                            <span class="works-fixed-client">
+                                {{ rolPermission?.rol?.rol_name }}
+                            </span>
+                        </div>
+                        <span class="route-tag">
+                            <i class="fas fa-key"></i> {{ rolPermission?.per?.per_slug }}
+                        </span>
+                    </div>
+
+                    <!-- Cuerpo de la Tarjeta (Detalles) -->
+                    <div class="card-body-details">
+                        @if (rolPermission?.per?.per_description) {
+                            <div class="detail-item">
+                                <i class="fas fa-align-left"></i>
+                                <span><strong>Descripción:</strong> {{ rolPermission?.per?.per_description }}</span>
+                            </div>
+                        } @else {
+                            <div class="detail-item" style="color: #7f8c8d; font-style: italic;">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Sin descripción de permiso registrada</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Pie de la Tarjeta (Acciones: Editar + Eliminar) -->
+                    <div class="card-footer-actions">
+                        <!-- Botón de Editar -->
+                        <a [routerLink]="['/admin/application/rol-permission', rolPermission.rol_uuid, rolPermission.per_uuid]" class="btn btn-raised btn-success btn-action-main" style="color: #ffffff;">
+                            <i class="fas fa-sync-alt"></i> EDITAR
+                        </a>
+
+                        <!-- Botón de Eliminar -->
+                        <button type="button" class="btn btn-raised btn-danger btn-action-main" (click)="deleteRolPermission(rolPermission)" title="Eliminar Permiso de Rol">
+                            <i class="far fa-trash-alt"></i> ELIMINAR
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
         @if(rolPermissions.totalPages > 1) {
             <app-pagination
