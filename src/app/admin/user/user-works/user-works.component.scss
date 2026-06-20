@@ -123,3 +123,28 @@
         }
     }
 }
+
+/* --- Control de visualización responsiva (Desktop vs. Mobile) --- */
+@media (min-width: 768px) {
+    .mobile-only-view {
+        display: none !important;
+    }
+    .desktop-only-view {
+        display: block !important;
+    }
+    .desktop-only-label {
+        display: block !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .mobile-only-view {
+        display: flex !important;
+    }
+    .desktop-only-view {
+        display: none !important;
+    }
+    .desktop-only-label {
+        display: none !important;
+    }
+}
