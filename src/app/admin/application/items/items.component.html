@@ -91,7 +91,7 @@
     @if(items$ | async; as items) {
         <div class="items-content-area">
             @if (items.data.length > 0) {
-                <div class="table-container">
+                <div class="table-container desktop-only-view">
                     <nz-table 
                         #basicTable 
                         [nzData]="items.data" 
@@ -136,6 +136,53 @@
                             }
                         </tbody>
                     </nz-table>
+                </div>
+
+                <!-- Vista Móvil (Tarjetas / Cards) -->
+                <div class="mobile-works-list mobile-only-view">
+                    @for (item of items.data; track item.itm_uuid) {
+                        <div class="mobile-work-card">
+                            <!-- Cabecera de la Tarjeta (Nombre y Tag) -->
+                            <div class="card-header">
+                                <div class="client-badge-wrapper">
+                                    <span class="works-fixed-client">
+                                        {{ item.itm_name }}
+                                    </span>
+                                </div>
+                                <span class="route-tag">
+                                    <i class="fas fa-tag"></i> Rubro
+                                </span>
+                            </div>
+
+                            <!-- Cuerpo de la Tarjeta (Detalles) -->
+                            <div class="card-body-details">
+                                @if (item.itm_description) {
+                                    <div class="detail-item">
+                                        <i class="fas fa-align-left"></i>
+                                        <span><strong>Descripción:</strong> {{ item.itm_description }}</span>
+                                    </div>
+                                } @else {
+                                    <div class="detail-item" style="color: #7f8c8d; font-style: italic;">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Sin descripción registrada</span>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Pie de la Tarjeta (Acciones: Editar + Eliminar) -->
+                            <div class="card-footer-actions">
+                                <!-- Botón de Editar -->
+                                <a [routerLink]="['/admin/application/item', item.itm_uuid]" class="btn btn-raised btn-success btn-action-main" style="color: #ffffff;">
+                                    <i class="fas fa-sync-alt"></i> EDITAR
+                                </a>
+
+                                <!-- Botón de Eliminar -->
+                                <button type="button" class="btn btn-raised btn-danger btn-action-main" (click)="deleteItem(item)" title="Eliminar Rubro">
+                                    <i class="far fa-trash-alt"></i> ELIMINAR
+                                </button>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 @if(items.totalPages > 1) {
