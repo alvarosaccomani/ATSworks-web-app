@@ -1,11 +1,14 @@
 <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
+    <!-- Vista Escritorio (Desktop) -->
+    <ul class="pagination justify-content-center desktop-only-view">
         <li 
             [ngClass]="{'disabled': page === 1}"
             (click)="prev()"
             class="page-item"
             >
-            <a class="page-link" tabindex="-1">Previous</a>
+            <a class="page-link" tabindex="-1">
+                <i class="fas fa-chevron-left"></i> Anterior
+            </a>
         </li>
         @for(p of pages; track i; let i = $index) {
             <li
@@ -25,7 +28,30 @@
             (click)="next()"
             class="page-item"
             >
-            <a class="page-link">Next</a>
+            <a class="page-link">
+                Siguiente <i class="fas fa-chevron-right"></i>
+            </a>
         </li>
     </ul>
+
+    <!-- Vista Móvil (Mobile) -->
+    <div class="mobile-pagination-wrapper mobile-only-view">
+        <button 
+            type="button" 
+            class="btn-pagination" 
+            [disabled]="page === 1" 
+            (click)="prev()"
+            >
+            <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <span class="mobile-pagination-info">Pág. {{page}} de {{totalPages}}</span>
+        <button 
+            type="button" 
+            class="btn-pagination" 
+            [disabled]="page >= totalPages" 
+            (click)="next()"
+            >
+            Siguiente <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
 </nav>

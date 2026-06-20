@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-declare var $:any;
+
 
 @Component({
   selector: 'app-pagination',
@@ -45,26 +45,20 @@ export class PaginationComponent {
 
   public next() {
     if(this.page < this.totalPages) {
-      $(`.pagination li:nth-child(${this.page + 1})`).removeClass('active');
       this.page++;
-      $(`.pagination li:nth-child(${this.page + 1})`).addClass('active');
       this.passPage();
     }
   }
 
   public prev() {
     if(this.page > 1) {
-      $(`.pagination li:nth-child(${this.page + 1})`).removeClass('active');
       this.page--;
-      $(`.pagination li:nth-child(${this.page + 1})`).addClass('active');
       this.passPage();
     }
   }
 
   public setPage(page: number) {
-    if(page !== this.page) {
-      $(`.pagination li:nth-child(${this.page + 1})`).removeClass('active');
-      $(`.pagination li:nth-child(${page + 1})`).addClass('active');
+    if(page !== this.page && page >= 1 && page <= this.totalPages) {
       this.page = page;
       this.passPage();
     }
