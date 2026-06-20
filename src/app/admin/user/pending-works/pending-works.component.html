@@ -86,7 +86,7 @@
 
 <div class="container-fluid">
     @if(works$ | async; as works) {
-        <div class="table-responsive">
+        <div class="table-responsive desktop-only-view">
             <table class="table table-dark table-sm">
                 <thead>
                     <tr class="text-center roboto-medium">
@@ -126,7 +126,7 @@
                             <td>{{work.wrks?.wrks_name}}</td>
                             <td>{{work.wrk_description}}</td>
                             <td>
-                                @if(work.wrks?.wrks_name === "Pendiente" || work.wrks?.wrks_name === "A Recuperar/Reprogramar") {
+                                 @if(work.wrks?.wrks_name === "Pendiente" || work.wrks?.wrks_name === "A Recuperar/Reprogramar") {
                                     <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-info">
                                         <i class="fas fa-file-pdf"></i>	
                                     </a>
@@ -157,6 +157,77 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        <!-- Vista Móvil (Tarjetas / Cards) -->
+        <div class="mobile-works-list mobile-only-view">
+            @for (work of works.data; track work.wrk_uuid) {
+                <div class="mobile-work-card">
+                    <!-- Cabecera de la Tarjeta (Cliente y Recorrido) -->
+                    <div class="card-header">
+                        <div class="client-badge-wrapper">
+                            @if (work.wrk_customer) {
+                                <span class="works-eventual-client">
+                                    {{ work.wrk_customer }}
+                                </span>
+                            } @else {
+                                <span class="works-fixed-client">
+                                    {{ work.adr?.cus?.cus_fullname }}
+                                </span>
+                            }
+                        </div>
+                        <span class="route-tag">
+                            <i class="fas fa-route"></i> {{ work.adr?.cus?.rou?.rou_name || 'Sin Ruta' }}
+                        </span>
+                    </div>
+
+                    <!-- Cuerpo de la Tarjeta (Detalles) -->
+                    <div class="card-body-details">
+                        <div class="detail-item">
+                            <i class="far fa-calendar-alt"></i>
+                            <span><strong>Fecha:</strong> {{ work.wrk_workdate | date: 'dd/MM/yyyy' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-briefcase"></i>
+                            <span><strong>Rubro:</strong> {{ work.mitm?.mitm_name || 'Sin Rubro' }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-info-circle"></i>
+                            <span><strong>Estado:</strong> {{ work.wrks?.wrks_name || 'Pendiente' }}</span>
+                        </div>
+                        @if (work.wrk_description) {
+                            <div class="detail-item">
+                                <i class="fas fa-align-left"></i>
+                                <span><strong>Descripción:</strong> {{ work.wrk_description }}</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Pie de la Tarjeta (Acciones: Planilla + Editar + Eliminar) -->
+                    <div class="card-footer-actions">
+                        <!-- Botón de Planilla -->
+                        @if (work.wrks?.wrks_name === "Pendiente" || work.wrks?.wrks_name === "A Recuperar/Reprogramar") {
+                            <a [routerLink]="['/admin/user/work-sheet', work.wrk_uuid]" class="btn btn-raised btn-success btn-action-main" style="color: #ffffff;">
+                                <i class="fas fa-clipboard-list"></i> REALIZAR
+                            </a>
+                        } @else {
+                            <a [routerLink]="['/admin/user/work-sheet-view', work.wrk_uuid]" class="btn btn-raised btn-info btn-action-main">
+                                <i class="fas fa-file-pdf"></i> VER DETALLE
+                            </a>
+                        }
+
+                        <!-- Botón de Editar -->
+                        <a [routerLink]="['/admin/user/work', work.wrk_uuid]" class="btn btn-raised btn-warning btn-action-icon" title="Editar Trabajo">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                        <!-- Botón de Eliminar -->
+                        <button type="button" class="btn btn-raised btn-danger btn-action-icon" (click)="deleteWork(work)" title="Eliminar Trabajo">
+                            <i class="far fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            }
         </div>
         @if(works.totalPages > 1) {
             <app-pagination
