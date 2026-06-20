@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
-import { CustomerInterface } from '../../../core/interfaces/customer';
+import { CustomerInterface } from '../../../core/interfaces/customer/customer.interface';
 import { RouteInterface } from '../../../core/interfaces/route';
 import { PaymentMethodInterface } from '../../../core/interfaces/payment-method';
 import { SessionService } from '../../../core/services/session.service';
@@ -22,20 +22,23 @@ import { UserRolesCompanyService } from '../../../core/services/user-roles-compa
 import { AddressInterface } from '../../../core/interfaces/address';
 import { SubscriptionPlanInterface } from '../../../core/interfaces/subscription-plan';
 
+import { NzSelectModule } from 'ng-zorro-antd/select';
+
 @Component({
   selector: 'app-customer',
   imports: [
     RouterLink,
     FormsModule,
     HeaderComponent,
-    PageNavTabsComponent
+    PageNavTabsComponent,
+    NzSelectModule
   ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.scss'
 })
 export class CustomerComponent {
 
-  public customer!: CustomerInterface;
+  public customer!: CustomerInterface; // Soporte para recorridos múltiples (M:N)
   public routes: RouteInterface[] = [];
   public paymentMethods: PaymentMethodInterface[] = [];
   public subscriptionsPlans: SubscriptionPlanInterface[] = [];
@@ -154,6 +157,7 @@ export class CustomerComponent {
       cus_phone: null,
       cus_dateofbirth: null,
       rou_uuid: null,
+      rou_uuids: [],
       rou: null,
       pmt_uuid: null,
       usr_uuid: null,

@@ -21,5 +21,6 @@ export interface CustomerInterface {
     cus_active: boolean | null,
     cus_createdat: Date | null,
     cus_updatedat: Date | null,
-    addresses?: AddressInterface[]
+    addresses?: AddressInterface[],
+    rou_uuids?: string[]
 }

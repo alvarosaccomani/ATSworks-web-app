@@ -128,24 +128,22 @@
                     <div class="col-12 col-md-4">
                         <div class="form-group">
                             <label
-                                for="rou_uuid"
+                                for="rou_uuids"
                                 class="bmd-label-floating">
-                                Recorrido
+                                Recorridos
                             </label>
-                            <select 
-                                class="form-control" 
-                                name="rou_uuid"
-                                [(ngModel)]="customer.rou_uuid"
-                                (change)="onRouteChange($event)">
-                                <option value="" selected="" disabled="">Seleccione una opción</option>
+                            <nz-select 
+                                name="rou_uuids"
+                                nzMode="multiple"
+                                nzPlaceHolder="Seleccione los recorridos"
+                                [(ngModel)]="customer.rou_uuids"
+                                style="width: 100%;">
                                 @for(route of routes; track route.rou_uuid) {
                                     @if(route){
-                                        <option [value]="route.rou_uuid">
-                                            {{route.rou_name}}
-                                        </option>
+                                        <nz-option [nzLabel]="route.rou_name" [nzValue]="route.rou_uuid"></nz-option>
                                     }
                                 }
-                            </select>
+                            </nz-select>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
