@@ -6,7 +6,7 @@
 <!-- Content -->
 <div class="container-fluid">
     @if(users$ | async; as users) {
-        <div class="table-responsive">
+        <div class="table-responsive desktop-only-view">
             <table class="table table-dark table-sm">
                 <thead>
                     <tr class="text-center roboto-medium">
@@ -73,6 +73,48 @@
                     }
                 </tbody>
             </table>
+        </div>
+
+        <!-- Vista Móvil (Tarjetas / Cards) -->
+        <div class="mobile-works-list mobile-only-view">
+            @for (user of users.data; track user.usr_uuid) {
+                @if (sysadmin || !user.usr_sysadmin) {
+                    <div class="mobile-work-card">
+                        <!-- Cabecera de la Tarjeta (Nombre Completo y Nick) -->
+                        <div class="card-header">
+                            <div class="client-badge-wrapper">
+                                <span class="works-fixed-client">
+                                    {{ user.usr_name }} {{ user.usr_surname }}
+                                </span>
+                            </div>
+                            <span class="route-tag">
+                                <i class="fas fa-user"></i> {{ user.usr_nick }}
+                            </span>
+                        </div>
+
+                        <!-- Cuerpo de la Tarjeta (Detalles) -->
+                        <div class="card-body-details">
+                            <div class="detail-item">
+                                <i class="fas fa-envelope"></i>
+                                <span><strong>Email:</strong> {{ user.usr_email }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Pie de la Tarjeta (Acciones: Editar + Eliminar) -->
+                        <div class="card-footer-actions">
+                            <!-- Botón de Editar -->
+                            <a [routerLink]="['/admin/application/user', user.usr_uuid]" class="btn btn-raised btn-success btn-action-main" style="color: #ffffff;">
+                                <i class="fas fa-sync-alt"></i> EDITAR
+                            </a>
+
+                            <!-- Botón de Eliminar -->
+                            <button type="button" class="btn btn-raised btn-danger btn-action-main" (click)="deleteUser(user)" title="Eliminar Usuario">
+                                <i class="far fa-trash-alt"></i> ELIMINAR
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
         </div>
         @if(users.totalPages > 1) {
             <app-pagination
