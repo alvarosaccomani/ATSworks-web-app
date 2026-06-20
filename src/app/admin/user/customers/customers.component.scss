@@ -32,7 +32,7 @@ nz-select {
         margin-bottom: 12px;
 
         .client-badge-wrapper {
-            max-width: 65%;
+            max-width: 50%;
             
             span {
                 display: inline-block;
@@ -44,6 +44,14 @@ nz-select {
                 font-size: 0.85rem;
                 padding: 4px 8px;
             }
+        }
+
+        .route-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: flex-end;
+            max-width: 50%;
         }
 
         .route-tag {

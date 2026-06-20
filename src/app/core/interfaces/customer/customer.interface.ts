@@ -22,5 +22,6 @@ export interface CustomerInterface {
     cus_createdat: Date | null,
     cus_updatedat: Date | null,
     addresses?: AddressInterface[],
-    rou_uuids?: string[]
+    rou_uuids?: string[],
+    routes?: RouteInterface[]
 }

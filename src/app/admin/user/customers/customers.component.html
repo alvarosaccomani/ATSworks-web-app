@@ -152,8 +152,17 @@
                             Direccion {{$index + 1}}: {{ address }}
                         </div>
                         }
+                    <td>
+                        @if (customer.routes && customer.routes.length > 0) {
+                            <div class="d-flex flex-wrap justify-content-center" style="gap: 4px;">
+                                @for(route of customer.routes; track route.rou_uuid) {
+                                    <span class="badge badge-info mr-1">{{route.rou_name}}</span>
+                                }
+                            </div>
+                        } @else {
+                            <span class="text-muted">Sin Recorrido</span>
+                        }
                     </td>
-                    <td>{{customer.rou?.rou_name}}</td>
                     <td>
                         <a [routerLink]="['/admin/user/customer', customer.cus_uuid]" class="btn btn-success">
                             <i class="fas fa-sync-alt"></i>
@@ -186,9 +195,19 @@
                             {{ customer.cus_fullname }}
                         </span>
                     </div>
-                    <span class="route-tag">
-                        <i class="fas fa-route"></i> {{ customer.rou?.rou_name || 'Sin Recorrido' }}
-                    </span>
+                    <div class="route-tags-wrapper">
+                        @if (customer.routes && customer.routes.length > 0) {
+                            @for(route of customer.routes; track route.rou_uuid) {
+                                <span class="route-tag">
+                                    <i class="fas fa-route"></i> {{ route.rou_name }}
+                                </span>
+                            }
+                        } @else {
+                            <span class="route-tag">
+                                <i class="fas fa-route"></i> Sin Recorrido
+                            </span>
+                        }
+                    </div>
                 </div>
 
                 <!-- Cuerpo de la Tarjeta (Detalles) -->
