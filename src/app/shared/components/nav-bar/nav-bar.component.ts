@@ -38,7 +38,9 @@ export class NavBarComponent implements OnInit {
   public companyItems$!: Observable<CompanyItemResults>;
   public isCustomer: boolean = false;
   public hasMultipleContexts: boolean = false;
-  public currentContext: 'admin' | 'customer' = 'admin';
+  public get currentContext(): 'admin' | 'customer' {
+    return this._router.url.includes('/customer') ? 'customer' : 'admin';
+  }
 
   constructor(
     private _router: Router,
@@ -127,7 +129,6 @@ export class NavBarComponent implements OnInit {
       const hasAdmin = roles.some((r: string) => !r.includes('client') && !r.includes('cliente'));
       
       this.hasMultipleContexts = this.isCustomer && hasAdmin;
-      this.currentContext = this._router.url.includes('/customer') ? 'customer' : 'admin';
     } else {
       this.isCustomer = false;
       this.hasMultipleContexts = false;

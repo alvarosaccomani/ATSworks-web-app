@@ -1,6 +1,6 @@
 <nav class="navbar-info-container">
     <div class="navbar-left">
-    @if(!isCustomer) {
+    @if(currentContext === 'admin') {
         <a class="nav-icon-btn" (click)="showCloseNavBar()" title="Menú">
             <i class="fas fa-bars"></i>
         </a>
