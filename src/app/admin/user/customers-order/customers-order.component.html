@@ -52,7 +52,7 @@
 </div>
 
 <div class="container-fluid">
-    <div class="table-responsive">
+    <div class="table-responsive desktop-only-view">
         <table class="table table-dark table-sm">
             <thead>
                 <tr class="text-center roboto-medium">
@@ -96,6 +96,61 @@
                 }
             </tbody>
         </table>
+    </div>
+
+    <!-- Vista Móvil (Tarjetas / Cards) -->
+    <div class="mobile-works-list mobile-only-view">
+        @for (customer of customers; track customer.cus_uuid) {
+            <div class="mobile-work-card">
+                <!-- Cabecera de la Tarjeta (Nombre y Recorrido) -->
+                <div class="card-header">
+                    <div class="client-badge-wrapper">
+                        <span class="works-fixed-client">
+                            {{ customer.cus_fullname }}
+                        </span>
+                    </div>
+                    <span class="route-tag">
+                        <i class="fas fa-route"></i> {{ customer.rou?.rou_name || 'Sin Recorrido' }}
+                    </span>
+                </div>
+
+                <!-- Cuerpo de la Tarjeta (Detalles y Control de Orden) -->
+                <div class="card-body-details">
+                    <div class="detail-item">
+                        <i class="fas fa-envelope"></i>
+                        <span><strong>Email:</strong> {{ customer.cus_email || 'Sin Email' }}</span>
+                    </div>
+                    <div class="detail-item align-items-center">
+                        <i class="fas fa-sort-numeric-down"></i>
+                        <div class="d-flex align-items-center">
+                            <strong style="margin-right: 8px;">Orden:</strong>
+                            <input 
+                                type="number" 
+                                class="form-control text-center text-white" 
+                                [(ngModel)]="customer.cus_order"
+                                style="width: 70px; background: transparent; border: 1px solid #555; height: 32px; padding: 2px;"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie de la Tarjeta (Acciones: Subir + Bajar) -->
+                <div class="card-footer-actions">
+                    <!-- Botón Subir -->
+                    <button type="button" class="btn btn-raised btn-info btn-action-main" (click)="moveUp($index)" [disabled]="$first || isLoading">
+                        <i class="fas fa-arrow-up"></i> SUBIR
+                    </button>
+
+                    <!-- Botón Bajar -->
+                    <button type="button" class="btn btn-raised btn-info btn-action-main" (click)="moveDown($index)" [disabled]="$last || isLoading">
+                        <i class="fas fa-arrow-down"></i> BAJAR
+                    </button>
+                </div>
+            </div>
+        }
+        @if (customers.length === 0 && !isLoading) {
+            <div class="text-center text-muted py-4 w-100">No se encontraron clientes.</div>
+        }
     </div>
 
     @if(isLoading) {
