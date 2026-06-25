@@ -31,12 +31,12 @@
                     </thead>
                     <tbody>
                         @for(workDetailsDetail of workDetailsDetail; track workDetailsDetail.wrkd_uuid) {
-                            <tr class="text-center" >
+                            <tr class="text-center">
                                 <td>{{$index + 1}}</td>
                                 <td>{{workDetailsDetail.wrkd_name}}</td>
-                                @switch (workDetailsDetail.dtp?.dtp_cod) {
-                                    @case ('string') {
-                                        <td>
+                                <td>
+                                    @switch (workDetailsDetail.dtp?.dtp_cod) {
+                                        @case ('string') {
                                             <input 
                                                 type="text" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
@@ -47,22 +47,18 @@
                                                 [class.is-invalid-field]="!workDetailsDetail.wrkd_value"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputText($event, workDetailsDetail!)">
-                                        </td>
-                                    }
-                                    @case ('boolean') {
-                                        <td>
+                                        }
+                                        @case ('boolean') {
                                             <input 
                                                 type="checkbox" 
-                                                class="form-control" 
+                                                class="form-check-input" 
                                                 id="wrkd_value" 
                                                 name="wrkd_value" 
                                                 [checked]="workDetailsDetail.wrkd_value === 'true'"
                                                 (click)="onValueChangeInputCheck($event, workDetailsDetail!)">
-                                                <!-- [(ngModel)]="workDetailsDetail.wrkd_value" -->
-                                        </td>
-                                    }
-                                    @case ('Integer') {
-                                        <input 
+                                        }
+                                        @case ('Integer') {
+                                            <input 
                                                 type="number" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                                 class="form-control" 
@@ -72,9 +68,9 @@
                                                 [class.is-invalid-field]="workDetailsDetail.wrkd_value === '' || workDetailsDetail.wrkd_value === null || workDetailsDetail.wrkd_value === undefined"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailsDetail!)">
-                                    }
-                                    @case ('float') {
-                                        <input 
+                                        }
+                                        @case ('float') {
+                                            <input 
                                                 type="number" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                                 class="form-control" 
@@ -84,9 +80,8 @@
                                                 [class.is-invalid-field]="workDetailsDetail.wrkd_value === '' || workDetailsDetail.wrkd_value === null || workDetailsDetail.wrkd_value === undefined"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailsDetail!)">
-                                    }
-                                    @case ('date') {
-                                        <td>
+                                        }
+                                        @case ('date') {
                                             <input 
                                                 type="date" 
                                                 class="form-control" 
@@ -94,10 +89,8 @@
                                                 id="wrkd_value"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 >
-                                        </td>
-                                    }
-                                    @case ('datetime') {
-                                        <td>
+                                        }
+                                        @case ('datetime') {
                                             <input 
                                                 type="datetime-local" 
                                                 class="form-control" 
@@ -105,10 +98,8 @@
                                                 id="wrkd_value"
                                                 [(ngModel)]="workDetailsDetail.wrkd_value"
                                                 >
-                                        </td>
-                                    }
-                                    @case ('array') {
-                                        <td>
+                                        }
+                                        @case ('array') {
                                             <select 
                                                 class="form-control" 
                                                 name="wrkd_value" 
@@ -121,14 +112,14 @@
                                                     </option>
                                                 }
                                             </select>
-                                        </td>
+                                        }
+                                        @default {
+                                            <div class="text-muted small">
+                                                No hay tipo de dato.
+                                            </div>
+                                        }
                                     }
-                                    @default {
-                                        <div>
-                                            No hay tipo de dato.
-                                        </div>
-                                    }
-                                }
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -171,12 +162,12 @@
                     </thead>
                     <tbody>
                         @for(workDetailObservation of workDetailsObservations; track workDetailObservation.wrkd_uuid) {
-                            <tr class="text-center" >
+                            <tr class="text-center">
                                 <td>{{$index + 1}}</td>
                                 <td>{{workDetailObservation.wrkd_name}}</td>
-                                @switch (workDetailObservation.dtp?.dtp_cod) {
-                                    @case ('string') {
-                                        <td>
+                                <td>
+                                    @switch (workDetailObservation.dtp?.dtp_cod) {
+                                        @case ('string') {
                                             <input 
                                                 type="text" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
@@ -186,22 +177,18 @@
                                                 name="wrkd_value"
                                                 [(ngModel)]="workDetailObservation.wrkd_value"
                                                 (blur)="onValueChangeInputText($event, workDetailObservation!)">
-                                        </td>
-                                    }
-                                    @case ('boolean') {
-                                        <td>
+                                        }
+                                        @case ('boolean') {
                                             <input 
                                                 type="checkbox" 
-                                                class="form-control" 
+                                                class="form-check-input" 
                                                 id="wrkd_value" 
                                                 name="wrkd_value" 
                                                 [checked]="workDetailObservation.wrkd_value === 'true'"
                                                 (click)="onValueChangeInputCheck($event, workDetailObservation!)">
-                                                <!-- [(ngModel)]="workDetailObservation.wrkd_value" -->
-                                        </td>
-                                    }
-                                    @case ('Integer') {
-                                        <input 
+                                        }
+                                        @case ('Integer') {
+                                            <input 
                                                 type="number" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                                 class="form-control" 
@@ -210,9 +197,9 @@
                                                 name="wrkd_value"
                                                 [(ngModel)]="workDetailObservation.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailObservation!)">
-                                    }
-                                    @case ('float') {
-                                        <input 
+                                        }
+                                        @case ('float') {
+                                            <input 
                                                 type="number" 
                                                 pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]{1,35}" 
                                                 class="form-control" 
@@ -221,9 +208,8 @@
                                                 name="wrkd_value"
                                                 [(ngModel)]="workDetailObservation.wrkd_value"
                                                 (blur)="onValueChangeInputNumber($event, workDetailObservation!)">
-                                    }
-                                    @case ('date') {
-                                        <td>
+                                        }
+                                        @case ('date') {
                                             <input 
                                                 type="date" 
                                                 class="form-control" 
@@ -231,10 +217,8 @@
                                                 id="wrkd_value"
                                                 [(ngModel)]="workDetailObservation.wrkd_value"
                                                 >
-                                        </td>
-                                    }
-                                    @case ('datetime') {
-                                        <td>
+                                        }
+                                        @case ('datetime') {
                                             <input 
                                                 type="datetime-local" 
                                                 class="form-control" 
@@ -242,10 +226,8 @@
                                                 id="wrkd_value"
                                                 [(ngModel)]="workDetailObservation.wrkd_value"
                                                 >
-                                        </td>
-                                    }
-                                    @case ('array') {
-                                        <td>
+                                        }
+                                        @case ('array') {
                                             <select 
                                                 class="form-control" 
                                                 name="wrkd_value" 
@@ -257,14 +239,14 @@
                                                     </option>
                                                 }
                                             </select>
-                                        </td>
+                                        }
+                                        @default {
+                                            <div class="text-muted small">
+                                                No hay tipo de dato.
+                                            </div>
+                                        }
                                     }
-                                    @default {
-                                        <div>
-                                            No hay tipo de dato.
-                                        </div>
-                                    }
-                                }
+                                </td>
                             </tr>
                         }
                     </tbody>
