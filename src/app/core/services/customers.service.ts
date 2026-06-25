@@ -80,4 +80,10 @@ export class CustomersService {
 
     return this._http.delete(environment.apiUrl + 'customer/' + cmp_uuid + '/' + cus_uuid, { headers: headers });
   }
+
+  public softDeleteCustomer(cmp_uuid: string, cus_uuid: string): Observable<any> {
+    let headers = new HttpHeaders().set('content-type', 'application/json');
+
+    return this._http.delete(environment.apiUrl + 'customer-soft-delete/' + cmp_uuid + '/' + cus_uuid, { headers: headers });
+  }
 }

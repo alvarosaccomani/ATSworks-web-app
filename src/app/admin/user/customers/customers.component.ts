@@ -142,7 +142,7 @@ export class CustomersComponent implements OnInit {
     },
       (result: any) => {
         if (result.value) {
-          this._customersService.deleteCustomer(customer.cmp_uuid!, customer.cus_uuid!)
+          this._customersService.softDeleteCustomer(customer.cmp_uuid!, customer.cus_uuid!)
             .subscribe(
               response => {
                 console.info(response);
