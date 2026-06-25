@@ -7,6 +7,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { WorksService } from '../../../core/services/works.service';
+import { WorksHistoryService } from '../../../core/services/works-history.service';
 import { WorkInterface, WorkResults } from '../../../core/interfaces/work';
 import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -42,6 +43,12 @@ export class WorksComponent {
   public fieldSortValue: string = "wrk_workdate";
   public sortValue: string = "ASC";
 
+  // Variables de Historial en Panel Lateral (Drawer)
+  public isHistoryDrawerOpen: boolean = false;
+  public selectedWorkForHistory: WorkInterface | null = null;
+  public workHistoryList: any[] = [];
+  public isLoadingHistory: boolean = false;
+
   private cmp_uuid!: string;
   public works$!: Observable<WorkResults>;
   public headerConfig: any = {
@@ -76,6 +83,7 @@ export class WorksComponent {
       private _sessionService: SessionService,
       private _messageService: MessageService,
       private _worksService: WorksService,
+      private _worksHistoryService: WorksHistoryService,
       private _sharedDataService: SharedDataService
     ) { }
 
@@ -151,4 +159,31 @@ export class WorksComponent {
     this.page = page;
     this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, page, this.perPage, this.fieldSortValue, this.sortValue);
   }
+
+  public openHistoryDrawer(work: WorkInterface): void {
+    this.selectedWorkForHistory = work;
+    this.isHistoryDrawerOpen = true;
+    this.workHistoryList = [];
+    this.isLoadingHistory = true;
+    
+    this._worksHistoryService.getworkHistory(work.cmp_uuid!, work.wrk_uuid!)
+      .subscribe({
+        next: (response) => {
+          this.workHistoryList = response.data || [];
+          this.isLoadingHistory = false;
+        },
+        error: (err: any) => {
+          console.error("Error al obtener historial:", err);
+          this._messageService.error("Error", "No se pudo recuperar el historial del trabajo.");
+          this.isLoadingHistory = false;
+        }
+      });
+  }
+
+  public closeHistoryDrawer(): void {
+    this.isHistoryDrawerOpen = false;
+    this.selectedWorkForHistory = null;
+    this.workHistoryList = [];
+  }
 }
+
