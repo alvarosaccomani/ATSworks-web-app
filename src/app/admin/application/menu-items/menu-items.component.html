@@ -1,1 +1,240 @@
-<p>menu-items works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content here-->
+<div class="container-fluid">
+    <form 
+        class="form-neon" 
+        autocomplete="off">
+        <div class="container-fluid">
+            <div class="row align-items-end">
+
+                <div class="col-12 col-md-9">
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <div class="form-group">
+                                <label for="inputFilter" class="bmd-label-floating">Buscar por título:</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="inputFilter"
+                                    [(ngModel)]="searchTitle" 
+                                    [ngModelOptions]="{standalone: true}"
+                                    placeholder="Escribe el título para filtrar..."
+                                    >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputFieldSort" class="bmd-label-floating">Campo:</label>
+                        <nz-select [(ngModel)]="fieldSortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="mnu_title" nzLabel="Título"></nz-option>
+                            <nz-option nzValue="mnu_order" nzLabel="Orden"></nz-option>
+                            <nz-option nzValue="mnu_route" nzLabel="Ruta"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputSort" class="bmd-label-floating">Ordenar:</label>
+                        <nz-select [(ngModel)]="sortValue" [ngModelOptions]="{standalone: true}" name="sort" style="width: 100%;">
+                            <nz-option nzValue="ASC" nzLabel="Ascendente"></nz-option>
+                            <nz-option nzValue="DESC" nzLabel="Descendente"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+                <div class="col-12 col-md-1">
+                    <div class="form-group">
+                        <label for="inputItems" class="bmd-label-floating">Items:</label>
+                        <nz-select [(ngModel)]="perPage" [ngModelOptions]="{standalone: true}" name="perPage" style="width: 100%;">
+                            <nz-option [nzValue]="10" nzLabel="10"></nz-option>
+                            <nz-option [nzValue]="25" nzLabel="25"></nz-option>
+                            <nz-option [nzValue]="50" nzLabel="50"></nz-option>
+                            <nz-option [nzValue]="100" nzLabel="100"></nz-option>
+                        </nz-select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-12">
+                <p class="text-center" style="margin-top: 15px;">
+                    <button type="submit" (click)="filter()" class="btn btn-raised btn-info" style="margin: 0 5px 0 0;">
+                        <i class="fas fa-search"></i> &nbsp; BUSCAR
+                    </button>
+                    <button type="button" (click)="clearSearch()" class="btn btn-raised btn-danger" style="margin: 0;">
+                        <i class="far fa-trash-alt"></i> &nbsp; LIMPIAR BÚSQUEDA
+                    </button>
+                </p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid">
+    @if(menus$ | async; as menus) {
+    <div class="table-responsive desktop-only-view">
+        <table class="table table-dark table-sm">
+            <thead>
+                <tr class="text-center roboto-medium">
+                    <th>#</th>
+                    <th>TITULO</th>
+                    <th>CODIGO</th>
+                    <th>DESCRIPCION</th>
+                    <th>ICONO</th>
+                    <th>RUTA</th>
+                    <th>ORDEN</th>
+                    <th>EMPRESA ACTIVA</th>
+                    <th>ESTADO</th>
+                    <th>ACTUALIZAR</th>
+                    <th>ELIMINAR</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(menu of menus.data; track menu.mnu_uuid) {
+                <tr class="text-center">
+                    <td>{{$index + 1}}</td>
+                    <td><strong>{{menu.mnu_title}}</strong></td>
+                    <td>
+                        <span class="badge badge-secondary">{{menu.mnu_cod || 'N/A'}}</span>
+                    </td>
+                    <td>{{menu.mnu_description || '-'}}</td>
+                    <td>
+                        @if(menu.mnu_icon) {
+                            <i [class]="menu.mnu_icon"></i>
+                        } @else {
+                            -
+                        }
+                    </td>
+                    <td><code>{{menu.mnu_route || '-'}}</code></td>
+                    <td>{{menu.mnu_order}}</td>
+                    <td>
+                        @if(menu.mnu_showifcompanyactive) {
+                            <span class="badge badge-success">Requerido</span>
+                        } @else {
+                            <span class="badge badge-light">No Req.</span>
+                        }
+                    </td>
+                    <td>
+                        @if(menu.mnu_active) {
+                            <span class="badge badge-success">Activo</span>
+                        } @else {
+                            <span class="badge badge-danger">Inactivo</span>
+                        }
+                    </td>
+                    <td>
+                        <a [routerLink]="['/admin/application/menu-item', menu.mnu_uuid]" class="btn btn-success">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button 
+                                type="button" 
+                                class="btn btn-warning" 
+                                (click)="deleteMenu(menu)">
+                                <i class="far fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Vista Móvil (Tarjetas / Cards) -->
+    <div class="mobile-works-list mobile-only-view">
+        @for (menu of menus.data; track menu.mnu_uuid) {
+            <div class="mobile-work-card">
+                <!-- Cabecera de la Tarjeta -->
+                <div class="card-header">
+                    <div class="client-badge-wrapper">
+                        <span class="works-fixed-client">
+                            {{ menu.mnu_title }}
+                        </span>
+                    </div>
+                    <span class="route-tag">
+                        <i class="fas fa-code"></i> {{ menu.mnu_cod || 'Sin Código' }}
+                    </span>
+                </div>
+
+                <!-- Cuerpo de la Tarjeta (Detalles) -->
+                <div class="card-body-details">
+                    <div class="detail-item">
+                        <i class="fas fa-link"></i>
+                        <span><strong>Ruta:</strong> <code>{{ menu.mnu_route || 'Sin Ruta' }}</code></span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-align-left"></i>
+                        <span><strong>Descripción:</strong> {{ menu.mnu_description || 'Sin Descripción' }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-star"></i>
+                        <span>
+                            <strong>Icono:</strong> 
+                            @if(menu.mnu_icon) {
+                                <i [class]="menu.mnu_icon" class="ml-1"></i> ({{ menu.mnu_icon }})
+                            } @else {
+                                Sin Icono
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-sort-numeric-down"></i>
+                        <span><strong>Orden:</strong> {{ menu.mnu_order }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-toggle-on"></i>
+                        <span>
+                            <strong>Estado:</strong> 
+                            @if(menu.mnu_active) {
+                                <span class="badge badge-success ml-1">Activo</span>
+                            } @else {
+                                <span class="badge badge-danger ml-1">Inactivo</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-building"></i>
+                        <span>
+                            <strong>Filtro Empresa:</strong> 
+                            @if(menu.mnu_showifcompanyactive) {
+                                <span class="badge badge-info ml-1">Req. Activa</span>
+                            } @else {
+                                <span class="badge badge-light ml-1">No Req.</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Pie de la Tarjeta (Fila de Botones: Editar + Eliminar) -->
+                <div class="card-footer-actions">
+                    <!-- Botón de Editar -->
+                    <a [routerLink]="['/admin/application/menu-item', menu.mnu_uuid]" class="btn btn-raised btn-warning btn-action-main" style="color: #ffffff;">
+                        <i class="fas fa-edit"></i> EDITAR
+                    </a>
+
+                    <!-- Botón de Eliminar -->
+                    <button type="button" class="btn btn-raised btn-danger btn-action-main" (click)="deleteMenu(menu)" title="Eliminar Menú">
+                        <i class="far fa-trash-alt"></i> ELIMINAR
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+    @if(menus.totalPages > 1) {
+        <app-pagination 
+            (paginaEmitter)="goToPage($event)" 
+            [page]="page" 
+            [totalPages]="menus.totalPages"
+            [numElements]="numElements"
+            >
+        </app-pagination>
+    }
+    }
+</div>
