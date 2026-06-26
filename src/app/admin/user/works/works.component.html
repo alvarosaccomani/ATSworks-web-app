@@ -37,7 +37,7 @@
                                     >
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-3">
                             <div class="form-group">
                                 <label for="inputFilterCustomer" class="bmd-label-floating">Cliente:</label>
                                 <input 
@@ -48,6 +48,17 @@
                                     [ngModelOptions]="{standalone: true}"
                                     placeholder="Filtro por cliente"
                                     >
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="form-group">
+                                <label for="inputFilterState" class="bmd-label-floating">Estado:</label>
+                                <nz-select [(ngModel)]="searchWorkState" [ngModelOptions]="{standalone: true}" name="searchWorkState" style="width: 100%;">
+                                    <nz-option nzValue="" nzLabel="Todos los estados"></nz-option>
+                                    @for (state of workStates; track state.wrks_uuid) {
+                                        <nz-option [nzValue]="state.wrks_uuid" [nzLabel]="state.wrks_name"></nz-option>
+                                    }
+                                </nz-select>
                             </div>
                         </div>
                     </div>

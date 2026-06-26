@@ -57,6 +57,7 @@ export class WorksComponent {
   public drawerStatusUuid: string = "";
   public drawerComment: string = "";
   public isSavingState: boolean = false;
+  public searchWorkState: string = "";
 
   private cmp_uuid!: string;
   public works$!: Observable<WorkResults>;
@@ -101,16 +102,30 @@ export class WorksComponent {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this.initDate();
     this.getWorkStates(this.cmp_uuid);
+    this.loadWorks();
 
-    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
         this.cmp_uuid = company.cmp_uuid;
         this.getWorkStates(this.cmp_uuid);
-        this.works$ = this._worksService.getWorks(company.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+        this.loadWorks();
       }
     });
+  }
+
+  private loadWorks(pageNumber: number = this.page): void {
+    this.works$ = this._worksService.getWorks(
+      this.cmp_uuid,
+      this.searchDateFrom,
+      this.searchDateTo,
+      this.searchCustomer,
+      this.searchWorkState || undefined,
+      pageNumber,
+      this.perPage,
+      this.fieldSortValue,
+      this.sortValue
+    );
   }
 
   // Formatea una fecha como 'YYYY-MM-DD'
@@ -132,17 +147,19 @@ export class WorksComponent {
   }
 
   public filter(): void {
-    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+    this.loadWorks();
   }
 
   public clearSearch(): void {
     this.initDate();
     this.searchCustomer = "";
+    this.searchWorkState = "";
+    this.loadWorks(1);
   }
 
   public deleteWork(work: WorkInterface) {
     this._messageService.showCustomMessage({
-        title: "¿Estás seguro de eliminar el Trabajo?",
+        title: "@SISTEMAS: ¿Estás seguro de eliminar el Trabajo?",
         type: "question",
         text: "Estás a punto de eliminar el Trabajo.",
         showCancelButton: true,
@@ -157,7 +174,7 @@ export class WorksComponent {
             .subscribe(
               response => {
                 console.info(response);
-                this.works$ = this._worksService.getWorks(work.cmp_uuid!, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+                this.loadWorks();
               },
               error => {
                 this._messageService.error("Error", error.error.error || "Ocurrió un error al eliminar el trabajo.");
@@ -170,7 +187,7 @@ export class WorksComponent {
 
   public goToPage(page: number): void {
     this.page = page;
-    this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, page, this.perPage, this.fieldSortValue, this.sortValue);
+    this.loadWorks(page);
   }
 
   public openHistoryDrawer(work: WorkInterface): void {
@@ -263,7 +280,7 @@ export class WorksComponent {
           work.wrks.wrks_frcolor = matchingState.wrks_frcolor;
         }
         
-        this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+        this.loadWorks();
         this.openHistoryDrawer(work);
       },
       error: (err) => {
@@ -282,7 +299,7 @@ export class WorksComponent {
     // 1. Guard check for allowed states
     if (currentStatusName !== "Pendiente" && currentStatusName !== "A Recuperar/Reprogramar") {
       this._messageService.error("Acción denegada", "Solo se puede cambiar el estado de trabajos que estén en 'Pendiente' o 'A Recuperar/Reprogramar'.");
-      this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+      this.loadWorks();
       return;
     }
 
@@ -318,17 +335,17 @@ export class WorksComponent {
         this._worksService.updateWork(updatedFields).subscribe({
           next: (response) => {
             this._messageService.success("Éxito", "El estado del trabajo ha sido actualizado.");
-            this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+            this.loadWorks();
           },
           error: (err) => {
             console.error("Error al actualizar estado inline:", err);
             this._messageService.error("Error", "No se pudo actualizar el estado del trabajo.");
-            this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+            this.loadWorks();
           }
         });
       } else {
         // Reset the selector value
-        this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+        this.loadWorks();
       }
     });
   }
