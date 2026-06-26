@@ -18,7 +18,7 @@ export class WorksService {
     private _pouchdbService: PouchdbService
   ) { }
 
-  public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
+  public getWorks(cmp_uuid: string, wrk_dateFrom?: string, wrk_dateTo?: string, wrk_fullname?: string, wrks_uuid?: string, page?: number, perPage?: number, field_order?: string, wrk_orderby?: string): Observable<WorkResults> {
     const headers = new HttpHeaders().set('content-type', 'application/json');
 
     let params = new HttpParams();
@@ -33,6 +33,10 @@ export class WorksService {
 
     if (wrk_fullname) {
       params = params.set('wrk_fullname', wrk_fullname);
+    }
+
+    if (wrks_uuid) {
+      params = params.set('wrks_uuid', wrks_uuid);
     }
 
     if (page) {
