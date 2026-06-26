@@ -1,1 +1,208 @@
-<p>menu-item works!</p>
+<!-- Page header -->
+<app-header [config]="headerConfig"></app-header>
+
+<app-page-nav-tabs [data]="dataTabs"></app-page-nav-tabs>
+
+<!-- Content here-->
+<div class="container-fluid">
+    <form 
+        #formMenu="ngForm" 
+        (ngSubmit)="onSaveMenu(formMenu)" 
+        class="form-neon" 
+        autocomplete="off">
+        
+        <fieldset>
+            <legend><i class="fas fa-compass"></i> &nbsp; Información del Menú</legend>
+            <div class="container-fluid">
+                <div [hidden]="true" class="row">
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="mnu_uuid" class="bmd-label-floating">mnu_uuid</label>
+                            <input type="text" class="form-control" name="mnu_uuid" id="mnu_uuid" [(ngModel)]="menu.mnu_uuid">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_title" class="bmd-label-floating">Título</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_title" 
+                                id="mnu_title" 
+                                [(ngModel)]="menu.mnu_title" 
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_cod" class="bmd-label-floating">Código identificador</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_cod" 
+                                id="mnu_cod" 
+                                [(ngModel)]="menu.mnu_cod">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_parent_uuid" class="bmd-label-floating">Menú Superior (Padre)</label>
+                            <select 
+                                class="form-control" 
+                                name="mnu_parent_uuid" 
+                                id="mnu_parent_uuid" 
+                                [(ngModel)]="menu.mnu_parent_uuid">
+                                <option value="">[ Ninguno (Menú de Nivel Superior) ]</option>
+                                @for(parent of parentMenus; track parent.mnu_uuid) {
+                                    <option [value]="parent.mnu_uuid">{{ parent.mnu_title }}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_route" class="bmd-label-floating">Ruta / Enlace</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_route" 
+                                id="mnu_route" 
+                                [(ngModel)]="menu.mnu_route">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_icon" class="bmd-label-floating">Icono (Clase FontAwesome)</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_icon" 
+                                id="mnu_icon" 
+                                [(ngModel)]="menu.mnu_icon">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_order" class="bmd-label-floating">Orden numérico</label>
+                            <input 
+                                type="number" 
+                                class="form-control" 
+                                name="mnu_order" 
+                                id="mnu_order" 
+                                [(ngModel)]="menu.mnu_order" 
+                                required
+                                min="0">
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="mnu_description" class="bmd-label-floating">Descripción</label>
+                            <textarea 
+                                class="form-control" 
+                                name="mnu_description" 
+                                id="mnu_description" 
+                                rows="3" 
+                                [(ngModel)]="menu.mnu_description"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend><i class="fas fa-toggle-on"></i> &nbsp; Configuración y Visibilidad</legend>
+            <div class="container-fluid">
+                <div class="row">
+                    
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="mnu_itemactive" class="bmd-label-floating">Item visible en navegación</label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="mnu_itemactive" 
+                                name="mnu_itemactive" 
+                                [(ngModel)]="menu.mnu_itemactive">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="mnu_active" class="bmd-label-floating">Habilitado / Activo</label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="mnu_active" 
+                                name="mnu_active" 
+                                [(ngModel)]="menu.mnu_active">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <div class="form-group">
+                            <label for="mnu_showifcompanyactive" class="bmd-label-floating">Requiere empresa activa</label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="mnu_showifcompanyactive" 
+                                name="mnu_showifcompanyactive" 
+                                [(ngModel)]="menu.mnu_showifcompanyactive">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
+        <p class="text-center" style="margin-top: 40px;">
+            @if(menu.mnu_uuid === "new") {
+                <button 
+                    type="reset" 
+                    class="btn btn-raised btn-secondary btn-sm"
+                    (click)="menuInit()"
+                    >
+                    <i class="fas fa-paint-roller"></i> &nbsp; LIMPIAR
+                </button>
+                &nbsp; &nbsp;
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-info btn-sm"
+                    [disabled]="isLoading || formMenu.invalid"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="far fa-save"></i> &nbsp; GUARDAR
+                    }
+                </button>
+            } @else {
+                <button 
+                    type="submit" 
+                    class="btn btn-raised btn-success btn-sm"
+                    [disabled]="isLoading || formMenu.invalid"
+                    >
+                    @if(isLoading) {
+                        <span class="spinner spinner-sm me-2"></span>
+                        <span>Procesando...</span>
+                    } @else {
+                        <i class="fas fa-sync-alt"></i> &nbsp; ACTUALIZAR
+                    }
+                </button>
+            }
+        </p>
+
+    </form>
+</div>
