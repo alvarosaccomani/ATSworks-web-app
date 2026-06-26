@@ -425,4 +425,82 @@ nz-select {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* --- Inline Status Select styling --- */
+.inline-status-select {
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    max-width: 100%;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    background-color: var(--bg-color, #374151);
+    color: var(--text-color, #ffffff);
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+    }
+
+    &:disabled {
+        opacity: 1 !important;
+        background-color: var(--bg-color, #374151) !important;
+        color: var(--text-color, #ffffff) !important;
+        -webkit-text-fill-color: var(--text-color, #ffffff) !important;
+        cursor: not-allowed;
+    }
+}
+
+/* --- Drawer State Editor styling --- */
+.drawer-state-editor {
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    h5 {
+        margin: 0 0 15px 0;
+        font-size: 1rem;
+        color: #ffffff;
+        font-family: 'roboto_medium_regular';
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        i {
+            color: #6366f1;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+
+        label {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .form-control {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.4);
+            color: #ffffff;
+            transition: border-color 0.2s ease;
+
+            &:focus {
+                border-color: #6366f1;
+                background: rgba(15, 23, 42, 0.6);
+            }
+        }
+    }
 }

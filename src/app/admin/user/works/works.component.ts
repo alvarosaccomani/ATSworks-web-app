@@ -8,11 +8,14 @@ import { HeaderComponent } from '../../../shared/components/header/header.compon
 import { PageNavTabsComponent } from '../../../shared/components/page-nav-tabs/page-nav-tabs.component';
 import { WorksService } from '../../../core/services/works.service';
 import { WorksHistoryService } from '../../../core/services/works-history.service';
+import { WorkStatesService } from '../../../core/services/work-states.service';
 import { WorkInterface, WorkResults } from '../../../core/interfaces/work';
+import { WorkStateInterface } from '../../../core/interfaces/work-state';
 import { SessionService } from '../../../core/services/session.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-works',
@@ -49,6 +52,12 @@ export class WorksComponent {
   public workHistoryList: any[] = [];
   public isLoadingHistory: boolean = false;
 
+  // Variables para Estados de Trabajo
+  public workStates: WorkStateInterface[] = [];
+  public drawerStatusUuid: string = "";
+  public drawerComment: string = "";
+  public isSavingState: boolean = false;
+
   private cmp_uuid!: string;
   public works$!: Observable<WorkResults>;
   public headerConfig: any = {
@@ -84,17 +93,21 @@ export class WorksComponent {
       private _messageService: MessageService,
       private _worksService: WorksService,
       private _worksHistoryService: WorksHistoryService,
+      private _workStatesService: WorkStatesService,
       private _sharedDataService: SharedDataService
     ) { }
 
   ngOnInit(): void {
     this.cmp_uuid = this._sessionService.getCompany().cmp_uuid;
     this.initDate();
+    this.getWorkStates(this.cmp_uuid);
 
     this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         console.info(company);
+        this.cmp_uuid = company.cmp_uuid;
+        this.getWorkStates(this.cmp_uuid);
         this.works$ = this._worksService.getWorks(company.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
       }
     });
@@ -165,6 +178,8 @@ export class WorksComponent {
     this.isHistoryDrawerOpen = true;
     this.workHistoryList = [];
     this.isLoadingHistory = true;
+    this.drawerStatusUuid = work.wrks_uuid || "";
+    this.drawerComment = "";
     
     this._worksHistoryService.getworkHistory(work.cmp_uuid!, work.wrk_uuid!)
       .subscribe({
@@ -184,6 +199,138 @@ export class WorksComponent {
     this.isHistoryDrawerOpen = false;
     this.selectedWorkForHistory = null;
     this.workHistoryList = [];
+  }
+
+  private getWorkStates(cmp_uuid: string): void {
+    this._workStatesService.getWorkStates(cmp_uuid).subscribe({
+      next: (response) => {
+        this.workStates = response.data || [];
+      },
+      error: (err) => {
+        console.error("Error al obtener los estados de trabajo:", err);
+      }
+    });
+  }
+
+  public getSelectedStateColor(statusUuid: string | null | undefined, fallback: string | null = '#374151'): string {
+    if (!statusUuid) return fallback || '#374151';
+    const state = this.workStates.find(s => s.wrks_uuid === statusUuid);
+    return state?.wrks_bkcolor || fallback || '#374151';
+  }
+
+  public getSelectedStateFrColor(statusUuid: string | null | undefined, fallback: string | null = '#ffffff'): string {
+    if (!statusUuid) return fallback || '#ffffff';
+    const state = this.workStates.find(s => s.wrks_uuid === statusUuid);
+    return state?.wrks_frcolor || fallback || '#ffffff';
+  }
+
+  public saveDrawerState(): void {
+    if (!this.selectedWorkForHistory) return;
+    
+    const work = this.selectedWorkForHistory;
+    const currentStatusName = work.wrks?.wrks_name || '';
+
+    // 1. Guard check for allowed states
+    if (currentStatusName !== "Pendiente" && currentStatusName !== "A Recuperar/Reprogramar") {
+      this._messageService.error("Acción denegada", "Solo se puede cambiar el estado de trabajos que estén en 'Pendiente' o 'A Recuperar/Reprogramar'.");
+      return;
+    }
+
+    // 2. Guard check for mandatory comment
+    if (!this.drawerComment || !this.drawerComment.trim()) {
+      this._messageService.error("Campo obligatorio", "Es obligatorio ingresar un comentario o motivo para guardar los cambios.");
+      return;
+    }
+
+    this.isSavingState = true;
+    const updatedFields = {
+      ...work,
+      wrks_uuid: this.drawerStatusUuid,
+      comment: this.drawerComment.trim()
+    };
+
+    this._worksService.updateWork(updatedFields).subscribe({
+      next: (response) => {
+        this._messageService.success("Éxito", "El estado del trabajo y comentario han sido guardados.");
+        this.isSavingState = false;
+        this.drawerComment = "";
+        
+        work.wrks_uuid = this.drawerStatusUuid;
+        const matchingState = this.workStates.find(s => s.wrks_uuid === this.drawerStatusUuid);
+        if (matchingState && work.wrks) {
+          work.wrks.wrks_name = matchingState.wrks_name;
+          work.wrks.wrks_bkcolor = matchingState.wrks_bkcolor;
+          work.wrks.wrks_frcolor = matchingState.wrks_frcolor;
+        }
+        
+        this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+        this.openHistoryDrawer(work);
+      },
+      error: (err) => {
+        console.error("Error al guardar el estado en el historial:", err);
+        this._messageService.error("Error", "No se pudo actualizar el estado del trabajo.");
+        this.isSavingState = false;
+      }
+    });
+  }
+
+  public changeInlineStatus(work: WorkInterface, newStatusUuid: string): void {
+    if (work.wrks_uuid === newStatusUuid) return;
+
+    const currentStatusName = work.wrks?.wrks_name || '';
+
+    // 1. Guard check for allowed states
+    if (currentStatusName !== "Pendiente" && currentStatusName !== "A Recuperar/Reprogramar") {
+      this._messageService.error("Acción denegada", "Solo se puede cambiar el estado de trabajos que estén en 'Pendiente' o 'A Recuperar/Reprogramar'.");
+      this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+      return;
+    }
+
+    // 2. Prompt for comment using premium dark SweetAlert2 popup
+    Swal.fire({
+      title: 'Comentario requerido',
+      text: 'Por favor, ingresá un comentario o motivo para el cambio de estado:',
+      input: 'text',
+      inputPlaceholder: 'Escribí el motivo acá...',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+      background: '#1e293b',
+      color: '#ffffff',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      inputValidator: (value) => {
+        if (!value || !value.trim()) {
+          return '¡El comentario es obligatorio!';
+        }
+        return null;
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const comment = result.value.trim();
+
+        const updatedFields = {
+          ...work,
+          wrks_uuid: newStatusUuid,
+          comment: comment
+        };
+
+        this._worksService.updateWork(updatedFields).subscribe({
+          next: (response) => {
+            this._messageService.success("Éxito", "El estado del trabajo ha sido actualizado.");
+            this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+          },
+          error: (err) => {
+            console.error("Error al actualizar estado inline:", err);
+            this._messageService.error("Error", "No se pudo actualizar el estado del trabajo.");
+            this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+          }
+        });
+      } else {
+        // Reset the selector value
+        this.works$ = this._worksService.getWorks(this.cmp_uuid, this.searchDateFrom, this.searchDateTo, this.searchCustomer, this.page, this.perPage, this.fieldSortValue, this.sortValue);
+      }
+    });
   }
 }
 

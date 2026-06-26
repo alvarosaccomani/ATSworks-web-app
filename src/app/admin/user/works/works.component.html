@@ -137,7 +137,21 @@
                             }
                             <td>{{work.wrk_workdate | date: 'dd/MM/yyyy'}}</td>
                             <td>{{work.mitm?.mitm_name}}</td>
-                            <td>{{work.wrks?.wrks_name}}</td>
+                            <td>
+                                <select 
+                                    class="inline-status-select" 
+                                    [ngModel]="work.wrks_uuid" 
+                                    (ngModelChange)="changeInlineStatus(work, $event)"
+                                    [style.--bg-color]="getSelectedStateColor(work.wrks_uuid, work.wrks?.wrks_bkcolor)" 
+                                    [style.--text-color]="getSelectedStateFrColor(work.wrks_uuid, work.wrks?.wrks_frcolor)"
+                                    [disabled]="work.wrks?.wrks_name !== 'Pendiente' && work.wrks?.wrks_name !== 'A Recuperar/Reprogramar'">
+                                    @for (state of workStates; track state.wrks_uuid) {
+                                        <option [value]="state.wrks_uuid" style="background-color: #1f2937; color: #ffffff;">
+                                            {{ state.wrks_name }}
+                                        </option>
+                                    }
+                                </select>
+                            </td>
                             <td>{{work.wrk_description}}</td>
                             <td>
                                 <button 
@@ -222,9 +236,22 @@
                             <i class="fas fa-briefcase"></i>
                             <span><strong>Rubro:</strong> {{ work.mitm?.mitm_name || 'Sin Rubro' }}</span>
                         </div>
-                        <div class="detail-item">
-                            <i class="fas fa-info-circle"></i>
-                            <span><strong>Estado:</strong> {{ work.wrks?.wrks_name || 'Pendiente' }}</span>
+                        <div class="detail-item d-flex align-items-center">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <span class="mr-2"><strong>Estado:</strong></span>
+                            <select 
+                                class="inline-status-select" 
+                                [ngModel]="work.wrks_uuid" 
+                                (ngModelChange)="changeInlineStatus(work, $event)"
+                                [style.--bg-color]="getSelectedStateColor(work.wrks_uuid, work.wrks?.wrks_bkcolor)" 
+                                [style.--text-color]="getSelectedStateFrColor(work.wrks_uuid, work.wrks?.wrks_frcolor)"
+                                [disabled]="work.wrks?.wrks_name !== 'Pendiente' && work.wrks?.wrks_name !== 'A Recuperar/Reprogramar'">
+                                @for (state of workStates; track state.wrks_uuid) {
+                                    <option [value]="state.wrks_uuid" style="background-color: #1f2937; color: #ffffff;">
+                                        {{ state.wrks_name }}
+                                    </option>
+                                }
+                            </select>
                         </div>
                         @if (work.wrk_description) {
                             <div class="detail-item">
@@ -296,6 +323,48 @@
                 <p><i class="fas fa-route"></i> {{selectedWorkForHistory.adr?.cus?.rou?.rou_name || 'Sin Ruta'}}</p>
                 <p><i class="far fa-calendar-alt"></i> {{selectedWorkForHistory.wrk_workdate | date: 'dd/MM/yyyy'}}</p>
             </div>
+            
+            @if (selectedWorkForHistory.wrks?.wrks_name === 'Pendiente' || selectedWorkForHistory.wrks?.wrks_name === 'A Recuperar/Reprogramar') {
+                <div class="drawer-state-editor mb-4">
+                    <h5><i class="fas fa-edit"></i> Actualizar Estado</h5>
+                    <div class="form-group mb-3">
+                        <label class="bmd-label-floating text-white-50">Nuevo Estado</label>
+                        <select 
+                            class="form-control inline-status-select" 
+                            [(ngModel)]="drawerStatusUuid"
+                            [style.background-color]="getSelectedStateColor(drawerStatusUuid)"
+                            [style.color]="getSelectedStateFrColor(drawerStatusUuid)"
+                            style="width: 100%; font-weight: 500; border-radius: 4px; padding: 6px 12px;">
+                            @for (state of workStates; track state.wrks_uuid) {
+                                <option [value]="state.wrks_uuid" style="background-color: #1f2937; color: #ffffff;">
+                                    {{ state.wrks_name }}
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="bmd-label-floating text-white-50">Comentario / Motivo</label>
+                        <textarea 
+                            class="form-control text-white" 
+                            rows="2" 
+                            [(ngModel)]="drawerComment"
+                            placeholder="Escriba un comentario o motivo del cambio..."
+                            style="background-color: #2e3542; border: 1px solid #4b5563; border-radius: 4px; padding: 8px; font-size: 14px; width: 100%; resize: vertical;"></textarea>
+                    </div>
+                    <button 
+                        type="button" 
+                        class="btn btn-raised btn-primary btn-block w-100" 
+                        [disabled]="isSavingState" 
+                        (click)="saveDrawerState()"
+                        style="margin-top: 10px;">
+                        @if(isSavingState) {
+                            <i class="fas fa-spinner fa-spin"></i> Guardando...
+                        } @else {
+                            <i class="fas fa-save"></i> Guardar Cambios
+                        }
+                    </button>
+                </div>
+            }
             
             <hr class="drawer-divider" />
             
