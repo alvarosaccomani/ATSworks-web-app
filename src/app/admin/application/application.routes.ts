@@ -6,6 +6,7 @@ import { ApplicationLayoutComponent } from './application-layout/application-lay
 import { RolPermissionsComponent } from './rol-permissions/rol-permissions.component';
 import { RolPermissionComponent } from './rol-permission/rol-permission.component';
 import { MenuItemsComponent } from './menu-items/menu-items.component';
+import { MenuItemComponent } from './menu-item/menu-item.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { ItemsComponent } from './items/items.component';
@@ -21,6 +22,7 @@ export const APPLICATION_ROUTES: Routes = [
             { path: 'rol-permissions', component: RolPermissionsComponent},
             { path: 'rol-permission/:rol_uuid/:per_uuid', component: RolPermissionComponent},
             { path: 'menu-items', component: MenuItemsComponent},
+            { path: 'menu-item/:mnu_uuid', component: MenuItemComponent},
             { path: 'users', component: UsersComponent},
             { path: 'user/:usr_uuid', component: UserComponent},
             { path: 'items', component: ItemsComponent},
