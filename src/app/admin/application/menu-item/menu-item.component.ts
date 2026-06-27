@@ -7,6 +7,7 @@ import { MenuInterface } from '../../../core/interfaces/menu/menu.interface';
 import { AppMenusService } from '../../../core/services/app-menus.service';
 import { MessageService } from '../../../core/services/message.service';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { PermissionsService } from '../../../core/services/permissions.service';
 
 @Component({
   selector: 'app-menu-item',
@@ -24,6 +25,7 @@ export class MenuItemComponent implements OnInit {
 
   public menu!: MenuInterface;
   public parentMenus: MenuInterface[] = [];
+  public permissions: any[] = [];
   public isLoading: boolean = false;
   public headerConfig: any = {};
   
@@ -44,13 +46,15 @@ export class MenuItemComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _messageService: MessageService,
-    private _appMenusService: AppMenusService
+    private _appMenusService: AppMenusService,
+    private _permissionsService: PermissionsService
   ) {
     this.menuInit();
   }
 
   ngOnInit(): void {
     this.getParentMenus();
+    this.getPermissions();
 
     this._route.params.subscribe((params) => {
       if (params['mnu_uuid'] && params['mnu_uuid'] !== 'new') {
@@ -85,7 +89,8 @@ export class MenuItemComponent implements OnInit {
       mnu_active: true,
       mnu_showifcompanyactive: false,
       mnu_createdat: null,
-      mnu_updatedat: null
+      mnu_updatedat: null,
+      per_uuid: ''
     };
   }
 
@@ -99,6 +104,19 @@ export class MenuItemComponent implements OnInit {
       },
       error: (err) => {
         console.error("Error al obtener menús padres:", err);
+      }
+    });
+  }
+
+  private getPermissions(): void {
+    this._permissionsService.getPermissions().subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.permissions = response.data;
+        }
+      },
+      error: (err) => {
+        console.error("Error al obtener lista de permisos:", err);
       }
     });
   }
@@ -143,6 +161,9 @@ export class MenuItemComponent implements OnInit {
     // Si mnu_parent_uuid es vacío, lo enviamos como null para evitar problemas en base de datos
     if (!payload.mnu_parent_uuid) {
       payload.mnu_parent_uuid = null;
+    }
+    if (!payload.per_uuid) {
+      payload.per_uuid = null;
     }
 
     if (this.menu.mnu_uuid && this.menu.mnu_uuid !== 'new') {

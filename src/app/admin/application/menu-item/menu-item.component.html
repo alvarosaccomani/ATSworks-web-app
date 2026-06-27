@@ -67,6 +67,22 @@
 
                     <div class="col-12 col-md-6">
                         <div class="form-group">
+                            <label for="per_uuid" class="bmd-label-floating">Permiso Asociado (Acceso)</label>
+                            <select 
+                                class="form-control" 
+                                name="per_uuid" 
+                                id="per_uuid" 
+                                [(ngModel)]="menu.per_uuid">
+                                <option value="">[ Ninguno (Acceso público/libre) ]</option>
+                                @for(permission of permissions; track permission.per_uuid) {
+                                    <option [value]="permission.per_uuid">{{ permission.per_slug }} ({{ permission.per_description }})</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
                             <label for="mnu_route" class="bmd-label-floating">Ruta / Enlace</label>
                             <input 
                                 type="text" 
