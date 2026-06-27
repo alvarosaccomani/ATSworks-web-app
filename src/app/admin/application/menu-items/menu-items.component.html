@@ -84,6 +84,7 @@
                     <th>#</th>
                     <th>TITULO</th>
                     <th>CODIGO</th>
+                    <th>ROLES PERMITIDOS</th>
                     <th>DESCRIPCION</th>
                     <th>ICONO</th>
                     <th>RUTA</th>
@@ -101,6 +102,15 @@
                     <td><strong>{{menu.mnu_title}}</strong></td>
                     <td>
                         <span class="badge badge-secondary">{{menu.mnu_cod || 'N/A'}}</span>
+                    </td>
+                    <td>
+                        @if(menu.allowedRoles && menu.allowedRoles.length > 0) {
+                            @for(role of menu.allowedRoles; track role) {
+                                <span class="badge badge-info mr-1" style="margin-right: 4px;">{{role}}</span>
+                            }
+                        } @else {
+                            <span class="badge badge-warning">Libre</span>
+                        }
                     </td>
                     <td>{{menu.mnu_description || '-'}}</td>
                     <td>
@@ -168,6 +178,19 @@
                     <div class="detail-item">
                         <i class="fas fa-link"></i>
                         <span><strong>Ruta:</strong> <code>{{ menu.mnu_route || 'Sin Ruta' }}</code></span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-user-shield"></i>
+                        <span>
+                            <strong>Roles:</strong>
+                            @if(menu.allowedRoles && menu.allowedRoles.length > 0) {
+                                @for(role of menu.allowedRoles; track role) {
+                                    <span class="badge badge-info ml-1" style="margin-left: 4px;">{{role}}</span>
+                                }
+                            } @else {
+                                <span class="badge badge-warning ml-1" style="margin-left: 4px;">Libre</span>
+                            }
+                        </span>
                     </div>
                     <div class="detail-item">
                         <i class="fas fa-align-left"></i>

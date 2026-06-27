@@ -12,5 +12,8 @@ export interface MenuInterface {
     mnu_showifcompanyactive: boolean | null,
     mnu_createdat: Date | null,
     mnu_updatedat: Date | null,
+    per_uuid?: string | null,
+    appPermission?: string | null,
+    allowedRoles?: string[],
     items?: MenuInterface[]
 }
