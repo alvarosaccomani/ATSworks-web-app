@@ -98,8 +98,8 @@ export class MenuItemComponent implements OnInit {
     this._appMenusService.getMenus().subscribe({
       next: (response) => {
         if (response && response.data) {
-          // Filtramos para mostrar sólo menús principales (sin padre) como opción para jerarquía simple
-          this.parentMenus = response.data.filter(m => !m.mnu_parent_uuid && m.mnu_uuid !== this.menu.mnu_uuid);
+          // Excluimos el propio menú para evitar auto-referencia, pero permitimos cualquier nivel como padre
+          this.parentMenus = response.data.filter(m => m.mnu_uuid !== this.menu.mnu_uuid);
         }
       },
       error: (err) => {

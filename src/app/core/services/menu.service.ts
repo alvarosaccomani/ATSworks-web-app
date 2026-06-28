@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map, of } from 'rxjs';
 import { SessionService } from './session.service';
+import { AppMenusService } from './app-menus.service';
 
 export interface MenuItem {
   id: string;
@@ -16,6 +17,7 @@ export interface MenuItem {
   visible?: boolean;
   badge?: number | string;
   badgeType?: 'primary' | 'danger' | 'warning' | 'success' | 'info';
+  mnu_cod?: string | null;
 }
 
 export interface DashboardItem {
@@ -34,371 +36,8 @@ export class MenuService {
   private currentUserRoles: string[] = [];
   private currentCompany: string = '';
 
-  // Items base del sidebar
-  private sidebarItems: MenuItem[] = [
-    {
-      id: '1',
-      name: 'Configuración',
-      icon: 'fas fa-cog fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['sysadmin'],
-      appPermission: 'menu.configuracion',
-      submenu: [
-        {
-          id: '11',
-          name: 'Permisos',
-          icon: 'fas fa-key fa-fw',
-          url: null,
-          hasSubmenu: true,
-          isOpen: false,
-          appPermission: 'menu.configuracion.permisos',
-          submenu: [
-            {
-              id: '111',
-              name: 'Agregar permiso',
-              icon: 'fas fa-plus fa-fw',
-              url: ['/admin/application/permission/new', ''],
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos.agregar_permiso'
-            },
-            {
-              id: '112',
-              name: 'Lista de permisos',
-              icon: 'fas fa-clipboard-list fa-fw',
-              url: '/admin/application/permissions',
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos.lista_permiso'
-            },
-            {
-              id: '113',
-              name: 'Buscar permiso',
-              icon: 'fas fa-search fa-fw',
-              url: null,
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos.buscar_permiso'
-            }
-          ],
-          allowedRoles: ['sysadmin']
-        },
-        {
-          id: '12',
-          name: 'Permisos de roles',
-          icon: 'fas fa-key fa-fw',
-          url: null,
-          hasSubmenu: true,
-          isOpen: false,
-          appPermission: 'menu.configuracion.permisos_de_roles',
-          submenu: [
-            {
-              id: '121',
-              name: 'Agregar permiso de rol',
-              icon: 'fas fa-plus fa-fw',
-              url: ['/admin/application/rol-permission/new', ''],
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos_de_roles.agregar_permiso_de_rol'
-            },
-            {
-              id: '122',
-              name: 'Lista de permisos de roles',
-              icon: 'fas fa-clipboard-list fa-fw',
-              url: '/admin/application/rol-permissions',
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos_de_roles.lista_de_permisos_de_rol'
-            },
-            {
-              id: '123',
-              name: 'Buscar permiso de rol',
-              icon: 'fas fa-search fa-fw',
-              url: null,
-              allowedRoles: ['sysadmin'],
-              appPermission: 'menu.configuracion.permisos_de_roles.buscar_permisos_de_rol'
-            }
-          ],
-          allowedRoles: ['sysadmin']
-        }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Dashboard',
-      icon: 'fab fa-dashcube fa-fw',
-      hasSubmenu: false,
-      url: '/admin/user/dashboard',
-      allowedRoles: ['sysadmin', 'admin', 'editor'],
-      appPermission: 'menu.dashboard'
-    },
-    {
-      id: '3',
-      name: 'Recorridos',
-      icon: 'fas fa-route fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['admin', 'viewer', 'editor'],
-      appPermission: 'menu.recorridos',
-      submenu: [
-        {
-          id: '31',
-          name: 'Agregar Recorrido',
-          icon: 'fas fa-plus fa-fw',
-          url: '/admin/user/route/new',
-          allowedRoles: ['admin'],
-          appPermission: 'menu.recorridos.agregar_recorrido'
-        },
-        {
-          id: '32',
-          name: 'Lista de recorridos',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: 'routes',
-          allowedRoles: ['admin', 'viewer'],
-          appPermission: 'menu.recorridos.listar_recorridos'
-        },
-        {
-          id: '33',
-          name: 'Buscar recorrido',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['admin', 'editor'],
-          appPermission: 'menu.recorridos.buscar_recorrido'
-        }
-      ]
-    },
-    {
-      id: '4',
-      name: 'Clientes',
-      icon: 'fas fa-users fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['admin', 'viewer', 'editor'],
-      appPermission: 'menu.clientes',
-      badge: 12,
-      badgeType: 'info',
-      submenu: [
-        {
-          id: '41',
-          name: 'Agregar Cliente',
-          icon: 'fas fa-plus fa-fw',
-          url: '/admin/user/customer/new',
-          allowedRoles: ['admin'],
-          appPermission: 'menu.clientes.agregar_cliente'
-        },
-        {
-          id: '42',
-          name: 'Lista de clientes',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: 'customers',
-          allowedRoles: ['admin', 'viewer'],
-          appPermission: 'menu.clientes.listar_clientes'
-        },
-        {
-          id: '43',
-          name: 'Orden clientes',
-          icon: 'fas fa-sort fa-fw',
-          url: 'customers-order',
-          allowedRoles: ['admin', 'editor'],
-          appPermission: 'menu.clientes.orden_clientes'
-        },
-        {
-          id: '44',
-          name: 'Trabajos Clientes',
-          icon: 'fas fa-briefcase fa-fw',
-          url: 'customer-works',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.clientes.trabajos_clientes'
-        },
-        {
-          id: '45',
-          name: 'Buscar cliente',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['admin', 'editor'],
-          appPermission: 'menu.clientes.buscar_cliente'
-        }
-      ]
-    },
-    {
-      id: '5',
-      name: 'Items',
-      icon: 'fas fa-pallet fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['sysadmin'],
-      appPermission: 'menu.items',
-      submenu: [
-        {
-          id: '51',
-          name: 'Agregar item',
-          icon: 'fas fa-plus fa-fw',
-          url: null,
-          allowedRoles: ['sysadmin'],
-          appPermission: 'menu.items.agregar_item'
-        },
-        {
-          id: '52',
-          name: 'Lista de items',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: '/admin/application/items',
-          allowedRoles: ['sysadmin'],
-          appPermission: 'menu.items.lista_items'
-        },
-        {
-          id: '53',
-          name: 'Buscar item',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['sysadmin'],
-          appPermission: 'menu.items.buscar_item'
-        }
-      ]
-    },
-    {
-      id: '6',
-      name: 'Modelo Items',
-      icon: 'fas fa-pallet fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['admin'],
-      appPermission: 'menu.modelo_items',
-      submenu: [
-        {
-          id: '61',
-          name: 'Agregar modelo item',
-          icon: 'fas fa-plus fa-fw',
-          url: ['/admin/user/model-item/new', '', ''],
-          allowedRoles: ['admin'],
-          appPermission: 'menu.modelo_items.agregar_modelo_item'
-        },
-        {
-          id: '62',
-          name: 'Lista de modelo items',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: 'models-items',
-          allowedRoles: ['admin'],
-          appPermission: 'menu.modelo_items.listar_modelo_items'
-        },
-        {
-          id: '63',
-          name: 'Buscar modelo item',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['admin'],
-          appPermission: 'menu.modelo_items.buscar_modelo_item'
-        }
-      ]
-    },
-    {
-      id: '7',
-      name: 'Trabajos',
-      icon: 'fas fa-file-invoice-dollar fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['admin', 'viewer', 'editor'],
-      appPermission: 'menu.trabajos',
-      badge: 5,
-      badgeType: 'danger',
-      submenu: [
-        {
-          id: '71',
-          name: 'Nuevo trabajo',
-          icon: 'fas fa-plus fa-fw',
-          url: '/admin/user/work/new',
-          allowedRoles: ['admin'],
-          appPermission: 'menu.trabajos.nuevo_trabajo'
-        },
-        {
-          id: '72',
-          name: 'Lista de trabajos',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: '/admin/user/works',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.listar_trabajos'
-        },
-        {
-          id: '73',
-          name: 'Buscar trabajos',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.buscar_trabajo'
-        },
-        {
-          id: '74',
-          name: 'Calendario de trabajos',
-          icon: 'fas fa-calendar fa-fw',
-          url: '/admin/user/work-schedule',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.calendario_de_trabajos'
-        },
-        {
-          id: '75',
-          name: 'Trabajos masivos',
-          icon: 'fas fa-copy fa-fw',
-          url: '/admin/user/massive-works',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.trabajos_masivos'
-        },
-        {
-          id: '75',
-          name: 'Mapa de trabajos',
-          icon: 'fas fa-map fa-fw',
-          url: '/admin/user/map-works',
-          allowedRoles: ['admin', 'viewer', 'editor'],
-          appPermission: 'menu.trabajos.mapa_trabajos'
-        }
-      ]
-    },
-    {
-      id: '8',
-      name: 'Usuarios',
-      icon: 'fas fa-user-secret fa-fw',
-      url: null,
-      hasSubmenu: true,
-      isOpen: false,
-      allowedRoles: ['sysadmin', 'admin'],
-      appPermission: 'menu.usuarios',
-      submenu: [
-        {
-          id: '81',
-          name: 'Nuevo usuario',
-          icon: 'fas fa-plus fa-fw',
-          url: '/admin/application/user/new',
-          allowedRoles: ['sysadmin', 'admin'],
-          appPermission: 'menu.usuarios.nuevo_usuario'
-        },
-        {
-          id: '82',
-          name: 'Lista de usuarios',
-          icon: 'fas fa-clipboard-list fa-fw',
-          url: '/admin/application/users',
-          allowedRoles: ['sysadmin'],
-          appPermission: 'menu.usuarios.lista_usuarios'
-        },
-        {
-          id: '83',
-          name: 'Buscar usuarios',
-          icon: 'fas fa-search fa-fw',
-          url: null,
-          allowedRoles: ['sysadmin'],
-          appPermission: 'menu.usuarios.buscar_usuarios'
-        }
-      ]
-    },
-    {
-      id: '9',
-      name: 'Empresa',
-      icon: 'fas fa-store-alt fa-fw',
-      url: null, // URL se establecerá dinámicamente
-      hasSubmenu: false,
-      allowedRoles: ['sysadmin', 'admin'],
-      appPermission: 'menu.empresa'
-    }
-  ];
+  // Items base del sidebar (ahora cargados dinámicamente)
+  private sidebarItems: MenuItem[] = [];
 
   // Items base del dashboard (plantilla)
   private dashboardTemplate: any[] = [
@@ -462,21 +101,53 @@ export class MenuService {
   private filteredDashboardItems = new BehaviorSubject<DashboardItem[]>([]);
 
   constructor(
-    private _sessionService: SessionService
+    private _sessionService: SessionService,
+    private _appMenusService: AppMenusService
   ) { }
+
+  // Mapear recursivamente el menú de la base de datos a MenuItem del sidebar
+  private mapDatabaseMenuToMenuItem(dbMenu: any): MenuItem {
+    const hasSubmenu = dbMenu.items && dbMenu.items.length > 0;
+    const allowedRoles = !dbMenu.per_uuid ? ['*'] : (dbMenu.allowedRoles || []);
+
+    return {
+      id: dbMenu.mnu_uuid,
+      name: dbMenu.mnu_title,
+      icon: dbMenu.mnu_icon || undefined,
+      hasSubmenu: hasSubmenu,
+      isOpen: false,
+      url: dbMenu.mnu_route || null,
+      allowedRoles: allowedRoles,
+      appPermission: dbMenu.appPermission || null,
+      mnu_cod: dbMenu.mnu_cod || null,
+      submenu: hasSubmenu ? dbMenu.items.map((child: any) => this.mapDatabaseMenuToMenuItem(child)) : undefined
+    };
+  }
 
   // Inicializar con datos del usuario
   public initialize(userRoles: string[], company: string): void {
     this.currentUserRoles = userRoles;
     this.currentCompany = company;
-    this.updateSidebarItems();
+
+    // Cargar los items de menú de la base de datos de manera dinámica
+    this._appMenusService.getMenuItemsTree().subscribe({
+      next: (response) => {
+        if (response && response.data) {
+          this.sidebarItems = response.data.map(item => this.mapDatabaseMenuToMenuItem(item));
+          this.updateSidebarItems();
+        }
+      },
+      error: (err) => {
+        console.error('Error al inicializar sidebarItems dinámicamente:', err);
+      }
+    });
   }
 
   // Método para obtener los items del sidebar con URLs actualizadas
   private getSidebarItemsWithUpdatedUrls(): MenuItem[] {
     return this.sidebarItems.map(item => {
-      // Si es el item de Empresa, actualizar la URL
-      if (item.id === '7' && this.currentCompany) {
+      // Si es el item de Empresa, actualizar la URL con la compañía actual
+      if ((item.appPermission === 'menu.empresa' || item.url === '/admin/user/company-profile') && this.currentCompany) {
         return {
           ...item,
           url: `/admin/user/company-profile/${this.currentCompany}`
