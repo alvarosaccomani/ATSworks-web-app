@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, of } from 'rxjs';
+import { BehaviorSubject, Observable, map, of, switchMap } from 'rxjs';
 import { SessionService } from './session.service';
 import { AppMenusService } from './app-menus.service';
 
@@ -18,6 +18,8 @@ export interface MenuItem {
   badge?: number | string;
   badgeType?: 'primary' | 'danger' | 'warning' | 'success' | 'info';
   mnu_cod?: string | null;
+  mnu_dashboardicon?: string | null;
+  mnu_dashboardtitle?: string | null;
 }
 
 export interface DashboardItem {
@@ -38,64 +40,6 @@ export class MenuService {
 
   // Items base del sidebar (ahora cargados dinámicamente)
   private sidebarItems: MenuItem[] = [];
-
-  // Items base del dashboard (plantilla)
-  private dashboardTemplate: any[] = [
-    {
-      id: '1',
-      name: 'Clientes',
-      title: 'Clientes',
-      icon: 'fas fa-users fa-fw',
-      url: '/admin/user/customers',
-      description: '',
-      allowedRoles: ['admin', 'editor']
-    },
-    {
-      id: '2',
-      name: 'Items',
-      title: 'Items',
-      icon: 'fas fa-pallet fa-fw',
-      url: '/admin/application/items',
-      description: '',
-      allowedRoles: ['sysadmin']
-    },
-    {
-      id: '3',
-      name: 'Modelo Items',
-      title: 'Modelo Items',
-      icon: 'fas fa-file-invoice-dollar fa-fw',
-      url: '/admin/user/models-items',
-      description: '',
-      allowedRoles: ['admin']
-    },
-    {
-      id: '4',
-      name: 'Trabajos',
-      title: 'Trabajos',
-      icon: 'fas fa-file-invoice-dollar fa-fw',
-      url: '/admin/user/works',
-      description: '',
-      allowedRoles: ['admin', 'viewer', 'editor']
-    },
-    {
-      id: '5',
-      name: 'Usuarios',
-      title: 'Usuarios',
-      icon: 'fas fa-user-secret fa-fw',
-      url: '/admin/application/users',
-      description: '',
-      allowedRoles: ['sysadmin', 'admin']
-    },
-    {
-      id: '6',
-      name: 'Empresa',
-      title: 'Empresa',
-      icon: 'fas fa-store-alt fa-fw',
-      url: '',
-      description: '',
-      allowedRoles: ['sysadmin', 'admin']
-    }
-  ];
 
   private filteredSidebarItems = new BehaviorSubject<MenuItem[]>([]);
   private filteredDashboardItems = new BehaviorSubject<DashboardItem[]>([]);
@@ -164,23 +108,45 @@ export class MenuService {
     this.filteredSidebarItems.next(filteredSidebar);
   }
 
-  // Método actualizado: ahora devuelve Observable
+  // Actualizar items del dashboard cargando la plantilla desde la base de datos de manera dinámica y asíncrona
   public updateDashboardItems(dashboardData: any, cmp_uuid: string): Observable<DashboardItem[]> {
     return this.getUserRoles(cmp_uuid).pipe(
-      map(userRoles => {
+      switchMap(userRoles => {
         this.currentUserRoles = userRoles;
         this.currentCompany = cmp_uuid;
 
         // Actualizar sidebar con la nueva compañía
         this.updateSidebarItems();
 
-        const dashboardItems = this.buildDashboardItems(dashboardData, cmp_uuid);
-        const filteredItems = this.filterDashboardItemsByRoles(dashboardItems, userRoles);
+        return this._appMenusService.getDashboardMenuItems().pipe(
+          map(response => {
+            const dbItems = response.data || [];
+            
+            const dataObj = Array.isArray(dashboardData) ? (dashboardData[0] || {}) : (dashboardData || {});
+            const dashboardItems = dbItems.map((dbMenu: any) => {
+              const dataKey = this.getDataKey(dbMenu.mnu_title);
+              const count = dataObj[dataKey] || 0;
 
-        // Actualizar el BehaviorSubject
-        this.filteredDashboardItems.next(filteredItems);
+              let url = dbMenu.mnu_route || '';
+              if (dbMenu.mnu_cod === 'menu.empresa' || url === '/admin/user/company-profile') {
+                url = `/admin/user/company-profile/${cmp_uuid}`;
+              }
 
-        return filteredItems;
+              return {
+                name: dbMenu.mnu_title,
+                title: dbMenu.mnu_dashboardtitle || dbMenu.mnu_title,
+                icon: dbMenu.mnu_dashboardicon || dbMenu.mnu_icon || 'fas fa-th-large fa-fw',
+                url: url,
+                description: `${count} Registrados`,
+                allowedRoles: !dbMenu.per_uuid ? ['*'] : (dbMenu.allowedRoles || [])
+              };
+            });
+
+            const filteredItems = this.filterDashboardItemsByRoles(dashboardItems, userRoles);
+            this.filteredDashboardItems.next(filteredItems);
+            return filteredItems;
+          })
+        );
       })
     );
   }
@@ -217,40 +183,24 @@ export class MenuService {
     });
   }
 
-  // Construir items del dashboard basado en los datos de la API
-  private buildDashboardItems(dashboardData: any, cmp_uuid: string): DashboardItem[] {
-    return this.dashboardTemplate
-      .map(item => {
-        // Buscar el dato correspondiente en la respuesta de la API
-        const dataKey = this.getDataKey(item.name);
-        const count = dashboardData[dataKey] || 0;
 
-        // Construir la URL para la empresa
-        let url = item.url;
-        if (item.name === 'Empresa') {
-          url = `/admin/user/company-profile/${cmp_uuid}`;
-        }
-
-        return {
-          ...item,
-          description: `${count} Registrados`,
-          url: url
-        };
-      });
-  }
 
   // Helper para mapear nombres a keys de datos
   private getDataKey(itemName: string): string {
+    const cleanName = (itemName || '').trim().toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Quita acentos/diacríticos
+
     const mapping: { [key: string]: string } = {
-      'Clientes': 'customersCount',
-      'Items': 'itemsCount',
-      'Modelo Items': 'modelsItemsCount',
-      'Trabajos': 'worksCount',
-      'Usuarios': 'usersCount',
-      'Empresa': 'companiesCount'
+      'clientes': 'customersCount',
+      'lista de clientes': 'customersCount',
+      'items': 'itemsCount',
+      'modelo items': 'modelsItemsCount',
+      'trabajos': 'worksCount',
+      'usuarios': 'usersCount',
+      'empresa': 'companiesCount'
     };
 
-    return mapping[itemName] || `${itemName.toLowerCase()}Count`;
+    return mapping[cleanName] || `${cleanName}Count`;
   }
 
   // Verificar acceso para items del dashboard

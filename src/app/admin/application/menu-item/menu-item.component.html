@@ -95,13 +95,37 @@
 
                     <div class="col-12 col-md-6">
                         <div class="form-group">
-                            <label for="mnu_icon" class="bmd-label-floating">Icono (Clase FontAwesome)</label>
+                            <label for="mnu_icon" class="bmd-label-floating">Icono del Sidebar (Clase FontAwesome)</label>
                             <input 
                                 type="text" 
                                 class="form-control" 
                                 name="mnu_icon" 
                                 id="mnu_icon" 
                                 [(ngModel)]="menu.mnu_icon">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_dashboardicon" class="bmd-label-floating">Icono del Dashboard (Opcional)</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_dashboardicon" 
+                                id="mnu_dashboardicon" 
+                                [(ngModel)]="menu.mnu_dashboardicon">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="mnu_dashboardtitle" class="bmd-label-floating">Título del Dashboard (Opcional)</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                name="mnu_dashboardtitle" 
+                                id="mnu_dashboardtitle" 
+                                [(ngModel)]="menu.mnu_dashboardtitle">
                         </div>
                     </div>
 
@@ -142,7 +166,7 @@
             <div class="container-fluid">
                 <div class="row">
                     
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label for="mnu_itemactive" class="bmd-label-floating">Item visible en navegación</label>
                             <input 
@@ -154,7 +178,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label for="mnu_active" class="bmd-label-floating">Habilitado / Activo</label>
                             <input 
@@ -166,7 +190,7 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-3">
                         <div class="form-group">
                             <label for="mnu_showifcompanyactive" class="bmd-label-floating">Requiere empresa activa</label>
                             <input 
@@ -175,6 +199,18 @@
                                 id="mnu_showifcompanyactive" 
                                 name="mnu_showifcompanyactive" 
                                 [(ngModel)]="menu.mnu_showifcompanyactive">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="form-group">
+                            <label for="mnu_showondashboard" class="bmd-label-floating">Mostrar en Dashboard</label>
+                            <input 
+                                type="checkbox" 
+                                class="form-control" 
+                                id="mnu_showondashboard" 
+                                name="mnu_showondashboard" 
+                                [(ngModel)]="menu.mnu_showondashboard">
                         </div>
                     </div>
 

@@ -90,7 +90,10 @@ export class MenuItemComponent implements OnInit {
       mnu_showifcompanyactive: false,
       mnu_createdat: null,
       mnu_updatedat: null,
-      per_uuid: ''
+      per_uuid: '',
+      mnu_dashboardicon: '',
+      mnu_showondashboard: false,
+      mnu_dashboardtitle: ''
     };
   }
 
@@ -164,6 +167,12 @@ export class MenuItemComponent implements OnInit {
     }
     if (!payload.per_uuid) {
       payload.per_uuid = null;
+    }
+    if (!payload.mnu_dashboardicon) {
+      payload.mnu_dashboardicon = null;
+    }
+    if (!payload.mnu_dashboardtitle) {
+      payload.mnu_dashboardtitle = null;
     }
 
     if (this.menu.mnu_uuid && this.menu.mnu_uuid !== 'new') {

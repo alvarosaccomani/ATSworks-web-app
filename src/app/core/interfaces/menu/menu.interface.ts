@@ -15,5 +15,8 @@ export interface MenuInterface {
     per_uuid?: string | null,
     appPermission?: string | null,
     allowedRoles?: string[],
+    mnu_dashboardicon?: string | null,
+    mnu_showondashboard?: boolean | null,
+    mnu_dashboardtitle?: string | null,
     items?: MenuInterface[]
 }
