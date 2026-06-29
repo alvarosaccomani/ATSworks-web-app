@@ -22,4 +22,9 @@ export class DashboardsService {
   
       return this._http.get<DashboardResults>(environment.apiUrl + 'dashboards/' + cmp_uuid + '/' + filter, {headers:headers})
     }
+
+  public getDashboardAnalytics(cmp_uuid: string): Observable<{ success: boolean, data: any }> {
+    let headers = new HttpHeaders().set('content-type', 'application/json');
+    return this._http.get<{ success: boolean, data: any }>(`${environment.apiUrl}dashboards-analytics/${cmp_uuid}`, { headers });
+  }
 }
