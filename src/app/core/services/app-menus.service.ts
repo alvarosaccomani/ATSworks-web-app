@@ -87,4 +87,12 @@ export class AppMenusService {
     let params = new HttpParams();
     return this._http.get<{ data: any[] }>(`${environment.apiUrl}menu-tree`, { headers, params });
   }
+
+  /**
+   * Obtiene los ítems del menú configurados para el dashboard.
+   */
+  public getDashboardMenuItems(): Observable<{ data: any[] }> {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
+    return this._http.get<{ data: any[] }>(`${environment.apiUrl}menu-dashboard`, { headers });
+  }
 }
