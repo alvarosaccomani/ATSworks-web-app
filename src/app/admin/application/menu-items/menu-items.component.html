@@ -13,7 +13,7 @@
 
                 <div class="col-12 col-md-9">
                     <div class="row">
-                        <div class="col-12 col-md-12">
+                        <div class="col-12 col-md-8">
                             <div class="form-group">
                                 <label for="inputFilter" class="bmd-label-floating">Buscar por título:</label>
                                 <input 
@@ -24,6 +24,16 @@
                                     [ngModelOptions]="{standalone: true}"
                                     placeholder="Escribe el título para filtrar..."
                                     >
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="form-group">
+                                <label for="inputShowOnDashboard" class="bmd-label-floating">Mostrar en Dashboard:</label>
+                                <nz-select [(ngModel)]="searchShowOnDashboard" [ngModelOptions]="{standalone: true}" name="showOnDashboard" style="width: 100%;">
+                                    <nz-option nzValue="ALL" nzLabel="Todos"></nz-option>
+                                    <nz-option nzValue="YES" nzLabel="Sí (Solo Dashboard)"></nz-option>
+                                    <nz-option nzValue="NO" nzLabel="No (Solo Navegación)"></nz-option>
+                                </nz-select>
                             </div>
                         </div>
                     </div>

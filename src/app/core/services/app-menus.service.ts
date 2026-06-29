@@ -17,29 +17,25 @@ export class AppMenusService {
    * Obtiene todos los menús con paginación y filtros.
    */
   public getMenus(
-    mnu_title?: string,
-    page?: number,
-    perPage?: number,
-    field_order?: string,
-    mnu_orderby?: string
+    mnu_title?: string, 
+    page: number = 1, 
+    perPage: number = 10,
+    field_sort: string = 'mnu_order',
+    sort: string = 'ASC',
+    mnu_showondashboard?: boolean
   ): Observable<MenuResults> {
     const headers = new HttpHeaders().set('content-type', 'application/json');
-    let params = new HttpParams();
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('perPage', perPage.toString())
+      .set('field_order', field_sort)
+      .set('mnu_orderby', sort);
 
     if (mnu_title) {
       params = params.set('mnu_title', mnu_title);
     }
-    if (page) {
-      params = params.set('page', page.toString());
-    }
-    if (perPage) {
-      params = params.set('perPage', perPage.toString());
-    }
-    if (field_order) {
-      params = params.set('field_order', field_order);
-    }
-    if (mnu_orderby) {
-      params = params.set('mnu_orderby', mnu_orderby);
+    if (mnu_showondashboard !== undefined) {
+      params = params.set('mnu_showondashboard', mnu_showondashboard.toString());
     }
 
     return this._http.get<MenuResults>(`${environment.apiUrl}menus`, { headers, params });

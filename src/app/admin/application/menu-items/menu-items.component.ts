@@ -36,6 +36,7 @@ export class MenuItemsComponent implements OnInit {
 
   // Variables para filtros
   public searchTitle: string = "";
+  public searchShowOnDashboard: string = "ALL";
   public fieldSortValue: string = "mnu_order";
   public sortValue: string = "ASC";
 
@@ -70,12 +71,17 @@ export class MenuItemsComponent implements OnInit {
   }
 
   public loadMenus(pageNumber: number = this.page): void {
+    let showOnDashboard: boolean | undefined = undefined;
+    if (this.searchShowOnDashboard === "YES") showOnDashboard = true;
+    if (this.searchShowOnDashboard === "NO") showOnDashboard = false;
+
     this.menus$ = this._appMenusService.getMenus(
       this.searchTitle || undefined,
       pageNumber,
       this.perPage,
       this.fieldSortValue,
-      this.sortValue
+      this.sortValue,
+      showOnDashboard
     );
   }
 
@@ -85,6 +91,7 @@ export class MenuItemsComponent implements OnInit {
 
   public clearSearch(): void {
     this.searchTitle = "";
+    this.searchShowOnDashboard = "ALL";
     this.loadMenus(1);
   }
 
