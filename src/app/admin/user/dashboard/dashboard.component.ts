@@ -5,7 +5,9 @@ import { SessionService } from '../../../core/services/session.service';
 import { SharedDataService } from '../../../core/services/shared-data.service';
 import { MenuService } from '../../../core/services/menu.service';
 import { DashboardsService } from '../../../core/services/dashboards.service';
+import { SocketService } from '../../../core/services/socket.service';
 import * as echarts from 'echarts';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,27 +31,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private trendsChartInstance: echarts.ECharts | null = null;
   private statesChartInstance: echarts.ECharts | null = null;
+  private socketSubs: Subscription[] = [];
 
   constructor(
     private _sessionService: SessionService,
     private _sharedDataService: SharedDataService,
     private _menuService: MenuService,
-    private _dashboardsService: DashboardsService
+    private _dashboardsService: DashboardsService,
+    private _socketService: SocketService
   ) { }
 
   ngOnInit(): void {
     this.company = this._sessionService.getCompany();
     this.loadDashboard();
+    this.initSocketListeners();
 
     this._sharedDataService.selectedCompany$.subscribe((company) => {
       if (company) {
         this.company = company;
         this.loadDashboard();
+        this.initSocketListeners(); // Re-init listeners with the new company uuid
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.socketSubs.forEach(sub => sub.unsubscribe());
     if (this.trendsChartInstance) {
       this.trendsChartInstance.dispose();
     }
@@ -68,6 +75,35 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  private initSocketListeners(): void {
+    // Clear old subscriptions if any
+    this.socketSubs.forEach(sub => sub.unsubscribe());
+    this.socketSubs = [];
+
+    const eventsToListen = [
+      'work_created', 'work_updated', 'work_deleted',
+      'customer_created', 'customer_deleted',
+      'user_created', 'user_deleted'
+    ];
+
+    eventsToListen.forEach(eventName => {
+      const sub = this._socketService.onEvent(eventName).subscribe({
+        next: (payload) => {
+          // If payload contains cmp_uuid and it doesn't match our current company, ignore it
+          if (payload && payload.cmp_uuid && payload.cmp_uuid !== this.cmp_uuid) {
+            return;
+          }
+          console.log(`Real-time update received: ${eventName}. Reloading dashboard...`);
+          this.loadDashboard();
+        },
+        error: (err) => {
+          console.error(`Socket listener error on event ${eventName}:`, err);
+        }
+      });
+      this.socketSubs.push(sub);
+    });
+  }
+
   private loadDashboard(): void {
     if(this.company) {
       this.cmp_uuid = this.company.cmp_uuid;
@@ -77,7 +113,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             const dashboard = response.data;
             this._menuService.updateDashboardItems(dashboard, this.cmp_uuid).subscribe({
               next: (filteredItems: any[]) => {
-                this.menuItems = filteredItems; // ← Esto ahora recibe los items filtrados
+                this.menuItems = filteredItems; // ← Recibe los items filtrados y actualizados
                 this.loadAnalytics();
               },
               error: (error) => {
