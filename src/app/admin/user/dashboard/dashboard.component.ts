@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private cmp_uuid!: string;
   private company!: any;
   public menuItems: any;
+  public recentActivity: any[] = [];
   public headerConfig: any = {
     title: "DASHBOARD",
     description: "Estadísticas.",
@@ -135,6 +136,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this._dashboardsService.getDashboardAnalytics(this.cmp_uuid).subscribe({
         next: (response) => {
           if (response.success && response.data) {
+            this.recentActivity = response.data.recentActivity || [];
             this.initCharts(response.data);
           }
         },
@@ -258,6 +260,34 @@ export class DashboardComponent implements OnInit, OnDestroy {
         ]
       };
       this.statesChartInstance.setOption(option);
+    }
+  }
+
+  public getRelativeTime(dateStr: string | Date): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHr = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+
+    if (diffSec < 60) {
+      return 'Hace unos instantes';
+    } else if (diffMin < 60) {
+      return `Hace ${diffMin} min`;
+    } else if (diffHr < 24) {
+      return `Hace ${diffHr} hs`;
+    } else if (diffDay === 1) {
+      return 'Ayer';
+    } else if (diffDay < 7) {
+      return `Hace ${diffDay} días`;
+    } else {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+      return `${dd}/${mm}/${yyyy}`;
     }
   }
 }
