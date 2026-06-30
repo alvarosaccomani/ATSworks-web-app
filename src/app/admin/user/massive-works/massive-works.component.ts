@@ -299,7 +299,8 @@ export class MassiveWorksComponent {
           console.info(response.data);
           this.addresses = response.data;
           this.list = this.addresses.map(item => {
-            const routeName = item.cus?.rou?.rou_name || 'Sin ruta';
+            const activeRoute = (item.cus as any)?.customerRoutes?.find((cr: any) => cr.cusrou_active);
+            const routeName = activeRoute?.rou?.rou_name || 'Sin ruta';
             return {
               key: item.adr_uuid,
               title: item.cus?.cus_fullname || '',
@@ -539,7 +540,7 @@ export class MassiveWorksComponent {
         this.work.wrk_lng = address.adr_lng;
         this.work.wrk_customer = address.cus?.cus_fullname || null;
         this.work.wrk_phone = address.cus?.cus_phone || null;
-        this.work.wrk_route = address.cus?.rou?.rou_name || null;
+        this.work.wrk_route = (address.cus as any)?.customerRoutes?.find((cr: any) => cr.cusrou_active)?.rou?.rou_name || null;
         this.work.wrk_order = address.cus?.cus_order || null;
 
         await this.insertWork(formWork); // ✅ espera cada inserción
